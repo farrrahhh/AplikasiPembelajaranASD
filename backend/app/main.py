@@ -14,4 +14,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+@app.get("/", tags=["root"])
+async def app_root() -> dict[str, str]:
+    return {
+        "message": f"Welcome to {settings.app_name}.",
+        "docs_url": "/docs",
+        "api_base": "/api",
+        "health_url": "/api/health",
+    }
+
+
 app.include_router(api_router, prefix="/api")
