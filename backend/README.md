@@ -25,8 +25,11 @@ When the API starts, the app initializes the database schema automatically with
 Default local connection:
 
 ```env
-DATABASE_URL=postgresql+psycopg://postgres:postgres@localhost:5432/asd_learning_db
+DATABASE_URL=postgresql+psycopg://postgres:your_password@localhost:5432/asd_learning_db
 ```
+
+If your PostgreSQL password contains special characters such as `#`, encode them
+in the URL. Example: `Farah#2004` becomes `Farah%232004`.
 
 ## Troubleshooting
 
