@@ -15,6 +15,18 @@ python -m uvicorn app.main:app --reload
 ## Environment
 
 Copy `.env.example` to `.env` if you want a fresh local file.
+The backend now expects `DATABASE_URL` and is configured for PostgreSQL.
+
+## Database
+
+ORM models are defined with SQLAlchemy in `app/models.py`.
+When the API starts, the app initializes the database schema automatically with
+`Base.metadata.create_all(...)`.
+Default local connection:
+
+```env
+DATABASE_URL=postgresql+psycopg://postgres:postgres@localhost:5432/asd_learning_db
+```
 
 ## Troubleshooting
 
