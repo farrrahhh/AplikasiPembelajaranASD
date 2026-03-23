@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     database_url: str = (
         "postgresql+psycopg://postgres:postgres@localhost:5432/asd_learning_db"
     )
+    database_schema: str = "public"
 
     model_config = SettingsConfigDict(
         env_file=".env",
