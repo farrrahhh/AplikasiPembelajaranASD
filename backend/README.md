@@ -12,10 +12,21 @@ python -m pip install -e ".[dev]"
 python -m uvicorn app.main:app --reload
 ```
 
+If you already have `.venv`, prefer running the interpreter from that
+environment. Example:
+
+```bash
+cd backend
+source .venv/bin/activate
+python -m uvicorn app.main:app --reload
+```
+
 ## Environment
 
 Copy `.env.example` to `.env` if you want a fresh local file.
 The backend now expects `DATABASE_URL` and is configured for PostgreSQL.
+If the active Python environment does not have `psycopg` installed, the app
+will automatically fall back to a local SQLite database for development.
 
 ## Database
 
@@ -42,6 +53,11 @@ Available endpoints:
 
 - `POST /api/auth/register`
 - `POST /api/auth/login`
+- `GET /api/users/me`
+- `GET /api/users/me/dashboard`
+- `GET /api/users/me/topics`
+- `GET /api/users/me/insights`
+- `GET /api/users/me/progress`
 
 Example register body:
 
@@ -53,8 +69,29 @@ Example register body:
 }
 ```
 
+Auth responses now return `access_token`. Send that token in the
+`Authorization: Bearer <token>` header for the `/api/users/me/*` endpoints.
+
+## LLM-powered insights
+
+Insights can use OpenAI via the Responses API when `OPENAI_API_KEY` is present.
+Recommended local settings:
+
+```env
+OPENAI_API_KEY=your_key_here
+OPENAI_MODEL=gpt-5.4-mini
+```
+
+If the key is missing or the API request fails, the backend falls back to a
+deterministic recommendation so the UI still works.
+
 ## Troubleshooting
 
 If `uvicorn` starts with a different Python version, your shell may be using a
 global binary instead of the one in `.venv`. Running `python -m uvicorn ...`
 uses the active virtualenv interpreter directly.
+
+If you see `ModuleNotFoundError: No module named 'psycopg'`, that means the
+active interpreter does not have PostgreSQL dependencies installed. Use the
+project virtualenv, reinstall dependencies, or allow the development fallback
+to SQLite.

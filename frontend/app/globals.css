@@ -1,8 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f4f8ff;
+  --foreground: #101828;
+  --surface: #ffffff;
+  --surface-muted: #eef4ff;
+  --border: rgba(21, 61, 143, 0.14);
+  --primary: #2f73c9;
+  --primary-strong: #1f5ba6;
+  --primary-soft: rgba(47, 115, 201, 0.12);
+  --text-muted: #475467;
+  --danger: #d92d20;
+  --success: #0e9384;
+  --shadow-soft: 0 24px 70px rgba(18, 52, 115, 0.14);
 }
 
 @theme inline {
@@ -12,15 +22,94 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--background);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), sans-serif;
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+::selection {
+  background: rgba(47, 115, 201, 0.24);
+}
+
+.auth-shell {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(76, 132, 211, 0.16), transparent 26%),
+    linear-gradient(180deg, #f7faff 0%, #eef4ff 100%);
+}
+
+.auth-left-panel {
+  background:
+    linear-gradient(180deg, #2f73c9 0%, #2b68b6 100%);
+}
+
+.auth-left-panel::before,
+.auth-left-panel::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  border: 18px solid rgba(255, 255, 255, 0.15);
+  transform: rotate(180deg);
+}
+
+.auth-left-panel::before {
+  top: -64px;
+  right: 48px;
+  width: 180px;
+  height: 180px;
+  border-left-color: transparent;
+  border-bottom-color: transparent;
+}
+
+.auth-left-panel::after {
+  left: -36px;
+  bottom: 48px;
+  width: 120px;
+  height: 120px;
+  border-left-color: transparent;
+  border-bottom-color: transparent;
+}
+
+.auth-illustration-glow {
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.1) 50%, transparent 71%);
+}
+
+.auth-card {
+  box-shadow: var(--shadow-soft);
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: rgba(47, 115, 201, 0.7);
+  box-shadow: 0 0 0 4px rgba(47, 115, 201, 0.12);
+}
+
+.auth-checkbox {
+  accent-color: var(--primary);
+}
+
+.auth-dashboard-panel {
+  background:
+    radial-gradient(circle at top right, rgba(47, 115, 201, 0.2), transparent 30%),
+    linear-gradient(180deg, #ffffff 0%, #f6f9ff 100%);
 }
