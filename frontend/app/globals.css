@@ -13,13 +13,15 @@
   --danger: #d92d20;
   --success: #0e9384;
   --shadow-soft: 0 24px 70px rgba(18, 52, 115, 0.14);
+  --font-sans-stack: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono-stack: "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono", monospace;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-sans-stack);
+  --font-mono: var(--font-mono-stack);
 }
 
 * {
@@ -33,7 +35,7 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), sans-serif;
+  font-family: var(--font-sans-stack);
   min-height: 100vh;
 }
 
