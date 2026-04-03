@@ -6,6 +6,8 @@ const API_BASE_URL =
 
 const AUTH_STORAGE_KEY = "asd-learning-auth";
 const AUTH_CHANGE_EVENT = "asd-learning-auth-change";
+const REMEMBER_ME_DURATION_MS = 1000 * 60 * 60 * 24 * 7;
+const DEFAULT_SESSION_DURATION_MS = 1000 * 60 * 60 * 12;
 let cachedAuthRawValue;
 let cachedAuthSnapshot = null;
 
@@ -32,10 +34,20 @@ export function storeAuthSession(payload, rememberMe = false) {
     return;
   }
 
+  const now = Date.now();
+  const expiresAt = now + (
+    rememberMe ? REMEMBER_ME_DURATION_MS : DEFAULT_SESSION_DURATION_MS
+  );
+
   clearStoredAuth();
   getPreferredStorage(rememberMe).setItem(
     AUTH_STORAGE_KEY,
-    JSON.stringify(payload),
+    JSON.stringify({
+      data: payload,
+      rememberMe,
+      expiresAt,
+      storedAt: now,
+    }),
   );
   emitAuthChanged();
 }
@@ -65,8 +77,19 @@ export function readStoredAuth() {
   }
 
   try {
+    const parsedValue = JSON.parse(rawValue);
+    const normalizedPayload = parsedValue?.data ?? parsedValue;
+    const expiresAt = Number(parsedValue?.expiresAt ?? 0);
+
+    if (expiresAt && Date.now() > expiresAt) {
+      cachedAuthRawValue = null;
+      cachedAuthSnapshot = null;
+      clearStoredAuth();
+      return null;
+    }
+
     cachedAuthRawValue = rawValue;
-    cachedAuthSnapshot = JSON.parse(rawValue);
+    cachedAuthSnapshot = normalizedPayload;
     return cachedAuthSnapshot;
   } catch {
     cachedAuthRawValue = null;
@@ -115,6 +138,14 @@ export function loginUser(payload) {
 
 export function registerUser(payload) {
   return sendAuthRequest("/auth/register", payload);
+}
+
+export function requestPasswordReset(payload) {
+  return sendAuthRequest("/auth/forgot-password", payload);
+}
+
+export function resetPassword(payload) {
+  return sendAuthRequest("/auth/reset-password", payload);
 }
 
 function subscribeToAuthStore(callback) {

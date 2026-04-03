@@ -47,6 +47,47 @@ class LoginRequest(BaseModel):
         return cleaned
 
 
+class ForgotPasswordRequest(BaseModel):
+    email: str
+
+    @field_validator("email")
+    @classmethod
+    def validate_email(cls, value: str) -> str:
+        cleaned = value.strip().lower()
+        if "@" not in cleaned or cleaned.startswith("@") or cleaned.endswith("@"):
+            raise ValueError("Email must be a valid email address.")
+        return cleaned
+
+
+class ForgotPasswordResponse(BaseModel):
+    message: str
+    reset_url: str | None = None
+
+
+class ResetPasswordRequest(BaseModel):
+    token: str
+    new_password: str
+
+    @field_validator("token")
+    @classmethod
+    def validate_token(cls, value: str) -> str:
+        cleaned = value.strip()
+        if not cleaned:
+            raise ValueError("Token must not be empty.")
+        return cleaned
+
+    @field_validator("new_password")
+    @classmethod
+    def validate_new_password(cls, value: str) -> str:
+        if len(value) < 8:
+            raise ValueError("Password must be at least 8 characters long.")
+        return value
+
+
+class ResetPasswordResponse(BaseModel):
+    message: str
+
+
 class UserResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 

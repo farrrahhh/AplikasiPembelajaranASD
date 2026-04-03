@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 
 import { logoutUser } from "@/lib/api";
 import { clearStoredAuth, useAuthSession } from "@/lib/auth";
@@ -19,17 +19,34 @@ function isActivePath(pathname, href) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+function subscribeToHydration() {
+  return () => {};
+}
+
+function getClientHydrationSnapshot() {
+  return true;
+}
+
+function getServerHydrationSnapshot() {
+  return false;
+}
+
 export default function AppShell({ hero = null, children }) {
   const pathname = usePathname();
   const router = useRouter();
   const session = useAuthSession();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const isHydrated = useSyncExternalStore(
+    subscribeToHydration,
+    getClientHydrationSnapshot,
+    getServerHydrationSnapshot,
+  );
 
   useEffect(() => {
-    if (!session?.user) {
+    if (isHydrated && !session?.user) {
       router.replace("/login");
     }
-  }, [router, session]);
+  }, [isHydrated, router, session]);
 
   async function handleLogout() {
     if (session?.access_token) {
@@ -43,7 +60,7 @@ export default function AppShell({ hero = null, children }) {
     router.push("/login");
   }
 
-  if (!session?.user) {
+  if (!isHydrated || !session?.user) {
     return null;
   }
 
@@ -60,14 +77,14 @@ export default function AppShell({ hero = null, children }) {
       <header className="bg-[#1f1f22] text-white">
         <div className="mx-auto max-w-7xl px-5 py-5 sm:px-8 lg:px-10">
           <div className="flex items-center justify-between gap-6">
-            <Link href="/dashboard" className="flex items-center gap-3">
+            <Link href="/dashboard" className="flex items-center gap-3 shrink-0">
               <Image
                 src="/logo.png"
                 alt="Algoria"
-                width={170}
-                height={48}
+                width={280}
+                height={80}
                 priority
-                className="h-11 w-auto object-contain"
+                className="h-14 w-auto object-contain sm:h-16"
               />
             </Link>
 

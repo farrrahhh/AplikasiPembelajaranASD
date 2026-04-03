@@ -21,12 +21,16 @@ from app.schemas import (
     DashboardResponse,
     ExerciseSubmissionRequest,
     ExerciseSubmissionResponse,
+    ForgotPasswordRequest,
+    ForgotPasswordResponse,
     GenerateTopicContentResponse,
     InsightsResponse,
     LoginRequest,
     LogoutResponse,
     ProgressResponse,
     RegisterRequest,
+    ResetPasswordRequest,
+    ResetPasswordResponse,
     TopicStepTrackingRequest,
     TopicStepTrackingResponse,
     TopicLearningResponse,
@@ -35,10 +39,14 @@ from app.schemas import (
 )
 from app.security import (
     create_access_token,
+    create_password_reset_token,
     hash_password,
+    inspect_password_reset_token,
     verify_access_token,
+    verify_password_reset_token,
     verify_password,
 )
+from app.config import settings
 
 router = APIRouter()
 bearer_scheme = HTTPBearer(auto_error=False)
@@ -117,6 +125,82 @@ async def register(
         message="User registered successfully.",
         user=UserResponse.model_validate(user),
         access_token=create_access_token(user.user_id, user.email),
+    )
+
+
+@router.post(
+    "/auth/forgot-password",
+    tags=["auth"],
+    response_model=ForgotPasswordResponse,
+)
+async def forgot_password(
+    payload: ForgotPasswordRequest,
+    db: Session = Depends(get_db),
+) -> ForgotPasswordResponse:
+    user = db.execute(select(User).where(User.email == payload.email)).scalar_one_or_none()
+
+    if user is None:
+        return ForgotPasswordResponse(
+            message=(
+                "Jika email terdaftar, link reset kata sandi akan tersedia "
+                "untuk digunakan."
+            )
+        )
+
+    reset_token = create_password_reset_token(user.user_id, user.email, user.password)
+    reset_url = None
+
+    if settings.app_env.lower() == "development":
+        reset_url = f"{settings.frontend_origin}/reset-kata-sandi?token={reset_token}"
+
+    return ForgotPasswordResponse(
+        message=(
+            "Permintaan reset kata sandi berhasil dibuat. "
+            "Gunakan link reset untuk mengatur kata sandi baru."
+        ),
+        reset_url=reset_url,
+    )
+
+
+@router.post(
+    "/auth/reset-password",
+    tags=["auth"],
+    response_model=ResetPasswordResponse,
+)
+async def reset_password(
+    payload: ResetPasswordRequest,
+    db: Session = Depends(get_db),
+) -> ResetPasswordResponse:
+    try:
+        token_data = inspect_password_reset_token(payload.token)
+        user_id = int(token_data["sub"])
+        email = str(token_data["email"])
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Token reset tidak valid atau sudah kedaluwarsa.",
+        ) from exc
+
+    user = db.get(User, user_id)
+    if user is None or user.email != email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Token reset tidak valid atau sudah kedaluwarsa.",
+        )
+
+    try:
+        verify_password_reset_token(payload.token, user.password)
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Token reset tidak valid atau sudah kedaluwarsa.",
+        ) from exc
+
+    user.password = hash_password(payload.new_password)
+    db.commit()
+
+    return ResetPasswordResponse(
+        message="Kata sandi berhasil diperbarui. Silakan masuk dengan kata sandi baru.",
     )
 
 

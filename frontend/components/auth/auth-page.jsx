@@ -238,27 +238,39 @@ export default function AuthPage({ mode }) {
 
               <div className="flex flex-col gap-3 text-sm font-medium text-[color:var(--text-muted)] sm:flex-row sm:items-center sm:justify-between">
                 {mode === "login" ? (
-                  <label className="flex items-center gap-3 text-[color:var(--foreground)]">
-                    <input
-                      className="auth-checkbox h-4 w-4 rounded border border-[color:var(--border)]"
-                      type="checkbox"
-                      name="rememberMe"
-                      checked={form.rememberMe}
-                      onChange={handleInputChange}
-                    />
-                    <span>Ingat Saya</span>
-                  </label>
+                  <div className="space-y-1">
+                    <label className="flex items-center gap-3 text-[color:var(--foreground)]">
+                      <input
+                        className="auth-checkbox h-4 w-4 rounded border border-[color:var(--border)]"
+                        type="checkbox"
+                        name="rememberMe"
+                        checked={form.rememberMe}
+                        onChange={handleInputChange}
+                      />
+                      <span>Ingat Saya</span>
+                    </label>
+                    <p className="text-xs text-[color:var(--text-muted)]">
+                      Session tersimpan 7 hari jika dicentang, atau 12 jam jika tidak.
+                    </p>
+                  </div>
                 ) : (
                   <span className="text-sm text-[color:var(--text-muted)]">
                     Gunakan minimal 8 karakter dan kombinasikan huruf serta
                     angka agar lebih aman.
                   </span>
                 )}
-                <span className="text-sm text-[color:var(--text-muted)]">
-                  {mode === "login"
-                    ? "Belum ada fitur lupa kata sandi."
-                    : "Pastikan email yang dipakai aktif."}
-                </span>
+                {mode === "login" ? (
+                  <Link
+                    href="/lupa-kata-sandi"
+                    className="text-sm text-[color:var(--primary)] transition hover:text-[color:var(--primary-strong)]"
+                  >
+                    Lupa kata sandi?
+                  </Link>
+                ) : (
+                  <span className="text-sm text-[color:var(--text-muted)]">
+                    Pastikan email yang dipakai aktif.
+                  </span>
+                )}
               </div>
 
               {errorMessage ? (

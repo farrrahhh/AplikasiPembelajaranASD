@@ -14,6 +14,7 @@ PBKDF2_ALGORITHM = "sha256"
 PBKDF2_ITERATIONS = 100_000
 PBKDF2_SALT_BYTES = 16
 ACCESS_TOKEN_TTL_SECONDS = 60 * 60 * 24 * 7
+PASSWORD_RESET_TOKEN_TTL_SECONDS = 60 * 60
 
 
 def hash_password(password: str) -> str:
@@ -58,7 +59,12 @@ def create_access_token(user_id: int, email: str) -> str:
         "sub": user_id,
         "email": email,
         "exp": int(time.time()) + ACCESS_TOKEN_TTL_SECONDS,
+        "purpose": "access",
     }
+    return _create_signed_token(payload)
+
+
+def _create_signed_token(payload: dict[str, int | str]) -> str:
     encoded_payload = _urlsafe_b64encode(
         json.dumps(payload, separators=(",", ":")).encode("utf-8")
     )
@@ -70,11 +76,11 @@ def create_access_token(user_id: int, email: str) -> str:
     return f"{encoded_payload}.{signature}"
 
 
-def verify_access_token(token: str) -> dict[str, int | str]:
+def _verify_signed_token(token: str, *, expected_purpose: str) -> dict[str, int | str]:
     try:
         encoded_payload, provided_signature = token.split(".", maxsplit=1)
     except ValueError as exc:
-        raise ValueError("Invalid access token format.") from exc
+        raise ValueError("Invalid token format.") from exc
 
     expected_signature = hmac.new(
         settings.app_secret_key.encode("utf-8"),
@@ -83,14 +89,47 @@ def verify_access_token(token: str) -> dict[str, int | str]:
     ).hexdigest()
 
     if not hmac.compare_digest(provided_signature, expected_signature):
-        raise ValueError("Invalid access token signature.")
+        raise ValueError("Invalid token signature.")
 
     try:
         payload = json.loads(_urlsafe_b64decode(encoded_payload).decode("utf-8"))
     except (ValueError, json.JSONDecodeError) as exc:
-        raise ValueError("Invalid access token payload.") from exc
+        raise ValueError("Invalid token payload.") from exc
 
     if int(payload.get("exp", 0)) < int(time.time()):
-        raise ValueError("Access token has expired.")
+        raise ValueError("Token has expired.")
+
+    if str(payload.get("purpose", "")) != expected_purpose:
+        raise ValueError("Invalid token purpose.")
+
+    return payload
+
+
+def verify_access_token(token: str) -> dict[str, int | str]:
+    return _verify_signed_token(token, expected_purpose="access")
+
+
+def create_password_reset_token(user_id: int, email: str, password_hash: str) -> str:
+    password_signature = hashlib.sha256(password_hash.encode("utf-8")).hexdigest()
+    payload = {
+        "sub": user_id,
+        "email": email,
+        "pwd": password_signature,
+        "exp": int(time.time()) + PASSWORD_RESET_TOKEN_TTL_SECONDS,
+        "purpose": "password-reset",
+    }
+    return _create_signed_token(payload)
+
+
+def inspect_password_reset_token(token: str) -> dict[str, int | str]:
+    return _verify_signed_token(token, expected_purpose="password-reset")
+
+
+def verify_password_reset_token(token: str, password_hash: str) -> dict[str, int | str]:
+    payload = inspect_password_reset_token(token)
+    expected_password_signature = hashlib.sha256(password_hash.encode("utf-8")).hexdigest()
+
+    if not hmac.compare_digest(str(payload.get("pwd", "")), expected_password_signature):
+        raise ValueError("Password reset token is no longer valid.")
 
     return payload

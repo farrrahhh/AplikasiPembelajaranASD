@@ -370,7 +370,11 @@ def _compute_topic_progress(
         if exercise_total
         else 0.0
     )
-    accuracy_ratio = min((accuracy or 0.0) / 100, 1.0)
+    accuracy_ratio = (
+        min((accuracy or 0.0) / 100, 1.0)
+        if tracking.exercises_completed > 0
+        else 0.0
+    )
 
     progress_value += completion_ratio * PROGRESS_WEIGHTS["exercise_completion"]
     progress_value += accuracy_ratio * PROGRESS_WEIGHTS["exercise_accuracy"]
@@ -1006,6 +1010,18 @@ def _activity_sort_value(row: dict) -> float:
     return 0.0
 
 
+def _is_started_topic_row(row: dict) -> bool:
+    return bool(
+        bool(row.get("material_completed"))
+        or bool(row.get("example_completed"))
+        or bool(row.get("summary_completed"))
+        or int(row.get("exercises_attempted") or 0) > 0
+        or int(row.get("exercises_completed") or 0) > 0
+        or int(row.get("study_minutes") or 0) > 0
+        or int(row.get("generated_content_count") or 0) > 0
+    )
+
+
 def _select_continue_learning_rows(topic_rows: list[dict], limit: int = 3) -> list[dict]:
     active_rows = [
         row
@@ -1013,14 +1029,7 @@ def _select_continue_learning_rows(topic_rows: list[dict], limit: int = 3) -> li
         if (
             bool(row.get("computed_unlocked"))
             and int(round(row.get("computed_progress", 0))) < 100
-            and (
-            int(round(row.get("computed_progress", 0))) > 0
-            or _activity_sort_value(row) > 0
-            or bool(row.get("material_completed"))
-            or bool(row.get("example_completed"))
-            or bool(row.get("summary_completed"))
-            or int(row.get("exercises_attempted") or 0) > 0
-            )
+            and _is_started_topic_row(row)
         )
     ]
     active_rows.sort(key=lambda row: int(row["topic_id"]))
@@ -1585,16 +1594,18 @@ def get_insights_payload(db: Session, user: User) -> InsightsResponse:
 def get_progress_payload(db: Session, user: User) -> ProgressResponse:
     ensure_user_learning_profile(db, user)
     topic_rows = _fetch_topic_rows(db, user.user_id)
-    topics = [_topic_overview_from_row(row) for row in topic_rows]
+    started_rows = [row for row in topic_rows if _is_started_topic_row(row)]
+    started_rows.sort(key=lambda row: (-_activity_sort_value(row), int(row["topic_id"])))
+    topics = [_topic_overview_from_row(row) for row in started_rows]
 
     overall_progress = round(sum(topic.progress for topic in topics) / max(len(topics), 1))
-    completed_exercises = sum(int(row.get("exercises_completed") or 0) for row in topic_rows)
-    topics_started = sum(1 for topic in topics if topic.progress > 0)
+    completed_exercises = sum(int(row.get("exercises_completed") or 0) for row in started_rows)
+    topics_started = len(started_rows)
     streak_days = _calculate_day_streak(_activity_dates_for_user(db, user.user_id))
-    total_study_minutes = sum(int(row.get("study_minutes") or 0) for row in topic_rows)
+    total_study_minutes = sum(int(row.get("study_minutes") or 0) for row in started_rows)
 
     topic_details = []
-    for row, topic in zip(topic_rows, topics, strict=True):
+    for row, topic in zip(started_rows, topics, strict=True):
         topic_details.append(
             ProgressTopicDetailResponse(
                 topic_id=topic.topic_id,
@@ -1612,10 +1623,10 @@ def get_progress_payload(db: Session, user: User) -> ProgressResponse:
 
     return ProgressResponse(
         summary=[
-            ProgressSummaryResponse(label="Overall Progress", value=f"{overall_progress}%", tone="purple"),
-            ProgressSummaryResponse(label="Exercises Completed", value=str(completed_exercises), tone="green"),
-            ProgressSummaryResponse(label="Topics Started", value=str(topics_started), tone="blue"),
-            ProgressSummaryResponse(label="Day Streak", value=str(streak_days), tone="gold"),
+            ProgressSummaryResponse(label="Progress Keseluruhan", value=f"{overall_progress}%", tone="purple"),
+            ProgressSummaryResponse(label="Latihan Selesai", value=str(completed_exercises), tone="green"),
+            ProgressSummaryResponse(label="Topik Dimulai", value=str(topics_started), tone="blue"),
+            ProgressSummaryResponse(label="Streak Hari", value=str(streak_days), tone="gold"),
         ],
         chart=[
             ProgressChartBarResponse(
@@ -1648,8 +1659,11 @@ def get_progress_payload(db: Session, user: User) -> ProgressResponse:
         ],
         encouragement_title=f"Keep Up the Great Work, {user.name}!",
         encouragement_text=(
-            f"Kamu sudah menyelesaikan {completed_exercises} latihan dengan total "
+            "Belum ada progres yang tercatat. Mulai satu topik dulu untuk melihat perkembanganmu."
+            if not topics
+            else f"Kamu sudah menyelesaikan {completed_exercises} latihan dengan total "
             f"{_format_study_hours(total_study_minutes)} jam belajar. Progress keseluruhanmu "
-            f"sudah {overall_progress}%, jadi tinggal jaga ritme dan lanjutkan topik berikutnya."
+            f"di topik yang sedang kamu pelajari sudah {overall_progress}%, jadi tinggal jaga "
+            "ritme dan lanjutkan topik berikutnya."
         ),
     )
