@@ -6,7 +6,15 @@ import { useCallback, useEffect, useState } from "react";
 
 import AppShell from "@/components/app/app-shell";
 import { PageErrorState, PageLoadingState } from "@/components/app/page-state";
-import { TopicIcon } from "@/components/app/topic-visuals";
+import {
+  LinkedListCardVisual,
+  LinkedListLessonVisual,
+  QueueCardVisual,
+  QueueLessonVisual,
+  StackCardVisual,
+  StackLessonVisual,
+  TopicIcon,
+} from "@/components/app/topic-visuals";
 import {
   ApiError,
   fetchTopicLearningData,
@@ -52,23 +60,165 @@ function AdaptiveBadge({ weaknessLevel }) {
   );
 }
 
-function MaterialStep({ materials }) {
+function parseMaterialContent(rawContent) {
+  const lines = rawContent
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  const intro = [];
+  const sections = [];
+  let currentSection = null;
+
+  for (const line of lines) {
+    if (line.startsWith("## ")) {
+      if (currentSection) {
+        sections.push(currentSection);
+      }
+      currentSection = {
+        heading: line.replace(/^##\s+/, ""),
+        paragraphs: [],
+        bullets: [],
+      };
+      continue;
+    }
+
+    if (line.startsWith("- ")) {
+      if (currentSection) {
+        currentSection.bullets.push(line.replace(/^-+\s+/, ""));
+      } else {
+        intro.push(line.replace(/^-+\s+/, ""));
+      }
+      continue;
+    }
+
+    if (currentSection) {
+      currentSection.paragraphs.push(line);
+    } else {
+      intro.push(line);
+    }
+  }
+
+  if (currentSection) {
+    sections.push(currentSection);
+  }
+
+  return { intro, sections };
+}
+
+function GenericTopicFigure({ topicIcon, title }) {
+  return (
+    <div className="rounded-[24px] border border-[#d9e2f0] bg-[linear-gradient(180deg,#f8fafc_0%,#eef4fb_100%)] p-6">
+      <div className="flex items-center gap-4">
+        <div className="flex h-16 w-16 items-center justify-center rounded-[18px] bg-white shadow-[0_10px_24px_rgba(15,23,42,0.06)]">
+          <TopicIcon kind={topicIcon} className="h-10 w-10" />
+        </div>
+        <div>
+          <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#667085]">
+            Visual ringkas
+          </p>
+          <p className="mt-1 text-[20px] font-bold text-[#111827]">{title}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MaterialFigure({ topicIcon, title, index }) {
+  if (topicIcon === "linked-list" && index === 0) {
+    return <LinkedListLessonVisual />;
+  }
+
+  if (topicIcon === "stack" && index === 0) {
+    return <StackLessonVisual />;
+  }
+
+  if (topicIcon === "queue" && index === 0) {
+    return <QueueLessonVisual />;
+  }
+
+  return <GenericTopicFigure topicIcon={topicIcon} title={title} />;
+}
+
+function MaterialStep({ materials, topicIcon }) {
   return (
     <div className="space-y-5">
-      {materials.map((item) => (
+      {materials.map((item, index) => {
+        const parsed = parseMaterialContent(item.content);
+
+        return (
         <article
           key={item.title}
-          className="rounded-[24px] border border-[#d7deea] bg-white px-6 py-6 shadow-[0_12px_24px_rgba(18,52,115,0.04)]"
+          className="overflow-hidden rounded-[28px] border border-[#d7deea] bg-white shadow-[0_12px_24px_rgba(18,52,115,0.04)]"
         >
-          <h3 className="text-[24px] font-bold text-[#111827]">{item.title}</h3>
-          <p className="mt-3 text-lg leading-8 text-[#475467]">{item.content}</p>
-          {item.generated_by_llm ? (
-            <p className="mt-4 text-sm font-semibold text-[#7a55ec]">
-              Dibuat secara dinamis dengan AI.
+          <div className="px-7 pt-7">
+            <div className="overflow-hidden rounded-[24px] border border-[#dfe7f2] bg-[#f8fbff]">
+              <MaterialFigure topicIcon={topicIcon} title={item.title} index={index} />
+            </div>
+          </div>
+
+          <div className="border-b border-[#e8edf5] bg-[linear-gradient(180deg,#fbfcff_0%,#f5f8fd_100%)] px-7 py-6">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#2f73c9]">
+              Materi
             </p>
-          ) : null}
+            <h3 className="mt-2 text-[32px] font-bold tracking-[-0.025em] text-[#111827]">
+              {item.title}
+            </h3>
+            {item.generated_by_llm ? (
+              <p className="mt-3 text-sm font-semibold text-[#7a55ec]">
+                Konten ini diperkaya secara dinamis dengan AI.
+              </p>
+            ) : null}
+          </div>
+
+          <div className="space-y-6 px-7 py-7">
+            {parsed.intro.length > 0 ? (
+              <div className="rounded-[22px] bg-[#f8fafc] px-5 py-5">
+                <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#667085]">
+                  Pengantar
+                </p>
+                <div className="mt-3 space-y-3 text-[17px] leading-8 text-[#475467]">
+                  {parsed.intro.map((paragraph) => (
+                    <p key={paragraph}>{paragraph}</p>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
+            {parsed.sections.length > 0 ? (
+              parsed.sections.map((section) => (
+                <section key={section.heading} className="rounded-[24px] border border-[#e7edf5] bg-white px-5 py-5">
+                  <h4 className="text-[24px] font-bold tracking-[-0.02em] text-[#111827]">
+                    {section.heading}
+                  </h4>
+                  <div className="mt-3 space-y-3 text-[17px] leading-8 text-[#475467]">
+                    {section.paragraphs.map((paragraph) => (
+                      <p key={paragraph}>{paragraph}</p>
+                    ))}
+                  </div>
+                  {section.bullets.length > 0 ? (
+                    <ul className="mt-4 space-y-3">
+                      {section.bullets.map((bullet) => (
+                        <li key={bullet} className="flex gap-3 text-[16px] leading-7 text-[#344054]">
+                          <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-[#2f73c9]" />
+                          <span>{bullet}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </section>
+              ))
+            ) : (
+              <section className="rounded-[24px] border border-[#e7edf5] bg-white px-5 py-5">
+                <div className="space-y-3 text-[17px] leading-8 text-[#475467]">
+                  <p>{item.content}</p>
+                </div>
+              </section>
+            )}
+          </div>
         </article>
-      ))}
+        );
+      })}
     </div>
   );
 }
@@ -457,7 +607,7 @@ export default function TopicLearningPage() {
     }
 
     if (currentStep === "material") {
-      return <MaterialStep materials={data.materials} />;
+      return <MaterialStep materials={data.materials} topicIcon={data.topic.icon} />;
     }
 
     if (currentStep === "example") {

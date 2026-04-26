@@ -5,16 +5,38 @@ TOPIC_CONTENT_BLUEPRINTS = {
                 "title": "Konsep dasar Linked List",
                 "content": (
                     "Linked List adalah struktur data linear yang tersusun dari node. "
-                    "Setiap node menyimpan data dan referensi ke node berikutnya, sehingga "
-                    "elemen tidak harus berada pada blok memori yang bersebelahan."
+                    "Setiap node menyimpan data dan referensi ke node berikutnya.\n\n"
+                    "## Apa yang dimaksud dengan node\n"
+                    "Node adalah satu unit kecil di dalam Linked List. Di dalamnya biasanya ada dua bagian: nilai data dan pointer/referensi.\n"
+                    "- Bagian data menyimpan isi node, misalnya angka atau objek.\n"
+                    "- Bagian referensi menyimpan alamat node berikutnya.\n\n"
+                    "## Mengapa tidak harus bersebelahan di memori\n"
+                    "Berbeda dari array, node pada Linked List tidak wajib disimpan berdampingan di memori. Hubungan antar elemen dijaga oleh pointer.\n"
+                    "- Karena itu, struktur ini fleksibel saat menambah atau menghapus elemen.\n"
+                    "- Namun, untuk mencapai elemen tertentu kita harus menelusuri node satu per satu dari head.\n\n"
+                    "## Istilah penting\n"
+                    "- Head adalah node pertama.\n"
+                    "- Tail adalah node terakhir.\n"
+                    "- Null berarti tidak ada node berikutnya."
                 ),
             },
             {
                 "title": "Kapan Linked List digunakan",
                 "content": (
                     "Linked List cocok saat kita sering melakukan penyisipan atau penghapusan "
-                    "elemen di tengah atau awal struktur data. Biaya tambah/hapus bisa O(1) "
-                    "jika referensi node terkait sudah diketahui."
+                    "elemen di awal atau tengah struktur data.\n\n"
+                    "## Situasi yang cocok\n"
+                    "Linked List berguna saat ukuran data sering berubah dan kita tidak ingin menggeser banyak elemen seperti pada array.\n"
+                    "- Insert di awal bisa sangat cepat.\n"
+                    "- Delete setelah node tertentu juga efisien jika referensinya sudah ada.\n\n"
+                    "## Kelebihan utama\n"
+                    "Biaya tambah dan hapus bisa O(1) jika posisi node yang ingin dimanipulasi sudah diketahui.\n"
+                    "- Tidak perlu memindahkan seluruh elemen.\n"
+                    "- Struktur lebih fleksibel untuk data dinamis.\n\n"
+                    "## Keterbatasan\n"
+                    "Linked List tidak unggul untuk akses acak.\n"
+                    "- Untuk mengambil elemen ke-i, kita tetap harus traversal dari head.\n"
+                    "- Tiap node juga butuh ruang tambahan untuk menyimpan pointer."
                 ),
             },
         ],
@@ -86,14 +108,35 @@ TOPIC_CONTENT_BLUEPRINTS = {
                 "title": "Prinsip LIFO",
                 "content": (
                     "Stack mengikuti prinsip Last In First Out. Elemen terakhir yang masuk "
-                    "akan menjadi elemen pertama yang keluar."
+                    "akan menjadi elemen pertama yang keluar.\n\n"
+                    "## Cara membayangkan Stack\n"
+                    "Bayangkan tumpukan piring di dapur. Piring yang terakhir kamu taruh di atas adalah piring pertama yang akan kamu ambil lagi.\n"
+                    "- Elemen baru selalu masuk ke bagian atas atau top.\n"
+                    "- Elemen yang keluar juga selalu diambil dari top.\n\n"
+                    "## Mengapa urutan ini penting\n"
+                    "Banyak masalah komputasi butuh memproses hal yang paling baru terlebih dahulu.\n"
+                    "- Undo pada editor teks bekerja dengan pola ini.\n"
+                    "- Pemanggilan fungsi rekursif juga disimpan dalam call stack.\n\n"
+                    "## Istilah penting\n"
+                    "- Top adalah posisi elemen paling atas.\n"
+                    "- LIFO berarti Last In, First Out."
                 ),
             },
             {
                 "title": "Operasi utama Stack",
                 "content": (
-                    "Operasi inti Stack adalah push untuk menambah elemen, pop untuk "
-                    "menghapus elemen teratas, dan peek/top untuk melihat elemen paling atas."
+                    "Operasi inti Stack adalah push, pop, dan peek.\n\n"
+                    "## Push\n"
+                    "Push menambahkan elemen baru ke posisi paling atas.\n"
+                    "- Setelah push, top berpindah ke elemen yang baru dimasukkan.\n\n"
+                    "## Pop\n"
+                    "Pop menghapus elemen paling atas dari Stack.\n"
+                    "- Operasi ini mengembalikan elemen yang dihapus.\n"
+                    "- Jika Stack kosong, pop tidak bisa dilakukan tanpa pengecekan.\n\n"
+                    "## Peek atau Top\n"
+                    "Peek melihat elemen paling atas tanpa menghapusnya.\n"
+                    "- Cocok saat kita hanya ingin memeriksa isi teratas.\n"
+                    "- Isi Stack tetap sama setelah operasi ini."
                 ),
             },
         ],
@@ -163,14 +206,31 @@ TOPIC_CONTENT_BLUEPRINTS = {
                 "title": "Prinsip FIFO",
                 "content": (
                     "Queue menggunakan prinsip First In First Out. Elemen yang masuk lebih dulu "
-                    "akan keluar lebih dulu."
+                    "akan keluar lebih dulu.\n\n"
+                    "## Cara membayangkan Queue\n"
+                    "Bayangkan antrean di kasir. Orang yang datang lebih dulu berdiri di depan dan dilayani terlebih dahulu.\n"
+                    "- Elemen baru masuk dari belakang.\n"
+                    "- Elemen lama keluar dari depan.\n\n"
+                    "## Mengapa Queue berbeda dari Stack\n"
+                    "Pada Stack, elemen terakhir justru keluar lebih dulu. Queue kebalikannya: urutan kedatangan harus dijaga.\n"
+                    "- Queue cocok untuk sistem antrean.\n"
+                    "- Queue sering dipakai saat keadilan urutan proses penting."
                 ),
             },
             {
                 "title": "Front dan Rear",
                 "content": (
-                    "Front menunjuk elemen paling depan untuk dequeue, sedangkan rear/tail "
-                    "digunakan saat enqueue elemen baru."
+                    "Queue punya dua ujung penting: front dan rear.\n\n"
+                    "## Front\n"
+                    "Front menunjuk elemen paling depan yang siap diambil.\n"
+                    "- Dequeue selalu mengambil elemen dari front.\n\n"
+                    "## Rear atau Tail\n"
+                    "Rear adalah sisi belakang tempat elemen baru dimasukkan.\n"
+                    "- Enqueue selalu menambah elemen ke rear.\n\n"
+                    "## Alur kerja dasar\n"
+                    "- Enqueue: tambah elemen di belakang.\n"
+                    "- Dequeue: keluarkan elemen di depan.\n"
+                    "- Pola ini menjaga FIFO tetap berjalan."
                 ),
             },
         ],
@@ -237,14 +297,33 @@ TOPIC_CONTENT_BLUEPRINTS = {
                 "title": "Struktur hierarkis",
                 "content": (
                     "Tree menyimpan data secara hierarkis dengan konsep root, parent, child, "
-                    "dan leaf. Setiap node dapat memiliki anak."
+                    "dan leaf.\n\n"
+                    "## Bagian utama Tree\n"
+                    "Tree tidak berjalan lurus seperti Linked List. Struktur ini bercabang.\n"
+                    "- Root adalah node paling atas.\n"
+                    "- Parent adalah node yang punya anak.\n"
+                    "- Child adalah node turunan.\n"
+                    "- Leaf adalah node yang tidak punya child.\n\n"
+                    "## Kapan Tree dipakai\n"
+                    "Tree cocok saat data punya hubungan bertingkat.\n"
+                    "- Struktur folder komputer.\n"
+                    "- Pohon keputusan.\n"
+                    "- Struktur DOM pada halaman web."
                 ),
             },
             {
                 "title": "Traversal Tree",
                 "content": (
-                    "Traversal umum pada Tree meliputi pre-order, in-order, dan post-order. "
-                    "Masing-masing memiliki urutan kunjungan node yang berbeda."
+                    "Traversal adalah proses mengunjungi node dalam urutan tertentu.\n\n"
+                    "## Pre-order\n"
+                    "Kunjungi root terlebih dahulu, lalu anak kiri, kemudian anak kanan.\n"
+                    "- Cocok saat root harus diproses lebih dulu.\n\n"
+                    "## In-order\n"
+                    "Kunjungi anak kiri, lalu root, kemudian anak kanan.\n"
+                    "- Pada Binary Search Tree, traversal ini memberi urutan menaik.\n\n"
+                    "## Post-order\n"
+                    "Kunjungi anak kiri, lalu anak kanan, dan root paling akhir.\n"
+                    "- Cocok saat child harus selesai diproses sebelum parent."
                 ),
             },
         ],
@@ -313,15 +392,30 @@ TOPIC_CONTENT_BLUEPRINTS = {
             {
                 "title": "Node dan edge",
                 "content": (
-                    "Graph terdiri dari vertex/node dan edge. Struktur ini cocok untuk "
-                    "merepresentasikan hubungan banyak-ke-banyak."
+                    "Graph terdiri dari vertex atau node dan edge atau sisi penghubung.\n\n"
+                    "## Komponen utama\n"
+                    "Node mewakili entitas, sedangkan edge mewakili hubungan antar entitas.\n"
+                    "- Node bisa berupa orang, kota, atau halaman web.\n"
+                    "- Edge bisa berarti pertemanan, jalur, atau tautan.\n\n"
+                    "## Mengapa Graph penting\n"
+                    "Graph sangat cocok untuk hubungan banyak-ke-banyak yang sulit direpresentasikan dengan struktur linear.\n"
+                    "- Jaringan sosial.\n"
+                    "- Peta jalan.\n"
+                    "- Relasi antar dependensi sistem."
                 ),
             },
             {
                 "title": "Representasi Graph",
                 "content": (
-                    "Graph dapat direpresentasikan menggunakan adjacency list atau adjacency matrix, "
-                    "tergantung kebutuhan efisiensi."
+                    "Graph dapat direpresentasikan dengan adjacency list atau adjacency matrix.\n\n"
+                    "## Adjacency List\n"
+                    "Setiap node menyimpan daftar tetangga yang terhubung langsung dengannya.\n"
+                    "- Hemat memori untuk graph yang jarang edge.\n"
+                    "- Nyaman untuk traversal seperti BFS dan DFS.\n\n"
+                    "## Adjacency Matrix\n"
+                    "Hubungan antar node disimpan dalam tabel dua dimensi.\n"
+                    "- Mudah mengecek apakah dua node terhubung.\n"
+                    "- Kurang hemat untuk graph besar yang sparse."
                 ),
             },
         ],
@@ -390,15 +484,32 @@ TOPIC_CONTENT_BLUEPRINTS = {
             {
                 "title": "Tujuan sorting",
                 "content": (
-                    "Sorting mengurutkan data sehingga pencarian, analisis, dan presentasi "
-                    "informasi menjadi lebih mudah."
+                    "Sorting adalah proses mengurutkan data agar lebih mudah dibaca dan diproses.\n\n"
+                    "## Mengapa data perlu diurutkan\n"
+                    "Data yang sudah rapi akan lebih mudah dicari, dibandingkan, dan dianalisis.\n"
+                    "- Mempercepat pencarian tertentu.\n"
+                    "- Membantu menampilkan laporan secara teratur.\n"
+                    "- Memudahkan proses algoritma lanjutan.\n\n"
+                    "## Contoh urutan\n"
+                    "Data bisa diurutkan menaik, menurun, berdasarkan nama, tanggal, atau prioritas."
                 ),
             },
             {
                 "title": "Perbandingan algoritma sorting",
                 "content": (
-                    "Bubble Sort mudah dipahami tetapi lambat, Merge Sort stabil dan efisien, "
-                    "sedangkan Quick Sort sering sangat cepat pada praktik."
+                    "Setiap algoritma sorting punya kekuatan dan kelemahan yang berbeda.\n\n"
+                    "## Bubble Sort\n"
+                    "Bubble Sort mudah dipahami karena hanya membandingkan elemen bersebelahan.\n"
+                    "- Cocok untuk belajar konsep dasar.\n"
+                    "- Kurang efisien untuk data besar.\n\n"
+                    "## Merge Sort\n"
+                    "Merge Sort memakai pendekatan divide and conquer.\n"
+                    "- Stabil dan punya performa baik.\n"
+                    "- Butuh ruang tambahan saat proses merge.\n\n"
+                    "## Quick Sort\n"
+                    "Quick Sort sering sangat cepat dalam praktik.\n"
+                    "- Sangat populer untuk banyak kasus nyata.\n"
+                    "- Performanya bisa turun pada kondisi tertentu jika pivot buruk."
                 ),
             },
         ],

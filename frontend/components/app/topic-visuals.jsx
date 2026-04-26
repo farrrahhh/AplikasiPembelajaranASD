@@ -98,7 +98,7 @@ export function TopicIcon({ kind, className = "h-12 w-12" }) {
 
 export function LinkedListCardVisual() {
   return (
-    <div className="relative h-44 overflow-hidden rounded-t-[22px] bg-gradient-to-br from-[#8ac0f4] to-[#9bcaef] p-5">
+    <div className="relative h-56 overflow-hidden rounded-[24px] bg-gradient-to-br from-[#8ac0f4] to-[#9bcaef] p-5">
       <p className="text-[18px] font-bold text-[#111827]">Head</p>
       <div className="mt-6 flex items-center gap-3">
         {["13", "23", "33", "40"].map((value, index) => (
@@ -114,13 +114,16 @@ export function LinkedListCardVisual() {
       <p className="absolute bottom-6 right-6 text-[18px] font-bold text-[#111827]">
         Tail
       </p>
+      <div className="absolute bottom-0 left-0 right-0 bg-black/8 px-5 py-3 text-sm font-medium text-[#17345f]">
+        Visual node: setiap kotak menyimpan data dan menunjuk ke node berikutnya.
+      </div>
     </div>
   );
 }
 
 export function StackCardVisual() {
   return (
-    <div className="relative h-44 overflow-hidden rounded-t-[22px] bg-gradient-to-br from-[#6b4eff] to-[#7c4df0] p-5 text-white">
+    <div className="relative h-56 overflow-hidden rounded-[24px] bg-gradient-to-br from-[#6b4eff] to-[#7c4df0] p-5 text-white">
       <div className="grid h-full grid-cols-2 gap-6">
         <div>
           <p className="text-2xl font-bold">Push</p>
@@ -161,13 +164,16 @@ export function StackCardVisual() {
           </div>
         </div>
       </div>
+      <div className="absolute bottom-0 left-0 right-0 bg-black/10 px-5 py-3 text-sm font-medium text-white/90">
+        Elemen baru selalu masuk dari atas, dan elemen teratas keluar lebih dulu.
+      </div>
     </div>
   );
 }
 
 export function QueueCardVisual() {
   return (
-    <div className="relative h-44 overflow-hidden rounded-t-[22px] bg-[#f7bde2] p-5">
+    <div className="relative h-56 overflow-hidden rounded-[24px] bg-[#f7bde2] p-5">
       <div className="absolute right-7 top-4 flex h-10 w-14 items-center justify-center bg-[#ecf6d5] text-2xl font-bold text-[#111827]">
         7
       </div>
@@ -183,6 +189,134 @@ export function QueueCardVisual() {
       </div>
       <div className="absolute left-7 bottom-4 flex h-10 w-14 items-center justify-center bg-[#ecf6d5] text-2xl font-bold text-[#111827]">
         2
+      </div>
+      <div className="absolute bottom-0 left-0 right-0 bg-black/8 px-5 py-3 text-sm font-medium text-[#5d3550]">
+        Queue menjaga urutan datang: yang paling depan diproses lebih dulu.
+      </div>
+    </div>
+  );
+}
+
+export function LinkedListLessonVisual() {
+  return (
+    <div className="overflow-hidden rounded-[28px] border border-[#dbe6f6] bg-white shadow-[0_16px_32px_rgba(18,52,115,0.05)]">
+      <div className="grid gap-0 lg:grid-cols-[1.2fr_0.8fr]">
+        <div className="bg-[linear-gradient(135deg,#9fcbf6_0%,#dcecff_100%)] px-6 py-6">
+          <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#1d4f91]">
+            Diagram utama
+          </p>
+          <div className="mt-5">
+            <LinkedListCardVisual />
+          </div>
+        </div>
+        <div className="bg-[#fbfcfe] px-6 py-6">
+          <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#667085]">
+            Intuisi cepat
+          </p>
+          <h4 className="mt-3 text-[26px] font-bold tracking-[-0.02em] text-[#111827]">
+            Linked List vs Array
+          </h4>
+          <div className="mt-5 overflow-hidden rounded-[20px] border border-[#e2e8f0]">
+            <div className="grid grid-cols-3 bg-[#eef4ff] px-4 py-3 text-sm font-semibold text-[#17345f]">
+              <span>Aspek</span>
+              <span>Array</span>
+              <span>Linked List</span>
+            </div>
+            {[
+              ["Penyimpanan", "Bersebelahan", "Bisa terpisah"],
+              ["Akses indeks", "Cepat", "Harus traversal"],
+              ["Insert/Delete", "Perlu geser", "Lebih fleksibel"],
+            ].map(([label, left, right]) => (
+              <div key={label} className="grid grid-cols-3 border-t border-[#e2e8f0] px-4 py-3 text-sm text-[#475467]">
+                <span className="font-semibold text-[#111827]">{label}</span>
+                <span>{left}</span>
+                <span>{right}</span>
+              </div>
+            ))}
+          </div>
+          <p className="mt-5 text-[15px] leading-7 text-[#667085]">
+            Seperti pola belajar di halaman dokumentasi, visual ini membantu membedakan
+            kapan linked list unggul dan kapan array lebih praktis.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function StackLessonVisual() {
+  return (
+    <div className="overflow-hidden rounded-[28px] border border-[#e2dafd] bg-white shadow-[0_16px_32px_rgba(18,52,115,0.05)]">
+      <div className="grid gap-0 lg:grid-cols-[1.2fr_0.8fr]">
+        <div className="bg-[linear-gradient(135deg,#7c63ff_0%,#a889ff_100%)] px-6 py-6">
+          <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-white/80">
+            Diagram utama
+          </p>
+          <div className="mt-5">
+            <StackCardVisual />
+          </div>
+        </div>
+        <div className="bg-[#fbfcfe] px-6 py-6">
+          <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#667085]">
+            Intuisi cepat
+          </p>
+          <h4 className="mt-3 text-[26px] font-bold tracking-[-0.02em] text-[#111827]">
+            Cara kerja LIFO
+          </h4>
+          <ul className="mt-5 space-y-3 text-[15px] leading-7 text-[#475467]">
+            <li className="flex gap-3">
+              <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-[#6f5ad8]" />
+              <span>Push menambah elemen ke bagian paling atas.</span>
+            </li>
+            <li className="flex gap-3">
+              <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-[#6f5ad8]" />
+              <span>Pop menghapus elemen yang paling baru masuk.</span>
+            </li>
+            <li className="flex gap-3">
+              <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-[#6f5ad8]" />
+              <span>Peek membaca elemen teratas tanpa mengubah isi stack.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function QueueLessonVisual() {
+  return (
+    <div className="overflow-hidden rounded-[28px] border border-[#f0d6e8] bg-white shadow-[0_16px_32px_rgba(18,52,115,0.05)]">
+      <div className="grid gap-0 lg:grid-cols-[1.2fr_0.8fr]">
+        <div className="bg-[linear-gradient(135deg,#ffc8e8_0%,#ffe6f4_100%)] px-6 py-6">
+          <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#6c3653]">
+            Diagram utama
+          </p>
+          <div className="mt-5">
+            <QueueCardVisual />
+          </div>
+        </div>
+        <div className="bg-[#fbfcfe] px-6 py-6">
+          <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#667085]">
+            Intuisi cepat
+          </p>
+          <h4 className="mt-3 text-[26px] font-bold tracking-[-0.02em] text-[#111827]">
+            Cara kerja FIFO
+          </h4>
+          <ul className="mt-5 space-y-3 text-[15px] leading-7 text-[#475467]">
+            <li className="flex gap-3">
+              <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-[#d08143]" />
+              <span>Enqueue selalu menambah elemen ke bagian belakang.</span>
+            </li>
+            <li className="flex gap-3">
+              <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-[#d08143]" />
+              <span>Dequeue selalu mengambil elemen dari bagian depan.</span>
+            </li>
+            <li className="flex gap-3">
+              <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-[#d08143]" />
+              <span>Urutan kedatangan tetap terjaga dari awal sampai akhir.</span>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   );
