@@ -2,6 +2,8 @@ const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") ??
   "http://localhost:8000/api";
 
+export const API_ORIGIN = API_BASE_URL.replace(/\/api$/, "");
+
 export class ApiError extends Error {
   constructor(message, status) {
     super(message);
@@ -112,4 +114,12 @@ export function submitTopicExerciseAnswer(
 
 export function logoutUser(accessToken) {
   return apiPost("/auth/logout", accessToken);
+}
+
+export function fetchTutorialCatalog(accessToken) {
+  return apiRequest("/tutorials", accessToken);
+}
+
+export function fetchTutorialTopicDetail(accessToken, topicSlug) {
+  return apiRequest(`/tutorials/${topicSlug}`, accessToken);
 }

@@ -44,8 +44,21 @@ DATABASE_URL=postgresql+psycopg://postgres:your_password@localhost:5432/asd_lear
 DATABASE_SCHEMA=public
 ```
 
+Frontend CORS defaults to `http://localhost:3000`, and development mode also
+accepts `localhost` / `127.0.0.1` on any port. To allow extra frontend URLs,
+set a comma-separated list:
+
+```env
+FRONTEND_ORIGINS=http://localhost:3001,http://127.0.0.1:3000
+```
+
 If your PostgreSQL password contains special characters such as `#`, encode them
 in the URL. Example: `Farah#2004` becomes `Farah%232004`.
+
+In `development`, if PostgreSQL is unavailable, the backend now falls back to
+the local SQLite file `asd_learning.db` so the API can still boot for frontend
+work. If you want to keep using PostgreSQL, make sure the local server on
+`localhost:5432` is running before starting FastAPI.
 
 ## Auth API
 

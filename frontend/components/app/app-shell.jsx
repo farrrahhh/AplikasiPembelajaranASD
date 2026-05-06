@@ -10,6 +10,7 @@ import { clearStoredAuth, useAuthSession } from "@/lib/auth";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Beranda" },
+  { href: "/materi", label: "Materi" },
   { href: "/topik", label: "Topik" },
   { href: "/insights", label: "Insights" },
   { href: "/progress", label: "Progress" },

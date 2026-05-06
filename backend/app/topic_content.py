@@ -2,102 +2,118 @@ TOPIC_CONTENT_BLUEPRINTS = {
     "Linked List": {
         "materials": [
             {
-                "title": "Konsep dasar Linked List",
+                "title": "Apa Itu Linked List?",
                 "content": (
-                    "Linked List adalah struktur data linear yang tersusun dari node. "
-                    "Setiap node menyimpan data dan referensi ke node berikutnya.\n\n"
-                    "## Apa yang dimaksud dengan node\n"
-                    "Node adalah satu unit kecil di dalam Linked List. Di dalamnya biasanya ada dua bagian: nilai data dan pointer/referensi.\n"
-                    "- Bagian data menyimpan isi node, misalnya angka atau objek.\n"
-                    "- Bagian referensi menyimpan alamat node berikutnya.\n\n"
-                    "## Mengapa tidak harus bersebelahan di memori\n"
-                    "Berbeda dari array, node pada Linked List tidak wajib disimpan berdampingan di memori. Hubungan antar elemen dijaga oleh pointer.\n"
-                    "- Karena itu, struktur ini fleksibel saat menambah atau menghapus elemen.\n"
-                    "- Namun, untuk mencapai elemen tertentu kita harus menelusuri node satu per satu dari head.\n\n"
-                    "## Istilah penting\n"
-                    "- Head adalah node pertama.\n"
-                    "- Tail adalah node terakhir.\n"
-                    "- Null berarti tidak ada node berikutnya."
+                    "Linked List adalah struktur data linear yang terdiri dari node-node yang "
+                    "saling terhubung. Setiap node menyimpan data dan pointer ke node berikutnya.\n\n"
+                    "Pada bahasa C, Linked List biasanya dibuat sendiri dengan `struct`, jadi kita "
+                    "benar-benar melihat bagaimana data dan pointer bekerja di memori.\n\n"
+                    "## Bagian node\n"
+                    "Satu node pada Linked List biasanya punya dua bagian utama.\n"
+                    "- `data` untuk menyimpan nilai.\n"
+                    "- `next` untuk menyimpan alamat node berikutnya.\n\n"
+                    "## Cara node terhubung\n"
+                    "Node tidak harus disimpan berdampingan seperti elemen array.\n"
+                    "- `head` menunjuk node pertama.\n"
+                    "- Node terakhir punya `next` bernilai `NULL`.\n"
+                    "- Traversal dilakukan dengan mengikuti pointer dari satu node ke node berikutnya.\n\n"
+                    "## Kenapa penting di C\n"
+                    "Linked List di C membantu memahami pointer secara nyata.\n"
+                    "- Kita membangun node dengan `malloc`.\n"
+                    "- Kita melepas node dengan `free`.\n"
+                    "- Kita harus hati-hati agar pointer tidak putus atau salah arah."
                 ),
             },
             {
-                "title": "Kapan Linked List digunakan",
+                "title": "Linked List vs Array",
                 "content": (
-                    "Linked List cocok saat kita sering melakukan penyisipan atau penghapusan "
-                    "elemen di awal atau tengah struktur data.\n\n"
-                    "## Situasi yang cocok\n"
-                    "Linked List berguna saat ukuran data sering berubah dan kita tidak ingin menggeser banyak elemen seperti pada array.\n"
-                    "- Insert di awal bisa sangat cepat.\n"
-                    "- Delete setelah node tertentu juga efisien jika referensinya sudah ada.\n\n"
-                    "## Kelebihan utama\n"
-                    "Biaya tambah dan hapus bisa O(1) jika posisi node yang ingin dimanipulasi sudah diketahui.\n"
-                    "- Tidak perlu memindahkan seluruh elemen.\n"
-                    "- Struktur lebih fleksibel untuk data dinamis.\n\n"
-                    "## Keterbatasan\n"
-                    "Linked List tidak unggul untuk akses acak.\n"
-                    "- Untuk mengambil elemen ke-i, kita tetap harus traversal dari head.\n"
-                    "- Tiap node juga butuh ruang tambahan untuk menyimpan pointer."
+                    "Cara paling mudah memahami Linked List adalah membandingkannya dengan array. "
+                    "Keduanya sama-sama menyimpan data berurutan, tetapi cara penyimpanannya berbeda.\n\n"
+                    "## Kelebihan Linked List\n"
+                    "Linked List cocok ketika data sering bertambah atau berkurang.\n"
+                    "- Insert di awal bisa O(1).\n"
+                    "- Delete setelah node tertentu juga efisien.\n"
+                    "- Node tidak perlu digeser seperti pada array.\n\n"
+                    "## Kelemahan Linked List\n"
+                    "Linked List tidak secepat array untuk akses posisi tertentu.\n"
+                    "- Tidak ada random access langsung.\n"
+                    "- Untuk mengambil node ke-i, program harus traversal dari `head`.\n"
+                    "- Setiap node butuh memori tambahan untuk pointer `next`.\n\n"
+                    "## Kapan dipakai\n"
+                    "Gunakan Linked List saat perubahan struktur data lebih sering daripada akses indeks.\n"
+                    "- Cocok untuk implementasi Stack atau Queue berbasis node.\n"
+                    "- Cocok saat ukuran data dinamis.\n"
+                    "- Kurang cocok jika program sering mengambil elemen berdasarkan indeks seperti array.\n\n"
+                    "## Hubungannya dengan implementasi C\n"
+                    "Di C, perbedaan ini terasa jelas karena kita sendiri yang mengatur pointer dan memori.\n"
+                    "- Array mudah diakses dengan indeks.\n"
+                    "- Linked List lebih fleksibel saat insert/delete.\n"
+                    "- Programmer harus menjaga alokasi dan pelepasan memori dengan benar."
                 ),
             },
         ],
         "examples": [
             {
-                "title": "Traversal Linked List",
+                "title": "Traversal Linked List dalam C",
                 "description": (
-                    "Traversal dilakukan mulai dari head lalu berpindah ke node berikutnya "
-                    "sampai mencapai null."
+                    "Traversal dilakukan dari `head` sampai pointer `current` bernilai `NULL`."
                 ),
                 "code": (
-                    "current = head\n"
-                    "while current is not None:\n"
-                    "    print(current.value)\n"
-                    "    current = current.next"
+                    "struct Node *current = head;\n"
+                    "while (current != NULL) {\n"
+                    "    printf(\"%d\\n\", current->data);\n"
+                    "    current = current->next;\n"
+                    "}"
                 ),
             },
             {
-                "title": "Insert di awal",
+                "title": "Insert node di awal list",
                 "description": (
-                    "Node baru cukup diarahkan ke head lama, lalu head dipindahkan ke node baru."
+                    "Node baru dialokasikan dengan `malloc`, lalu disambungkan ke `head` lama."
                 ),
                 "code": (
-                    "new_node.next = head\n"
-                    "head = new_node"
+                    "struct Node *new_node = malloc(sizeof(struct Node));\n"
+                    "if (new_node != NULL) {\n"
+                    "    new_node->data = value;\n"
+                    "    new_node->next = head;\n"
+                    "    head = new_node;\n"
+                    "}"
                 ),
             },
         ],
         "summary": (
-            "Linked List menekankan hubungan antar node melalui pointer/referensi. "
-            "Kekuatan utamanya ada pada fleksibilitas insert dan delete, sedangkan "
-            "kelemahannya ada pada akses acak yang tidak secepat array."
+            "Implementasi Linked List di bahasa C sangat bergantung pada `struct`, "
+            "pointer, `malloc`, dan `free`. Kelebihannya ada pada operasi insert/delete "
+            "yang fleksibel, sementara akses ke posisi tertentu tetap memerlukan traversal."
         ),
         "adaptive_focus": {
-            "high": "Fokus pada hubungan antar node, pointer head, dan alur traversal langkah demi langkah.",
-            "medium": "Perkuat pemahaman manipulasi pointer saat insert dan delete.",
-            "low": "Coba kasus lanjutan seperti reverse list dan detect cycle.",
+            "high": "Fokus pada hubungan `head`, `next`, dan cara pointer berpindah saat traversal di C.",
+            "medium": "Perkuat latihan insert/delete sambil membiasakan diri mengecek hasil `malloc`.",
+            "low": "Lanjutkan ke operasi lanjutan seperti reverse list, delete tail, dan deteksi cycle di C.",
         },
         "exercises": [
             {
-                "question": "Mengapa operasi insert di awal Linked List dapat dilakukan dalam O(1)?",
+                "question": "Dalam implementasi Linked List di bahasa C, mengapa insert di awal dapat dilakukan dalam O(1)?",
                 "reference_answer": (
-                    "Karena kita hanya perlu membuat node baru menunjuk ke head lama lalu "
-                    "memindahkan head ke node baru tanpa menggeser elemen lain."
+                    "Karena program hanya perlu mengatur `new_node->next` ke `head` lama "
+                    "lalu memindahkan `head` ke node baru tanpa menelusuri seluruh list."
                 ),
-                "keywords": ["head", "node baru", "tanpa menggeser", "o(1)"],
+                "keywords": ["head", "new_node", "next", "o(1)", "pointer"],
                 "explanation": (
-                    "Insert di awal hanya memodifikasi pointer head dan next pada node baru, "
-                    "sehingga jumlah langkahnya konstan."
+                    "Jumlah langkahnya konstan karena hanya ada beberapa perubahan pointer "
+                    "dan tidak ada elemen yang digeser seperti pada array."
                 ),
             },
             {
-                "question": "Apa kelemahan utama Linked List dibanding array saat mengakses elemen ke-i?",
+                "question": "Pada Linked List di bahasa C, mengapa mengakses node ke-i tetap O(n)?",
                 "reference_answer": (
-                    "Linked List tidak mendukung akses acak langsung sehingga harus traversal "
-                    "dari head sampai elemen ke-i, biasanya O(n)."
+                    "Karena C harus menelusuri pointer dari `head` ke node berikutnya satu per satu "
+                    "sampai mencapai posisi ke-i dan tidak bisa langsung melompat seperti array."
                 ),
-                "keywords": ["traversal", "head", "o(n)", "akses acak"],
+                "keywords": ["traversal", "head", "pointer", "o(n)", "array"],
                 "explanation": (
-                    "Array dapat langsung menghitung alamat elemen, sedangkan Linked List harus "
-                    "menelusuri node satu per satu dari head."
+                    "Setiap node hanya mengetahui alamat node sesudahnya, jadi akses posisi tertentu "
+                    "harus dilakukan secara berurutan."
                 ),
             },
         ],
@@ -105,97 +121,101 @@ TOPIC_CONTENT_BLUEPRINTS = {
     "Stack": {
         "materials": [
             {
-                "title": "Prinsip LIFO",
+                "title": "Prinsip LIFO dalam implementasi C",
                 "content": (
-                    "Stack mengikuti prinsip Last In First Out. Elemen terakhir yang masuk "
-                    "akan menjadi elemen pertama yang keluar.\n\n"
-                    "## Cara membayangkan Stack\n"
-                    "Bayangkan tumpukan piring di dapur. Piring yang terakhir kamu taruh di atas adalah piring pertama yang akan kamu ambil lagi.\n"
-                    "- Elemen baru selalu masuk ke bagian atas atau top.\n"
-                    "- Elemen yang keluar juga selalu diambil dari top.\n\n"
-                    "## Mengapa urutan ini penting\n"
-                    "Banyak masalah komputasi butuh memproses hal yang paling baru terlebih dahulu.\n"
-                    "- Undo pada editor teks bekerja dengan pola ini.\n"
-                    "- Pemanggilan fungsi rekursif juga disimpan dalam call stack.\n\n"
-                    "## Istilah penting\n"
-                    "- Top adalah posisi elemen paling atas.\n"
-                    "- LIFO berarti Last In, First Out."
+                    "Stack mengikuti prinsip Last In First Out. Pada bahasa C, Stack sering "
+                    "diimplementasikan dengan array dan variabel `top`.\n\n"
+                    "## Makna `top`\n"
+                    "Variabel `top` menandai indeks elemen paling atas pada Stack.\n"
+                    "- Saat Stack kosong, `top` sering bernilai `-1`.\n"
+                    "- Saat `push`, `top` dinaikkan lalu nilai baru disimpan.\n"
+                    "- Saat `pop`, nilai pada `top` diambil lalu `top` diturunkan.\n\n"
+                    "## Kapan Stack berguna\n"
+                    "Stack banyak dipakai untuk kebutuhan yang memproses data terbaru lebih dulu.\n"
+                    "- Undo sederhana.\n"
+                    "- Evaluasi ekspresi.\n"
+                    "- Penyimpanan state pemanggilan fungsi secara konseptual."
                 ),
             },
             {
-                "title": "Operasi utama Stack",
+                "title": "Push, pop, dan penanganan error",
                 "content": (
-                    "Operasi inti Stack adalah push, pop, dan peek.\n\n"
+                    "Di C, operasi Stack harus disertai pengecekan batas agar tidak terjadi "
+                    "overflow atau underflow.\n\n"
                     "## Push\n"
-                    "Push menambahkan elemen baru ke posisi paling atas.\n"
-                    "- Setelah push, top berpindah ke elemen yang baru dimasukkan.\n\n"
+                    "Push menambah data ke atas Stack selama masih ada ruang.\n"
+                    "- Cek `top == MAX - 1` untuk mendeteksi overflow.\n"
+                    "- Jika aman, naikkan `top` lalu isi elemen baru.\n\n"
                     "## Pop\n"
-                    "Pop menghapus elemen paling atas dari Stack.\n"
-                    "- Operasi ini mengembalikan elemen yang dihapus.\n"
-                    "- Jika Stack kosong, pop tidak bisa dilakukan tanpa pengecekan.\n\n"
-                    "## Peek atau Top\n"
-                    "Peek melihat elemen paling atas tanpa menghapusnya.\n"
-                    "- Cocok saat kita hanya ingin memeriksa isi teratas.\n"
-                    "- Isi Stack tetap sama setelah operasi ini."
+                    "Pop mengambil elemen teratas selama Stack tidak kosong.\n"
+                    "- Cek `top == -1` untuk mendeteksi underflow.\n"
+                    "- Setelah nilai diambil, `top` dikurangi.\n\n"
+                    "## Mengapa pengecekan penting\n"
+                    "C tidak otomatis melindungi akses memori di luar batas array.\n"
+                    "- Tanpa validasi, data bisa rusak.\n"
+                    "- Program juga dapat menghasilkan perilaku tak terduga."
                 ),
             },
         ],
         "examples": [
             {
-                "title": "Undo action",
+                "title": "Fungsi push pada Stack array",
                 "description": (
-                    "Fitur undo pada editor biasanya menyimpan aksi ke Stack. Aksi terakhir "
-                    "bisa dibatalkan lebih dulu."
+                    "Contoh dasar `push` di C dengan pengecekan overflow sebelum memasukkan data."
                 ),
                 "code": (
-                    "history.push(action)\n"
-                    "last_action = history.pop()"
+                    "if (top == MAX - 1) {\n"
+                    "    printf(\"Stack overflow\\n\");\n"
+                    "} else {\n"
+                    "    stack[++top] = value;\n"
+                    "}"
                 ),
             },
             {
-                "title": "Validasi tanda kurung",
+                "title": "Fungsi pop pada Stack array",
                 "description": (
-                    "Setiap tanda buka didorong ke Stack, lalu dicocokkan saat tanda tutup muncul."
+                    "Elemen teratas diambil hanya jika Stack tidak kosong."
                 ),
                 "code": (
-                    "for char in text:\n"
-                    "    if char in '([{': stack.append(char)\n"
-                    "    elif char in ')]}': stack.pop()"
+                    "if (top == -1) {\n"
+                    "    printf(\"Stack underflow\\n\");\n"
+                    "} else {\n"
+                    "    int item = stack[top--];\n"
+                    "    printf(\"%d\\n\", item);\n"
+                    "}"
                 ),
             },
         ],
         "summary": (
-            "Stack ideal untuk masalah yang membutuhkan urutan balik, seperti undo, "
-            "pemrosesan ekspresi, dan traversal rekursif."
+            "Pada bahasa C, Stack paling mudah dipahami lewat array dan variabel `top`. "
+            "Kunci utamanya adalah menjaga urutan LIFO dan selalu mengecek overflow serta underflow."
         ),
         "adaptive_focus": {
-            "high": "Ulangi konsep elemen top dan bedakan jelas antara push, pop, dan peek.",
-            "medium": "Latih penerapan Stack pada validasi simbol dan undo history.",
-            "low": "Eksplorasi implementasi Stack berbasis array dan linked list.",
+            "high": "Bedakan dengan jelas kapan `top` berubah pada `push` dan kapan berubah pada `pop` di C.",
+            "medium": "Latih implementasi Stack array lengkap dengan fungsi `isEmpty` dan `isFull`.",
+            "low": "Eksplorasi Stack berbasis Linked List di C agar tidak dibatasi ukuran array tetap.",
         },
         "exercises": [
             {
-                "question": "Mengapa fungsi undo sangat cocok diimplementasikan dengan Stack?",
+                "question": "Dalam program C, mengapa fitur undo sederhana cocok memakai Stack?",
                 "reference_answer": (
-                    "Karena aksi terakhir harus dibatalkan lebih dulu sehingga sesuai dengan "
-                    "prinsip LIFO pada Stack."
+                    "Karena aksi terakhir harus dibatalkan lebih dulu, sehingga pola kerjanya "
+                    "sesuai prinsip LIFO pada Stack."
                 ),
-                "keywords": ["aksi terakhir", "lifo", "undo", "stack"],
+                "keywords": ["undo", "lifo", "aksi terakhir", "stack", "c"],
                 "explanation": (
-                    "Undo selalu memproses aksi paling baru terlebih dahulu, sama seperti pop "
-                    "mengambil elemen paling atas pada Stack."
+                    "Saat user meminta undo, program cukup mengambil aksi paling baru dari puncak Stack."
                 ),
             },
             {
-                "question": "Sebutkan perbedaan push, pop, dan peek pada Stack.",
+                "question": "Pada implementasi Stack array di bahasa C, apa perbedaan efek `push`, `pop`, dan `peek` terhadap variabel `top`?",
                 "reference_answer": (
-                    "Push menambah elemen ke atas Stack, pop menghapus elemen teratas, "
-                    "dan peek melihat elemen teratas tanpa menghapusnya."
+                    "`Push` menaikkan `top` lalu menyimpan data, `pop` mengambil data lalu "
+                    "menurunkan `top`, sedangkan `peek` hanya membaca elemen teratas tanpa mengubah `top`."
                 ),
-                "keywords": ["push", "pop", "peek", "teratas"],
+                "keywords": ["push", "pop", "peek", "top", "array"],
                 "explanation": (
-                    "Ketiga operasi bekerja pada elemen top, tetapi efeknya terhadap isi "
-                    "Stack berbeda."
+                    "Memahami perubahan `top` sangat penting karena indeks inilah yang menentukan elemen aktif pada Stack."
                 ),
             },
         ],
@@ -203,90 +223,99 @@ TOPIC_CONTENT_BLUEPRINTS = {
     "Queue": {
         "materials": [
             {
-                "title": "Prinsip FIFO",
+                "title": "Prinsip FIFO dalam C",
                 "content": (
-                    "Queue menggunakan prinsip First In First Out. Elemen yang masuk lebih dulu "
-                    "akan keluar lebih dulu.\n\n"
-                    "## Cara membayangkan Queue\n"
-                    "Bayangkan antrean di kasir. Orang yang datang lebih dulu berdiri di depan dan dilayani terlebih dahulu.\n"
-                    "- Elemen baru masuk dari belakang.\n"
-                    "- Elemen lama keluar dari depan.\n\n"
-                    "## Mengapa Queue berbeda dari Stack\n"
-                    "Pada Stack, elemen terakhir justru keluar lebih dulu. Queue kebalikannya: urutan kedatangan harus dijaga.\n"
-                    "- Queue cocok untuk sistem antrean.\n"
-                    "- Queue sering dipakai saat keadilan urutan proses penting."
+                    "Queue mengikuti prinsip First In First Out. Pada bahasa C, Queue sering "
+                    "diimplementasikan dengan array serta dua indeks: `front` dan `rear`.\n\n"
+                    "## Peran `front` dan `rear`\n"
+                    "Dua indeks ini menjaga urutan elemen yang masuk dan keluar.\n"
+                    "- `front` menunjuk elemen paling depan yang siap diambil.\n"
+                    "- `rear` menunjuk posisi elemen paling belakang.\n"
+                    "- Enqueue menambah data dari sisi belakang, dequeue mengambil dari sisi depan.\n\n"
+                    "## Kasus penggunaan\n"
+                    "Queue cocok saat urutan kedatangan harus dipertahankan.\n"
+                    "- Antrean pelanggan.\n"
+                    "- Buffer tugas.\n"
+                    "- Simulasi proses yang dilayani bergiliran."
                 ),
             },
             {
-                "title": "Front dan Rear",
+                "title": "Circular Queue dan validasi batas",
                 "content": (
-                    "Queue punya dua ujung penting: front dan rear.\n\n"
-                    "## Front\n"
-                    "Front menunjuk elemen paling depan yang siap diambil.\n"
-                    "- Dequeue selalu mengambil elemen dari front.\n\n"
-                    "## Rear atau Tail\n"
-                    "Rear adalah sisi belakang tempat elemen baru dimasukkan.\n"
-                    "- Enqueue selalu menambah elemen ke rear.\n\n"
-                    "## Alur kerja dasar\n"
-                    "- Enqueue: tambah elemen di belakang.\n"
-                    "- Dequeue: keluarkan elemen di depan.\n"
-                    "- Pola ini menjaga FIFO tetap berjalan."
+                    "Jika Queue array biasa terus melakukan dequeue, ruang kosong di depan "
+                    "bisa terbuang. Karena itu implementasi C sering memakai Circular Queue.\n\n"
+                    "## Ide Circular Queue\n"
+                    "Saat `rear` mencapai akhir array, indeks bisa kembali ke awal dengan operasi modulo.\n"
+                    "- Ruang array dipakai ulang dengan lebih efisien.\n"
+                    "- Cocok untuk buffer berukuran tetap.\n\n"
+                    "## Pengecekan penuh dan kosong\n"
+                    "Queue tetap harus memeriksa kondisi penuh dan kosong.\n"
+                    "- Empty sering ditandai `front == -1`.\n"
+                    "- Full pada Circular Queue bisa dicek dengan `(rear + 1) % MAX == front`.\n\n"
+                    "## Mengapa penting di C\n"
+                    "Tanpa validasi, enqueue atau dequeue dapat mengakses indeks yang salah dan merusak data."
                 ),
             },
         ],
         "examples": [
             {
-                "title": "Antrian pelanggan",
+                "title": "Enqueue pada Circular Queue",
                 "description": (
-                    "Pelanggan yang datang lebih awal dilayani lebih dulu, sesuai konsep Queue."
+                    "Data baru ditambahkan di `rear` dan indeks digeser memakai modulo."
                 ),
                 "code": (
-                    "queue.enqueue(customer)\n"
-                    "next_customer = queue.dequeue()"
+                    "rear = (rear + 1) % MAX;\n"
+                    "queue[rear] = value;\n"
+                    "if (front == -1) {\n"
+                    "    front = 0;\n"
+                    "}"
                 ),
             },
             {
-                "title": "Job scheduling",
+                "title": "Dequeue pada Circular Queue",
                 "description": (
-                    "Sistem antrean tugas memproses pekerjaan berdasarkan urutan kedatangan."
+                    "Elemen depan diambil lalu `front` digeser ke posisi berikutnya."
                 ),
                 "code": (
-                    "jobs.append(task)\n"
-                    "current = jobs.pop(0)"
+                    "int item = queue[front];\n"
+                    "if (front == rear) {\n"
+                    "    front = rear = -1;\n"
+                    "} else {\n"
+                    "    front = (front + 1) % MAX;\n"
+                    "}"
                 ),
             },
         ],
         "summary": (
-            "Queue cocok untuk sistem antrean, scheduling, dan breadth-first traversal "
-            "yang memerlukan urutan kedatangan."
+            "Queue di bahasa C berfokus pada pengelolaan indeks `front` dan `rear`. "
+            "Circular Queue membantu memakai array secara efisien sambil tetap menjaga prinsip FIFO."
         ),
         "adaptive_focus": {
-            "high": "Perjelas perbedaan front dan rear serta urutan enqueue-dequeue.",
-            "medium": "Latih contoh dunia nyata seperti antrean layanan dan BFS.",
-            "low": "Pelajari variasi queue seperti circular queue dan priority queue.",
+            "high": "Perjelas kapan `front` berubah, kapan `rear` berubah, dan apa arti Queue kosong di C.",
+            "medium": "Latih enqueue/dequeue pada Circular Queue agar nyaman dengan operasi modulo.",
+            "low": "Lanjutkan ke variasi Queue lain seperti deque dan priority queue setelah dasar FIFO kuat.",
         },
         "exercises": [
             {
-                "question": "Mengapa Queue cocok untuk simulasi antrean pelanggan?",
+                "question": "Dalam implementasi Queue di bahasa C, mengapa antrean pelanggan cocok dimodelkan dengan FIFO?",
                 "reference_answer": (
                     "Karena pelanggan yang datang lebih dulu harus dilayani lebih dulu, "
-                    "sesuai prinsip FIFO pada Queue."
+                    "sama seperti Queue yang mengeluarkan elemen dari `front` sesuai urutan kedatangan."
                 ),
-                "keywords": ["fifo", "lebih dulu", "antrian", "pelanggan"],
+                "keywords": ["fifo", "front", "pelanggan", "urutan", "queue"],
                 "explanation": (
-                    "Queue mempertahankan urutan kedatangan sehingga perilakunya sesuai "
-                    "dengan antrean nyata."
+                    "FIFO menjaga keadilan urutan layanan sehingga perilakunya sesuai dengan antrean nyata."
                 ),
             },
             {
-                "question": "Apa perbedaan enqueue dan dequeue?",
+                "question": "Pada Circular Queue di bahasa C, apa perbedaan tugas `enqueue` dan `dequeue` terhadap indeks `rear` dan `front`?",
                 "reference_answer": (
-                    "Enqueue menambah elemen di rear/tail, sedangkan dequeue menghapus "
-                    "elemen dari front/head."
+                    "`Enqueue` menaruh data baru di `rear` lalu memajukan `rear`, sedangkan "
+                    "`dequeue` mengambil data dari `front` lalu memajukan `front`."
                 ),
-                "keywords": ["enqueue", "dequeue", "rear", "front"],
+                "keywords": ["enqueue", "dequeue", "rear", "front", "circular queue"],
                 "explanation": (
-                    "Dua operasi utama Queue selalu bekerja pada dua sisi yang berbeda."
+                    "Kedua operasi bekerja di sisi berbeda agar urutan data yang keluar tetap sama dengan urutan masuknya."
                 ),
             },
         ],
@@ -294,95 +323,102 @@ TOPIC_CONTENT_BLUEPRINTS = {
     "Tree": {
         "materials": [
             {
-                "title": "Struktur hierarkis",
+                "title": "Struktur Tree dengan `struct` dan pointer",
                 "content": (
-                    "Tree menyimpan data secara hierarkis dengan konsep root, parent, child, "
-                    "dan leaf.\n\n"
-                    "## Bagian utama Tree\n"
-                    "Tree tidak berjalan lurus seperti Linked List. Struktur ini bercabang.\n"
+                    "Dalam bahasa C, Tree biasanya direpresentasikan dengan `struct` node "
+                    "yang memiliki data serta pointer ke child kiri dan kanan.\n\n"
+                    "## Komponen penting\n"
+                    "Binary Tree paling dasar memiliki tiga bagian dalam satu node.\n"
+                    "- `data` menyimpan nilai.\n"
+                    "- `left` menunjuk child kiri.\n"
+                    "- `right` menunjuk child kanan.\n\n"
+                    "## Hubungan hierarkis\n"
+                    "Berbeda dari Linked List, satu node Tree dapat bercabang ke lebih dari satu arah.\n"
                     "- Root adalah node paling atas.\n"
-                    "- Parent adalah node yang punya anak.\n"
-                    "- Child adalah node turunan.\n"
-                    "- Leaf adalah node yang tidak punya child.\n\n"
-                    "## Kapan Tree dipakai\n"
-                    "Tree cocok saat data punya hubungan bertingkat.\n"
-                    "- Struktur folder komputer.\n"
-                    "- Pohon keputusan.\n"
-                    "- Struktur DOM pada halaman web."
+                    "- Parent adalah node yang punya child.\n"
+                    "- Leaf adalah node tanpa child.\n\n"
+                    "## Dampak ke implementasi C\n"
+                    "Karena ada lebih dari satu pointer, kita harus teliti saat membuat, menghubungkan, dan membebaskan node."
                 ),
             },
             {
-                "title": "Traversal Tree",
+                "title": "Traversal rekursif pada Tree di C",
                 "content": (
-                    "Traversal adalah proses mengunjungi node dalam urutan tertentu.\n\n"
+                    "Traversal Tree di C sering ditulis dengan fungsi rekursif karena bentuk "
+                    "pohon sangat cocok dengan pola pemanggilan berulang.\n\n"
                     "## Pre-order\n"
-                    "Kunjungi root terlebih dahulu, lalu anak kiri, kemudian anak kanan.\n"
-                    "- Cocok saat root harus diproses lebih dulu.\n\n"
+                    "Kunjungi root lebih dulu, lalu subtree kiri, kemudian subtree kanan.\n"
+                    "- Cocok ketika node saat ini harus diproses sebelum child.\n\n"
                     "## In-order\n"
-                    "Kunjungi anak kiri, lalu root, kemudian anak kanan.\n"
-                    "- Pada Binary Search Tree, traversal ini memberi urutan menaik.\n\n"
+                    "Kunjungi kiri, root, lalu kanan.\n"
+                    "- Pada Binary Search Tree, hasilnya akan terurut menaik.\n\n"
                     "## Post-order\n"
-                    "Kunjungi anak kiri, lalu anak kanan, dan root paling akhir.\n"
-                    "- Cocok saat child harus selesai diproses sebelum parent."
+                    "Kunjungi kiri, kanan, lalu root.\n"
+                    "- Berguna saat child harus selesai diproses sebelum parent, misalnya saat membebaskan node."
                 ),
             },
         ],
         "examples": [
             {
-                "title": "Representasi folder",
+                "title": "Definisi node Binary Tree di C",
                 "description": (
-                    "Struktur folder komputer adalah contoh Tree karena setiap folder dapat "
-                    "berisi subfolder."
+                    "Setiap node menyimpan data dan dua pointer child."
                 ),
                 "code": (
-                    "Root\n"
-                    "├── Documents\n"
-                    "└── Photos"
+                    "struct TreeNode {\n"
+                    "    int data;\n"
+                    "    struct TreeNode *left;\n"
+                    "    struct TreeNode *right;\n"
+                    "};"
                 ),
             },
             {
-                "title": "Pre-order traversal",
+                "title": "Pre-order traversal rekursif",
                 "description": (
-                    "Kunjungi root terlebih dahulu, lalu subtree kiri, kemudian subtree kanan."
+                    "Fungsi ini memproses root lebih dulu sebelum turun ke child kiri dan kanan."
                 ),
                 "code": (
-                    "visit(node)\n"
-                    "preorder(node.left)\n"
-                    "preorder(node.right)"
+                    "void preorder(struct TreeNode *node) {\n"
+                    "    if (node == NULL) {\n"
+                    "        return;\n"
+                    "    }\n"
+                    "    printf(\"%d \", node->data);\n"
+                    "    preorder(node->left);\n"
+                    "    preorder(node->right);\n"
+                    "}"
                 ),
             },
         ],
         "summary": (
-            "Tree membantu merepresentasikan data hierarkis dan menjadi dasar banyak "
-            "algoritma pencarian, parsing, serta indeks."
+            "Tree di bahasa C mengandalkan `struct` dengan beberapa pointer child. "
+            "Traversal rekursif membantu menelusuri node sesuai urutan pre-order, in-order, atau post-order."
         ),
         "adaptive_focus": {
-            "high": "Perkuat pemahaman root, parent-child, dan urutan traversal dasar.",
-            "medium": "Bandingkan pre-order, in-order, dan post-order lewat contoh kecil.",
-            "low": "Mulai pelajari binary search tree dan heap sebagai pengembangan Tree.",
+            "high": "Mulai dari memahami root, child, dan arti pointer `left` serta `right` pada node C.",
+            "medium": "Bandingkan hasil pre-order, in-order, dan post-order memakai contoh Binary Tree kecil.",
+            "low": "Lanjutkan ke Binary Search Tree, heap, dan operasi insert/search berbasis Tree di C.",
         },
         "exercises": [
             {
-                "question": "Apa perbedaan utama struktur Tree dengan Linked List?",
+                "question": "Dalam implementasi Tree di bahasa C, apa perbedaan utama struktur node Tree dibanding node Linked List?",
                 "reference_answer": (
-                    "Tree bersifat hierarkis dan satu node dapat memiliki beberapa child, "
-                    "sedangkan Linked List linear dan tiap node biasanya menunjuk ke satu node berikutnya."
+                    "Node Tree biasanya punya lebih dari satu pointer child seperti `left` dan `right`, "
+                    "sedangkan node Linked List umumnya hanya punya satu pointer `next` ke node berikutnya."
                 ),
-                "keywords": ["hierarkis", "child", "linear", "node berikutnya"],
+                "keywords": ["left", "right", "next", "tree", "linked list"],
                 "explanation": (
-                    "Perbedaan utama ada pada hubungan antar node: Tree bercabang, "
-                    "Linked List berurutan linear."
+                    "Perbedaan jumlah pointer ini membuat Tree bersifat hierarkis dan bercabang, bukan linear."
                 ),
             },
             {
-                "question": "Jelaskan urutan kunjungan pada pre-order traversal.",
+                "question": "Pada fungsi pre-order traversal di bahasa C, urutan kunjungan node seperti apa yang harus terjadi?",
                 "reference_answer": (
-                    "Pre-order mengunjungi root terlebih dahulu, lalu subtree kiri, "
+                    "Program harus memproses root terlebih dahulu, lalu subtree kiri, "
                     "kemudian subtree kanan."
                 ),
-                "keywords": ["root", "subtree kiri", "subtree kanan", "pre-order"],
+                "keywords": ["pre-order", "root", "subtree kiri", "subtree kanan", "c"],
                 "explanation": (
-                    "Pre-order selalu mendahulukan node saat ini sebelum turun ke anak-anaknya."
+                    "Pre-order selalu mendahulukan node saat ini sebelum memanggil fungsi rekursif ke anak-anaknya."
                 ),
             },
         ],
@@ -390,91 +426,97 @@ TOPIC_CONTENT_BLUEPRINTS = {
     "Graph": {
         "materials": [
             {
-                "title": "Node dan edge",
+                "title": "Graph dalam representasi C",
                 "content": (
-                    "Graph terdiri dari vertex atau node dan edge atau sisi penghubung.\n\n"
+                    "Graph terdiri dari vertex dan edge. Dalam bahasa C, Graph bisa direpresentasikan "
+                    "dengan adjacency list atau adjacency matrix tergantung kebutuhan.\n\n"
                     "## Komponen utama\n"
-                    "Node mewakili entitas, sedangkan edge mewakili hubungan antar entitas.\n"
-                    "- Node bisa berupa orang, kota, atau halaman web.\n"
-                    "- Edge bisa berarti pertemanan, jalur, atau tautan.\n\n"
+                    "Vertex mewakili entitas dan edge mewakili hubungan.\n"
+                    "- Vertex bisa berupa kota, user, atau simpul jaringan.\n"
+                    "- Edge bisa berupa jalan, pertemanan, atau koneksi sistem.\n\n"
                     "## Mengapa Graph penting\n"
-                    "Graph sangat cocok untuk hubungan banyak-ke-banyak yang sulit direpresentasikan dengan struktur linear.\n"
+                    "Banyak masalah nyata punya hubungan banyak-ke-banyak yang tidak cocok jika dipaksa ke struktur linear.\n"
+                    "- Peta rute.\n"
                     "- Jaringan sosial.\n"
-                    "- Peta jalan.\n"
-                    "- Relasi antar dependensi sistem."
+                    "- Relasi dependensi modul."
                 ),
             },
             {
-                "title": "Representasi Graph",
+                "title": "Adjacency list dan adjacency matrix di C",
                 "content": (
-                    "Graph dapat direpresentasikan dengan adjacency list atau adjacency matrix.\n\n"
-                    "## Adjacency List\n"
-                    "Setiap node menyimpan daftar tetangga yang terhubung langsung dengannya.\n"
-                    "- Hemat memori untuk graph yang jarang edge.\n"
-                    "- Nyaman untuk traversal seperti BFS dan DFS.\n\n"
-                    "## Adjacency Matrix\n"
-                    "Hubungan antar node disimpan dalam tabel dua dimensi.\n"
-                    "- Mudah mengecek apakah dua node terhubung.\n"
-                    "- Kurang hemat untuk graph besar yang sparse."
+                    "Pilihan representasi Graph di C berpengaruh langsung pada memori dan kemudahan operasi.\n\n"
+                    "## Adjacency list\n"
+                    "Setiap vertex menyimpan daftar tetangga yang terhubung.\n"
+                    "- Lebih hemat memori untuk graph sparse.\n"
+                    "- Nyaman dipakai untuk BFS dan DFS.\n\n"
+                    "## Adjacency matrix\n"
+                    "Koneksi disimpan dalam array dua dimensi.\n"
+                    "- Mudah mengecek apakah dua vertex terhubung.\n"
+                    "- Memori yang dipakai tetap besar walaupun edge sedikit.\n\n"
+                    "## Implikasi implementasi C\n"
+                    "Adjacency list sering membutuhkan `struct` node tambahan, sedangkan matrix cukup memakai array 2D."
                 ),
             },
         ],
         "examples": [
             {
-                "title": "Jaringan sosial",
+                "title": "Adjacency matrix sederhana",
                 "description": (
-                    "Pengguna sebagai node dan hubungan pertemanan sebagai edge."
+                    "Contoh Graph kecil di C dengan matriks 4x4 untuk menyimpan koneksi antarsimpul."
                 ),
                 "code": (
-                    "A -- B\n"
-                    "|    |\n"
-                    "C -- D"
+                    "int graph[4][4] = {\n"
+                    "    {0, 1, 1, 0},\n"
+                    "    {1, 0, 0, 1},\n"
+                    "    {1, 0, 0, 1},\n"
+                    "    {0, 1, 1, 0}\n"
+                    "};"
                 ),
             },
             {
-                "title": "Adjacency list",
+                "title": "Iterasi tetangga dari adjacency matrix",
                 "description": (
-                    "Setiap node menyimpan daftar node yang terhubung dengannya."
+                    "Loop ini memeriksa semua vertex yang terhubung langsung dengan vertex `v`."
                 ),
                 "code": (
-                    "graph = {\n"
-                    "  'A': ['B', 'C'],\n"
-                    "  'B': ['A', 'D']\n"
+                    "for (int i = 0; i < vertices; i++) {\n"
+                    "    if (graph[v][i] == 1) {\n"
+                    "        printf(\"%d \", i);\n"
+                    "    }\n"
                     "}"
                 ),
             },
         ],
         "summary": (
-            "Graph berguna untuk memodelkan jaringan, rute, dependensi, dan relasi kompleks. "
-            "Traversal umumnya menggunakan BFS atau DFS."
+            "Graph di bahasa C dapat dibuat dengan adjacency list maupun adjacency matrix. "
+            "Pemilihan representasi harus menyesuaikan kepadatan edge, kebutuhan memori, dan jenis algoritma traversal."
         ),
         "adaptive_focus": {
-            "high": "Mulai dari konsep vertex, edge, dan adjacency list sebelum masuk traversal.",
-            "medium": "Latih BFS dan DFS dengan graph kecil agar pola penelusuran terasa jelas.",
-            "low": "Lanjutkan ke shortest path dan weighted graph setelah traversal dasar dikuasai.",
+            "high": "Mulai dari memahami arti vertex, edge, dan bagaimana array 2D menyimpan koneksi di C.",
+            "medium": "Latih membaca adjacency matrix lalu bandingkan dengan adjacency list untuk graph kecil.",
+            "low": "Lanjutkan ke BFS, DFS, dan shortest path setelah representasi Graph di C terasa nyaman.",
         },
         "exercises": [
             {
-                "question": "Mengapa Graph cocok untuk memodelkan jaringan sosial?",
+                "question": "Dalam model Graph di bahasa C, mengapa jaringan sosial mudah direpresentasikan dengan vertex dan edge?",
                 "reference_answer": (
-                    "Karena setiap pengguna dapat direpresentasikan sebagai node dan hubungan "
-                    "antar pengguna sebagai edge."
+                    "Karena setiap pengguna bisa menjadi vertex dan setiap hubungan pertemanan "
+                    "atau follow bisa menjadi edge yang menghubungkan dua vertex."
                 ),
-                "keywords": ["node", "edge", "hubungan", "pengguna"],
+                "keywords": ["vertex", "edge", "pengguna", "hubungan", "graph"],
                 "explanation": (
-                    "Graph sangat kuat untuk merepresentasikan koneksi antarelemen yang kompleks."
+                    "Graph memang dirancang untuk menggambarkan hubungan antarelemen yang saling terhubung secara kompleks."
                 ),
             },
             {
-                "question": "Apa keuntungan adjacency list dibanding adjacency matrix pada graph yang jarang edge?",
+                "question": "Pada implementasi Graph di bahasa C, apa keuntungan adjacency list dibanding adjacency matrix untuk graph yang jarang edge?",
                 "reference_answer": (
-                    "Adjacency list lebih hemat memori karena hanya menyimpan edge yang ada, "
-                    "sementara adjacency matrix menyimpan seluruh kemungkinan koneksi."
+                    "Adjacency list lebih hemat memori karena hanya menyimpan edge yang benar-benar ada, "
+                    "sedangkan adjacency matrix tetap menyediakan ruang untuk semua pasangan vertex."
                 ),
-                "keywords": ["hemat memori", "edge yang ada", "adjacency list", "matrix"],
+                "keywords": ["adjacency list", "adjacency matrix", "hemat memori", "sparse", "edge"],
                 "explanation": (
-                    "Pada graph sparse, adjacency list jauh lebih efisien karena tidak "
-                    "menyimpan banyak nilai kosong."
+                    "Untuk graph sparse, banyak sel pada matrix akan bernilai nol sehingga adjacency list biasanya lebih efisien."
                 ),
             },
         ],
@@ -482,93 +524,98 @@ TOPIC_CONTENT_BLUEPRINTS = {
     "Sorting Algorithms": {
         "materials": [
             {
-                "title": "Tujuan sorting",
+                "title": "Tujuan sorting dalam program C",
                 "content": (
-                    "Sorting adalah proses mengurutkan data agar lebih mudah dibaca dan diproses.\n\n"
-                    "## Mengapa data perlu diurutkan\n"
-                    "Data yang sudah rapi akan lebih mudah dicari, dibandingkan, dan dianalisis.\n"
-                    "- Mempercepat pencarian tertentu.\n"
-                    "- Membantu menampilkan laporan secara teratur.\n"
-                    "- Memudahkan proses algoritma lanjutan.\n\n"
-                    "## Contoh urutan\n"
-                    "Data bisa diurutkan menaik, menurun, berdasarkan nama, tanggal, atau prioritas."
+                    "Sorting adalah proses mengurutkan data agar lebih mudah dicari, dibandingkan, "
+                    "dan diproses. Dalam bahasa C, sorting biasanya diterapkan pada array.\n\n"
+                    "## Mengapa array perlu diurutkan\n"
+                    "Data yang teratur membuat banyak operasi lanjutan menjadi lebih sederhana.\n"
+                    "- Pencarian tertentu bisa lebih cepat.\n"
+                    "- Laporan lebih mudah dibaca.\n"
+                    "- Data lebih mudah diproses tahap berikutnya.\n\n"
+                    "## Bentuk data umum\n"
+                    "Contoh yang sering diurutkan di C adalah array bilangan, array `struct`, atau data hasil input pengguna."
                 ),
             },
             {
-                "title": "Perbandingan algoritma sorting",
+                "title": "Membandingkan Bubble Sort dan Merge Sort di C",
                 "content": (
-                    "Setiap algoritma sorting punya kekuatan dan kelemahan yang berbeda.\n\n"
+                    "Dua algoritma sorting yang sering dipelajari di awal adalah Bubble Sort "
+                    "dan Merge Sort karena pendekatannya sangat berbeda.\n\n"
                     "## Bubble Sort\n"
-                    "Bubble Sort mudah dipahami karena hanya membandingkan elemen bersebelahan.\n"
-                    "- Cocok untuk belajar konsep dasar.\n"
-                    "- Kurang efisien untuk data besar.\n\n"
+                    "Bubble Sort berulang kali membandingkan elemen yang bersebelahan.\n"
+                    "- Mudah diimplementasikan dengan dua loop `for` di C.\n"
+                    "- Kurang efisien untuk data besar karena kompleksitasnya O(n^2).\n\n"
                     "## Merge Sort\n"
-                    "Merge Sort memakai pendekatan divide and conquer.\n"
-                    "- Stabil dan punya performa baik.\n"
-                    "- Butuh ruang tambahan saat proses merge.\n\n"
-                    "## Quick Sort\n"
-                    "Quick Sort sering sangat cepat dalam praktik.\n"
-                    "- Sangat populer untuk banyak kasus nyata.\n"
-                    "- Performanya bisa turun pada kondisi tertentu jika pivot buruk."
+                    "Merge Sort membagi array menjadi bagian kecil lalu menggabungkannya kembali.\n"
+                    "- Performa umumnya O(n log n).\n"
+                    "- Implementasinya lebih kompleks dan sering butuh array bantu.\n\n"
+                    "## Pilihan algoritma\n"
+                    "Tidak semua kasus cocok memakai algoritma yang sama, jadi programmer C harus mempertimbangkan ukuran data dan memori."
                 ),
             },
         ],
         "examples": [
             {
-                "title": "Bubble Sort sederhana",
+                "title": "Bubble Sort sederhana dalam C",
                 "description": (
-                    "Membandingkan pasangan elemen bersebelahan lalu menukarnya bila urutannya salah."
+                    "Dua loop `for` dipakai untuk membandingkan dan menukar elemen yang posisinya salah."
                 ),
                 "code": (
-                    "for i in range(n):\n"
-                    "    for j in range(0, n-i-1):\n"
-                    "        if arr[j] > arr[j+1]:\n"
-                    "            arr[j], arr[j+1] = arr[j+1], arr[j]"
+                    "for (int i = 0; i < n - 1; i++) {\n"
+                    "    for (int j = 0; j < n - i - 1; j++) {\n"
+                    "        if (arr[j] > arr[j + 1]) {\n"
+                    "            int temp = arr[j];\n"
+                    "            arr[j] = arr[j + 1];\n"
+                    "            arr[j + 1] = temp;\n"
+                    "        }\n"
+                    "    }\n"
+                    "}"
                 ),
             },
             {
-                "title": "Merge Sort divide and conquer",
+                "title": "Membagi array pada Merge Sort",
                 "description": (
-                    "Data dibagi menjadi dua bagian, diurutkan secara rekursif, lalu digabungkan kembali."
+                    "Potongan ini menunjukkan langkah awal rekursi sebelum proses merge dilakukan."
                 ),
                 "code": (
-                    "left = merge_sort(arr[:mid])\n"
-                    "right = merge_sort(arr[mid:])\n"
-                    "return merge(left, right)"
+                    "int mid = left + (right - left) / 2;\n"
+                    "merge_sort(arr, left, mid);\n"
+                    "merge_sort(arr, mid + 1, right);\n"
+                    "merge(arr, left, mid, right);"
                 ),
             },
         ],
         "summary": (
-            "Pemilihan algoritma sorting bergantung pada ukuran data, kebutuhan stabilitas, "
-            "dan batasan memori."
+            "Sorting pada bahasa C umumnya berpusat pada array. Bubble Sort cocok untuk belajar logika dasar, "
+            "sedangkan Merge Sort memberi gambaran pendekatan divide and conquer yang lebih efisien."
         ),
         "adaptive_focus": {
-            "high": "Mulai dari konsep pertukaran elemen dan perbandingan sederhana pada Bubble Sort.",
-            "medium": "Bandingkan kompleksitas O(n^2) dan O(n log n) lewat contoh nyata.",
-            "low": "Eksplorasi kapan Quick Sort, Merge Sort, atau Heap Sort lebih tepat digunakan.",
+            "high": "Mulai dari memahami perbandingan elemen dan proses swap pada Bubble Sort dalam C.",
+            "medium": "Bandingkan jumlah iterasi Bubble Sort dengan langkah pecah-gabung pada Merge Sort.",
+            "low": "Eksplorasi Quick Sort, selection sort, dan pengaruh kompleksitas waktu pada data besar di C.",
         },
         "exercises": [
             {
-                "question": "Mengapa Bubble Sort kurang efisien untuk data besar?",
+                "question": "Dalam implementasi sorting di bahasa C, mengapa Bubble Sort kurang efisien untuk array besar?",
                 "reference_answer": (
-                    "Karena kompleksitas waktunya cenderung O(n^2) sehingga jumlah "
-                    "perbandingan dan pertukarannya besar pada data besar."
+                    "Karena Bubble Sort melakukan banyak perbandingan dan pertukaran berulang "
+                    "dengan kompleksitas waktu O(n^2), sehingga lambat saat jumlah elemen besar."
                 ),
-                "keywords": ["o(n^2)", "perbandingan", "data besar", "bubble sort"],
+                "keywords": ["bubble sort", "o(n^2)", "array besar", "perbandingan", "swap"],
                 "explanation": (
-                    "Bubble Sort melakukan banyak iterasi berulang sehingga performanya turun "
-                    "saat jumlah elemen membesar."
+                    "Semakin besar array, semakin banyak iterasi loop bersarang yang harus dijalankan oleh program C."
                 ),
             },
             {
-                "question": "Apa ide utama pada Merge Sort?",
+                "question": "Pada Merge Sort di bahasa C, apa ide utama dari langkah `divide and conquer`?",
                 "reference_answer": (
-                    "Merge Sort membagi data menjadi bagian kecil, mengurutkannya, lalu "
-                    "menggabungkan kembali hasil yang sudah terurut."
+                    "Array dibagi menjadi bagian-bagian kecil, tiap bagian diurutkan secara rekursif, "
+                    "lalu hasil yang sudah terurut digabungkan kembali."
                 ),
-                "keywords": ["membagi", "menggabungkan", "merge sort", "terurut"],
+                "keywords": ["merge sort", "divide and conquer", "rekursif", "gabung", "array"],
                 "explanation": (
-                    "Ini adalah pola divide and conquer: pecah masalah, selesaikan bagian kecil, lalu gabungkan."
+                    "Strategi ini memecah masalah besar menjadi submasalah yang lebih mudah diselesaikan sebelum hasilnya digabungkan."
                 ),
             },
         ],

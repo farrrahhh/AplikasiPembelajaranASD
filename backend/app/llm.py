@@ -241,13 +241,16 @@ def generate_topic_learning_content(
         "weakness_level": weakness_level,
         "adaptive_focus": adaptive_focus,
         "instructions": (
-            "Buat konten pembelajaran topik algoritma dan struktur data dalam Bahasa Indonesia. "
+            "Buat konten pembelajaran topik algoritma dan struktur data dalam Bahasa Indonesia "
+            "dengan fokus implementasi bahasa C. "
             "Balas hanya JSON dengan bentuk: "
             '{"materials":[{"title":"...","content":"..."}],'
             '"examples":[{"title":"...","description":"...","code":"..."}],'
             '"summary":"...",'
             '"exercises":[{"question":"...","reference_answer":"...","keywords":["..."],"explanation":"..."}]}. '
-            "Beri 2 materi, 2 contoh, 2 latihan yang relevan dengan fokus adaptif pengguna."
+            "Beri 2 materi, 2 contoh, 2 latihan yang relevan dengan fokus adaptif pengguna. "
+            "Setiap contoh kode wajib menggunakan sintaks bahasa C, dan setiap latihan harus "
+            "membahas konsep atau implementasi algoritma/struktur data dalam konteks bahasa C."
         ),
     }
 

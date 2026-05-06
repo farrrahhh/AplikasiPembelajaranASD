@@ -1,11 +1,29 @@
-from collections.abc import Generator
 import warnings
+from collections.abc import Generator
 
 from sqlalchemy import MetaData, create_engine, text
 from sqlalchemy.engine import URL, make_url
+from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 
 from app.config import settings
+
+
+def _sqlite_fallback_url() -> str:
+    return "sqlite:///./asd_learning.db"
+
+
+def _postgres_is_available(database_url: str) -> bool:
+    probe_engine = create_engine(database_url, pool_pre_ping=True)
+
+    try:
+        with probe_engine.connect() as connection:
+            connection.execute(text("SELECT 1"))
+        return True
+    except OperationalError:
+        return False
+    finally:
+        probe_engine.dispose()
 
 
 def _resolve_database_url() -> str:
@@ -17,13 +35,29 @@ def _resolve_database_url() -> str:
     try:
         import psycopg  # noqa: F401
     except ModuleNotFoundError:
-        fallback_url = "sqlite:///./asd_learning.db"
+        fallback_url = _sqlite_fallback_url()
         warnings.warn(
             (
                 "psycopg is not installed in the active Python environment. "
                 "Falling back to SQLite for local development. "
                 "Install backend dependencies or use the project virtualenv to keep "
                 "using PostgreSQL."
+            ),
+            RuntimeWarning,
+            stacklevel=2,
+        )
+        return fallback_url
+
+    if settings.app_env.lower() == "development" and not _postgres_is_available(
+        configured_url
+    ):
+        fallback_url = _sqlite_fallback_url()
+        warnings.warn(
+            (
+                "PostgreSQL is not reachable in development. "
+                "Falling back to SQLite so the backend can still start locally. "
+                "Start PostgreSQL if you want to keep using the configured "
+                "DATABASE_URL."
             ),
             RuntimeWarning,
             stacklevel=2,
@@ -45,9 +79,7 @@ class Base(DeclarativeBase):
 
 
 sqlite_connect_args = (
-    {"check_same_thread": False}
-    if DATABASE_URL.startswith("sqlite")
-    else {}
+    {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
 )
 
 engine = create_engine(DATABASE_URL, connect_args=sqlite_connect_args)

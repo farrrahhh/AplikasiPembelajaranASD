@@ -1,0 +1,6 @@
+/Users/user/Documents/AplikasiPembelajaranASD/backend/app/db.py:70: RuntimeWarning: psycopg is not installed in the active Python environment. Falling back to SQLite for local development. Install backend dependencies or use the project virtualenv to keep using PostgreSQL.
+  DATABASE_URL = _resolve_database_url()
+INFO:     Started server process [42442]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
