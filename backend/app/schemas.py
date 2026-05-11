@@ -59,3 +59,4 @@ class UserResponse(BaseModel):
 class AuthResponse(BaseModel):
     message: str
     user: UserResponse
+    token: str

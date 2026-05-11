@@ -11,6 +11,7 @@ class Settings(BaseSettings):
         "postgresql+psycopg://postgres:postgres@localhost:5432/asd_learning_db"
     )
     database_schema: str = "public"
+    secret_key: str = "change-me-in-production"
 
     model_config = SettingsConfigDict(
         env_file=".env",
