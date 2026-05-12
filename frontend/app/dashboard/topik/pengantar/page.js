@@ -853,6 +853,202 @@ int main() {
 }
 
 // ---------------------------------------------------------------------------
+// CONTOH content — Total Tabungan Setelah Bonus
+// ---------------------------------------------------------------------------
+function ContohContent() {
+  const [showHint, setShowHint] = useState(false);
+  const [showJawaban, setShowJawaban] = useState(false);
+
+  return (
+    <div className="text-[15px] text-gray-700">
+
+      {/* Header */}
+      <div className="mb-6">
+        <div className="flex items-center gap-2 mb-3 flex-wrap">
+          <span className="bg-green-100 text-green-700 text-xs font-bold px-2.5 py-1 rounded-full border border-green-200">
+            Easy
+          </span>
+          <span className="bg-blue-50 text-blue-700 text-xs font-medium px-2.5 py-1 rounded-full border border-blue-100">
+            Algoritma Dasar
+          </span>
+          <span className="bg-blue-50 text-blue-700 text-xs font-medium px-2.5 py-1 rounded-full border border-blue-100">
+            Input-Output
+          </span>
+          <span className="bg-blue-50 text-blue-700 text-xs font-medium px-2.5 py-1 rounded-full border border-blue-100">
+            Aritmatika
+          </span>
+        </div>
+        <h2 className="text-xl font-bold text-gray-900">Total Tabungan Setelah Bonus</h2>
+      </div>
+
+      {/* Deskripsi */}
+      <div className="mb-5">
+        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-2">Deskripsi</h3>
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 leading-relaxed">
+          <p>
+            Diberikan sebuah nilai tabungan awal <code className="bg-white border border-gray-200 text-blue-700 px-1 rounded font-mono text-[13px]">N</code>.
+            Bank memberikan <strong>bonus sebesar 10%</strong> dari tabungan awal.
+            Hitung total tabungan setelah bonus.
+          </p>
+        </div>
+      </div>
+
+      {/* Input / Output / Constraint */}
+      <div className="grid grid-cols-3 gap-3 mb-5">
+        <div className="border border-gray-200 rounded-lg p-3">
+          <div className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1">Input</div>
+          <p className="text-sm text-gray-700">
+            Sebuah bilangan bulat <code className="bg-gray-100 text-blue-700 text-[12px] px-1 rounded font-mono">N</code>
+          </p>
+        </div>
+        <div className="border border-gray-200 rounded-lg p-3">
+          <div className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1">Output</div>
+          <p className="text-sm text-gray-700">Total tabungan setelah mendapat bonus</p>
+        </div>
+        <div className="border border-gray-200 rounded-lg p-3">
+          <div className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1">Constraint</div>
+          <p className="text-sm font-mono text-gray-700">0 ≤ N ≤ 1.000.000</p>
+        </div>
+      </div>
+
+      {/* Contoh I/O */}
+      <div className="mb-5">
+        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-2">Contoh</h3>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="border border-gray-200 rounded-lg overflow-hidden">
+            <div className="bg-gray-100 px-3 py-1.5 text-xs font-bold text-gray-500 border-b border-gray-200">
+              Input
+            </div>
+            <pre className="bg-white px-4 py-3 font-mono text-sm text-gray-800">100000</pre>
+          </div>
+          <div className="border border-gray-200 rounded-lg overflow-hidden">
+            <div className="bg-gray-100 px-3 py-1.5 text-xs font-bold text-gray-500 border-b border-gray-200">
+              Output
+            </div>
+            <pre className="bg-white px-4 py-3 font-mono text-sm text-gray-800">110000</pre>
+          </div>
+        </div>
+      </div>
+
+      {/* Hint (collapsible) */}
+      <div className="mb-5">
+        <button
+          onClick={() => setShowHint(!showHint)}
+          className="flex items-center gap-2 text-sm font-semibold text-yellow-700 bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-2.5 hover:bg-yellow-100 transition-colors w-full"
+        >
+          <span>{showHint ? '▾' : '▸'}</span>
+          <span>Hint</span>
+        </button>
+        {showHint && (
+          <div className="mt-2 bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-3 text-sm text-gray-700">
+            <p className="mb-2">Bonus dihitung dengan rumus:</p>
+            <pre className="bg-white border border-yellow-100 rounded px-3 py-2 font-mono text-[13px] text-gray-800">
+              {`bonus = N * 10 / 100`}
+            </pre>
+            <p className="mt-2">
+              Kemudian tambahkan bonus ke tabungan awal untuk mendapatkan total.
+            </p>
+          </div>
+        )}
+      </div>
+
+      <hr className="my-6 border-gray-200" />
+
+      {/* Pembahasan (collapsible) */}
+      <div>
+        <button
+          onClick={() => setShowJawaban(!showJawaban)}
+          className="flex items-center gap-2 text-sm font-semibold text-blue-700 bg-blue-50 border border-blue-200 rounded-lg px-4 py-2.5 hover:bg-blue-100 transition-colors w-full mb-4"
+        >
+          <span>{showJawaban ? '▾' : '▸'}</span>
+          <span>Lihat Pembahasan</span>
+        </button>
+
+        {showJawaban && (
+          <div className="space-y-6">
+
+            {/* Algoritma */}
+            <div>
+              <h3 className="text-base font-bold text-gray-800 mb-2">Algoritma</h3>
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                <ol className="list-decimal list-inside space-y-2 text-sm text-gray-700">
+                  <li>Input nilai tabungan <code className="bg-white border border-gray-200 text-blue-700 px-1 rounded font-mono text-[12px]">N</code></li>
+                  <li>
+                    Hitung bonus:{' '}
+                    <code className="bg-white border border-gray-200 text-blue-700 px-1.5 rounded font-mono text-[12px]">
+                      bonus = N × 10 / 100
+                    </code>
+                  </li>
+                  <li>
+                    Hitung total:{' '}
+                    <code className="bg-white border border-gray-200 text-blue-700 px-1.5 rounded font-mono text-[12px]">
+                      total = N + bonus
+                    </code>
+                  </li>
+                  <li>Output <code className="bg-white border border-gray-200 text-blue-700 px-1 rounded font-mono text-[12px]">total</code></li>
+                </ol>
+              </div>
+            </div>
+
+            {/* Notasi Algoritmik */}
+            <div>
+              <h3 className="text-base font-bold text-gray-800 mb-2">Notasi Algoritmik</h3>
+              <pre className="bg-gray-50 border border-gray-200 rounded-lg px-5 py-4 text-[13px] font-mono text-gray-800 overflow-x-auto leading-relaxed">
+{`Program TotalTabungan
+
+KAMUS
+  N, bonus, total : integer
+
+ALGORITMA
+  input(N)
+
+  bonus ← N * 10 / 100
+  total ← N + bonus
+
+  output(total)`}
+              </pre>
+            </div>
+
+            {/* Implementasi C */}
+            <div>
+              <h3 className="text-base font-bold text-gray-800 mb-2">Implementasi Bahasa C</h3>
+              <div className="rounded-lg overflow-hidden border border-gray-200 text-[13px]">
+                <div className="bg-gray-700 text-gray-300 px-4 py-1 font-mono text-xs tracking-wide">c</div>
+                <pre className="bg-gray-900 text-green-300 px-5 py-4 overflow-x-auto font-mono leading-relaxed">
+{`#include <stdio.h>
+
+int main() {
+    int N, bonus, total;
+
+    scanf("%d", &N);
+
+    bonus = N * 10 / 100;
+    total = N + bonus;
+
+    printf("%d\\n", total);
+
+    return 0;
+}`}
+                </pre>
+              </div>
+              <div className="mt-3 bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm">
+                <span className="font-semibold text-gray-600">Trace untuk N = 100000:</span>
+                <div className="mt-1 font-mono text-[13px] text-gray-700 space-y-0.5">
+                  <div>bonus = 100000 * 10 / 100 = <span className="text-blue-700 font-bold">10000</span></div>
+                  <div>total = 100000 + 10000 = <span className="text-green-700 font-bold">110000</span></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        )}
+      </div>
+
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Placeholder tabs
 // ---------------------------------------------------------------------------
 function ComingSoon({ icon, label }) {
@@ -904,7 +1100,7 @@ export default function PengantarPage() {
   return (
     <div className="flex" style={{ height: 'calc(100vh - 56px)' }}>
       {/* ── Sidebar ── */}
-      <aside className="w-56 flex-shrink-0 bg-white border-r border-gray-200 overflow-y-auto">
+      <aside className="w-56 shrink-0 bg-white border-r border-gray-200 overflow-y-auto">
         <div className="py-3">
           <div className="px-4 py-2 text-[11px] font-bold text-gray-400 uppercase tracking-widest">
             Pengantar
@@ -930,7 +1126,7 @@ export default function PengantarPage() {
       {/* ── Main area ── */}
       <div className="flex-1 flex flex-col min-w-0 bg-white">
         {/* Tabs */}
-        <div className="flex-shrink-0 border-b border-gray-200 flex gap-1 px-6 pt-3 bg-white">
+        <div className="shrink-0 border-b border-gray-200 flex gap-1 px-6 pt-3 bg-white">
           {TABS.map((tab) => (
             <button
               key={tab}
@@ -950,9 +1146,7 @@ export default function PengantarPage() {
         <div ref={mainRef} className="flex-1 overflow-y-auto">
           <div className="max-w-3xl mx-auto px-8 py-6">
             {activeTab === 'MATERI' && <MateriContent />}
-            {activeTab === 'CONTOH' && (
-              <ComingSoon icon="💡" label="Contoh soal sedang disiapkan" />
-            )}
+            {activeTab === 'CONTOH' && <ContohContent />}
             {activeTab === 'LATIHAN' && (
               <ComingSoon icon="✏️" label="Latihan interaktif sedang disiapkan" />
             )}
