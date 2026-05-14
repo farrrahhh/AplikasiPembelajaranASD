@@ -1049,6 +1049,488 @@ int main() {
 }
 
 // ---------------------------------------------------------------------------
+// LATIHAN data  —  from soal.md
+// ---------------------------------------------------------------------------
+const SOAL = [
+  {
+    id: 1,
+    tipe: 'pengetahuan',
+    topik: ['Fungsi & Prosedur', 'Paradigma Prosedural'],
+    pertanyaan:
+      'Jelaskan perbedaan antara fungsi dan prosedur dalam paradigma pemrograman prosedural. Berikan masing-masing satu contoh kasus nyata yang tepat untuk menggunakan fungsi dan satu kasus yang tepat untuk menggunakan prosedur, serta jelaskan alasannya!',
+  },
+  {
+    id: 2,
+    tipe: 'pengetahuan',
+    topik: ['Modularitas', 'ADT', 'Reusability'],
+    pertanyaan:
+      'Dalam pembuatan program modular bahasa C, jelaskan peran masing-masing file berikut:\n• xxx.h — file header\n• xxx.c — file body\n• main.c — program utama\n• check_xxx.c — file unit test\n\nMengapa variabel tidak boleh dideklarasikan di dalam file header?',
+  },
+  {
+    id: 3,
+    tipe: 'implementasi',
+    topik: ['Fungsi', 'Seleksi', 'Bahasa C'],
+    pertanyaan:
+      'Implementasikan fungsi MAKS dalam bahasa C berdasarkan notasi algoritma di bawah ini, lalu buat program utama yang membaca dua bilangan dari input dan mencetak nilai terbesarnya menggunakan fungsi tersebut.',
+    notasiAlgoritma: `function MAKS(input a: integer, input b: integer) → integer
+{ Mengembalikan nilai terbesar antara a dan b }
+KAMUS LOKAL
+  hasil : integer
+ALGORITMA
+  if (a > b) then
+    hasil ← a
+  else
+    hasil ← b
+  return hasil`,
+  },
+  {
+    id: 4,
+    tipe: 'implementasi',
+    topik: ['Prosedur', 'Pointer', 'Pass by Reference'],
+    pertanyaan:
+      'Implementasikan prosedur TUKAR dalam bahasa C menggunakan pointer yang menukar nilai dua variabel integer tanpa variabel ketiga. Cetak nilai sebelum dan sesudah pertukaran dalam program utama.',
+    notasiAlgoritma: `procedure TUKAR(input/output a: integer, input/output b: integer)
+{ I.S. : a dan b terdefinisi }
+{ F.S. : nilai a dan b saling tertukar }
+KAMUS LOKAL
+  -
+ALGORITMA
+  a ← a + b
+  b ← a - b
+  a ← a - b`,
+  },
+  {
+    id: 5,
+    tipe: 'implementasi',
+    topik: ['Rekursi', 'Fungsi', 'Validasi Input'],
+    pertanyaan:
+      'Implementasikan fungsi rekursif FAKTORIAL dalam bahasa C. Buat program utama yang membaca n dari pengguna dan mencetak n!. Tambahkan validasi: jika n < 0, cetak pesan kesalahan.',
+    notasiAlgoritma: `function FAKTORIAL(input n: integer) → integer
+{ Mengembalikan n! untuk n ≥ 0 }
+KAMUS LOKAL
+  -
+ALGORITMA
+  if (n = 0) then
+    return 1
+  else
+    return n * FAKTORIAL(n - 1)`,
+  },
+];
+
+const NILAI_COLOR = {
+  'Sangat Baik': 'bg-green-100 text-green-700 border-green-200',
+  Baik: 'bg-blue-100 text-blue-700 border-blue-200',
+  Cukup: 'bg-yellow-100 text-yellow-700 border-yellow-200',
+  'Perlu Perbaikan': 'bg-red-100 text-red-700 border-red-200',
+  'Belum Dijawab': 'bg-gray-100 text-gray-500 border-gray-200',
+};
+
+const SKOR_BAR = (skor) => {
+  if (skor >= 85) return 'bg-green-500';
+  if (skor >= 70) return 'bg-blue-500';
+  if (skor >= 50) return 'bg-yellow-500';
+  return 'bg-red-500';
+};
+
+// ---------------------------------------------------------------------------
+// LATIHAN component  —  one question at a time
+// ---------------------------------------------------------------------------
+function LatihanContent() {
+  const [idx, setIdx] = useState(0);              // 0-based current question
+  const [jawaban, setJawaban] = useState({});
+  const [showNotasi, setShowNotasi] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [hasil, setHasil] = useState(null);
+  const [error, setError] = useState('');
+  const [resultIdx, setResultIdx] = useState(0);  // navigate feedback in hasil view
+
+  const soal = SOAL[idx];
+  const totalDijawab = SOAL.filter((s) => jawaban[s.id]?.trim()).length;
+  const isLast = idx === SOAL.length - 1;
+  const isFirst = idx === 0;
+  const canAnalyze = totalDijawab > 0;
+
+  const goTo = (i) => {
+    setIdx(i);
+    setShowNotasi(false);
+  };
+
+  const handleAnalisis = async () => {
+    setLoading(true);
+    setError('');
+    setHasil(null);
+    try {
+      const res = await fetch('/api/latihan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          soal: SOAL.map((s) => ({
+            id: s.id,
+            tipe: s.tipe,
+            topik: s.topik,
+            pertanyaan: s.pertanyaan,
+            ...(s.notasiAlgoritma ? { notasiAlgoritma: s.notasiAlgoritma } : {}),
+          })),
+          jawaban: Object.fromEntries(SOAL.map((s) => [s.id, jawaban[s.id] ?? ''])),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? 'Analisis gagal');
+      setHasil(data);
+      setResultIdx(0);
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleReset = () => {
+    setJawaban({});
+    setHasil(null);
+    setError('');
+    setIdx(0);
+    setResultIdx(0);
+    setShowNotasi(false);
+  };
+
+  const rataRata = hasil
+    ? Math.round(hasil.feedback.reduce((a, f) => a + f.skor, 0) / hasil.feedback.length)
+    : null;
+
+  // ── Dot nav (soal or result) ─────────────────────────────────────────────
+  const NavDots = ({ current, onSelect, feedbackList }) => (
+    <div className="flex items-center gap-2 mb-5">
+      {SOAL.map((s, i) => {
+        const answered = !!jawaban[s.id]?.trim();
+        const isCurrent = i === current;
+        const fb = feedbackList?.find((f) => f.id === s.id);
+
+        let cls = 'border-2 ';
+        if (fb) {
+          cls += fb.skor >= 70
+            ? 'bg-green-500 border-green-500 text-white'
+            : 'bg-red-400 border-red-400 text-white';
+        } else if (isCurrent) {
+          cls += answered
+            ? 'bg-blue-600 border-blue-600 text-white'
+            : 'bg-white border-blue-600 text-blue-600';
+        } else {
+          cls += answered
+            ? 'bg-blue-100 border-blue-400 text-blue-700'
+            : 'bg-gray-100 border-gray-300 text-gray-400';
+        }
+
+        return (
+          <button
+            key={s.id}
+            onClick={() => onSelect(i)}
+            className={`w-8 h-8 rounded-full text-xs font-bold transition-all ${cls}`}
+          >
+            {answered && !fb ? '✓' : s.id}
+          </button>
+        );
+      })}
+      <span className="ml-2 text-xs text-gray-400">
+        {feedbackList ? `${feedbackList.filter(f=>f.skor>0).length}/${SOAL.length} dinilai` : `${totalDijawab}/${SOAL.length} dijawab`}
+      </span>
+    </div>
+  );
+
+  // ── HASIL view ────────────────────────────────────────────────────────────
+  if (hasil) {
+    const fb = hasil.feedback[resultIdx];
+    const s = SOAL[resultIdx];
+
+    return (
+      <div className="text-[15px] text-gray-700">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="text-xl font-bold text-gray-900">Hasil Latihan</h2>
+            <p className="text-sm text-gray-500">IF2111 Algoritma dan Struktur Data — Pengantar</p>
+          </div>
+          <button
+            onClick={handleReset}
+            className="text-sm text-gray-500 hover:text-gray-700 border border-gray-300 rounded-lg px-3 py-1.5 hover:bg-gray-50 transition-colors"
+          >
+            Ulangi Latihan
+          </button>
+        </div>
+
+        {/* Overall score */}
+        <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-5 text-white mb-5">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-blue-200 text-sm font-medium">Nilai Rata-rata</p>
+              <p className="text-4xl font-bold">{rataRata}<span className="text-xl text-blue-300">/100</span></p>
+            </div>
+            <div className="text-right">
+              <p className="text-blue-200 text-sm">Soal dijawab</p>
+              <p className="text-2xl font-bold">{totalDijawab}/{SOAL.length}</p>
+            </div>
+          </div>
+          <div className="mt-3 bg-blue-500 rounded-full h-2">
+            <div className="bg-white h-2 rounded-full transition-all" style={{ width: `${rataRata}%` }} />
+          </div>
+        </div>
+
+        {/* Per-question navigation */}
+        <NavDots current={resultIdx} onSelect={setResultIdx} feedbackList={hasil.feedback} />
+
+        {/* Feedback card for current result question */}
+        <div className="border border-gray-200 rounded-xl overflow-hidden mb-4">
+          {/* Card top */}
+          <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 flex items-start gap-3">
+            <div className="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
+              {s.id}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 flex-wrap mb-1">
+                <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${s.tipe === 'implementasi' ? 'bg-purple-50 text-purple-700 border-purple-200' : 'bg-teal-50 text-teal-700 border-teal-200'}`}>
+                  {s.tipe === 'implementasi' ? 'Implementasi' : 'Pengetahuan'}
+                </span>
+                {s.topik.map((t) => (
+                  <span key={t} className="text-[11px] text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">{t}</span>
+                ))}
+              </div>
+              <p className="text-sm text-gray-800 font-medium whitespace-pre-line">{s.pertanyaan}</p>
+            </div>
+          </div>
+
+          {/* Score bar */}
+          <div className="px-4 py-3 border-b border-gray-100 flex items-center gap-3">
+            <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${NILAI_COLOR[fb.nilai] ?? NILAI_COLOR['Cukup']}`}>
+              {fb.nilai}
+            </span>
+            <span className="text-sm font-semibold text-gray-700">{fb.skor}/100</span>
+            <div className="flex-1 bg-gray-200 rounded-full h-2">
+              <div className={`h-2 rounded-full ${SKOR_BAR(fb.skor)}`} style={{ width: `${fb.skor}%` }} />
+            </div>
+          </div>
+
+          {/* Feedback body */}
+          <div className="px-4 py-4 space-y-3">
+            {jawaban[s.id]?.trim() && (
+              <div>
+                <div className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1">Jawabanmu</div>
+                <pre className={`whitespace-pre-wrap text-sm rounded-lg px-3 py-2.5 border border-gray-200 overflow-x-auto ${s.tipe === 'implementasi' ? 'font-mono bg-gray-900 text-green-300 text-[12px]' : 'bg-gray-50 text-gray-700 font-sans'}`}>
+                  {jawaban[s.id]}
+                </pre>
+              </div>
+            )}
+            <p className="text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 leading-relaxed">{fb.komentar}</p>
+            {fb.yang_benar && (
+              <div className="bg-green-50 border border-green-200 rounded-lg px-3 py-2.5 text-sm text-green-800 leading-relaxed">
+                <span className="font-semibold">✓ Yang sudah benar: </span>{fb.yang_benar}
+              </div>
+            )}
+            {fb.yang_perlu_diperbaiki && (
+              <div className="bg-red-50 border border-red-200 rounded-lg px-3 py-2.5 text-sm text-red-800 leading-relaxed">
+                <span className="font-semibold">✗ Perlu diperbaiki: </span>{fb.yang_perlu_diperbaiki}
+              </div>
+            )}
+            {fb.konsep_lemah?.length > 0 && (
+              <div className="flex items-center gap-2 flex-wrap pt-1">
+                <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Pelajari:</span>
+                {fb.konsep_lemah.map((k) => (
+                  <span key={k} className="text-[11px] bg-orange-50 border border-orange-200 text-orange-700 px-2 py-0.5 rounded-full">{k}</span>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Result prev/next */}
+        <div className="flex items-center justify-between mb-8">
+          <button
+            onClick={() => setResultIdx(Math.max(0, resultIdx - 1))}
+            disabled={resultIdx === 0}
+            className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          >
+            ← Sebelumnya
+          </button>
+          <span className="text-sm text-gray-400">Soal {resultIdx + 1} dari {SOAL.length}</span>
+          <button
+            onClick={() => setResultIdx(Math.min(SOAL.length - 1, resultIdx + 1))}
+            disabled={resultIdx === SOAL.length - 1}
+            className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          >
+            Berikutnya →
+          </button>
+        </div>
+
+        {/* Weakness analysis */}
+        {hasil.analisis_kelemahan && (
+          <div className="border border-orange-200 rounded-xl overflow-hidden mb-4">
+            <div className="bg-orange-50 px-4 py-2.5 border-b border-orange-200">
+              <span className="text-orange-700 font-bold text-sm">Analisis Kelemahan</span>
+            </div>
+            <div className="px-4 py-3 text-sm text-gray-700 leading-relaxed">{hasil.analisis_kelemahan}</div>
+            {hasil.area_fokus?.length > 0 && (
+              <div className="px-4 pb-3 flex items-center gap-2 flex-wrap">
+                <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Fokuskan belajar di:</span>
+                {hasil.area_fokus.map((a) => (
+                  <span key={a} className="text-[11px] bg-orange-50 border border-orange-300 text-orange-700 px-2 py-0.5 rounded-full font-medium">{a}</span>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* AI-generated extra questions */}
+        {hasil.soal_tambahan?.length > 0 && (
+          <div className="border border-purple-200 rounded-xl overflow-hidden">
+            <div className="bg-purple-50 px-4 py-2.5 border-b border-purple-200 flex items-center gap-2">
+              <span className="text-purple-700 font-bold text-sm">Soal Latihan Tambahan — Dihasilkan AI</span>
+              <span className="text-[10px] bg-purple-100 text-purple-600 border border-purple-200 px-2 py-0.5 rounded-full font-medium">Berdasarkan kelemahanmu</span>
+            </div>
+            <div className="divide-y divide-purple-100">
+              {hasil.soal_tambahan.map((sq, i) => (
+                <div key={i} className="px-4 py-4">
+                  <div className="flex items-center gap-2 mb-2 flex-wrap">
+                    <span className="w-6 h-6 rounded-full bg-purple-100 text-purple-700 text-xs font-bold flex items-center justify-center shrink-0">{i + 1}</span>
+                    <span className="text-[11px] text-purple-600 bg-purple-50 border border-purple-200 px-2 py-0.5 rounded-full">{sq.topik}</span>
+                    <span className="text-[11px] text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">{sq.tipe}</span>
+                  </div>
+                  <p className="text-sm text-gray-800 font-medium mb-2 whitespace-pre-line">{sq.pertanyaan}</p>
+                  {sq.hint && (
+                    <p className="text-[12px] text-yellow-700 bg-yellow-50 border border-yellow-100 rounded-lg px-3 py-1.5">
+                      <span className="font-semibold">Hint: </span>{sq.hint}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // ── SOAL view  (one at a time) ────────────────────────────────────────────
+  return (
+    <div className="text-[15px] text-gray-700">
+      {/* Header */}
+      <div className="mb-4">
+        <h2 className="text-xl font-bold text-gray-900">Soal Latihan</h2>
+        <p className="text-sm text-gray-500 mt-0.5">IF2111 Algoritma dan Struktur Data — Pengantar</p>
+      </div>
+
+      {/* Dot navigation */}
+      <NavDots current={idx} onSelect={goTo} feedbackList={null} />
+
+      {/* Question card */}
+      <div className="border border-gray-200 rounded-xl overflow-hidden">
+        {/* Card header */}
+        <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 flex items-start gap-3">
+          <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 ${jawaban[soal.id]?.trim() ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}`}>
+            {jawaban[soal.id]?.trim() ? '✓' : soal.id}
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 flex-wrap mb-1.5">
+              <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${soal.tipe === 'implementasi' ? 'bg-purple-50 text-purple-700 border-purple-200' : 'bg-teal-50 text-teal-700 border-teal-200'}`}>
+                {soal.tipe === 'implementasi' ? 'Implementasi' : 'Pengetahuan'}
+              </span>
+              {soal.topik.map((t) => (
+                <span key={t} className="text-[11px] text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">{t}</span>
+              ))}
+            </div>
+            <p className="text-sm text-gray-800 font-medium leading-relaxed whitespace-pre-line">{soal.pertanyaan}</p>
+          </div>
+        </div>
+
+        {/* Notasi Algoritma (collapsible, implementasi only) */}
+        {soal.notasiAlgoritma && (
+          <div className="px-4 py-2.5 bg-gray-50 border-b border-gray-200">
+            <button
+              onClick={() => setShowNotasi((v) => !v)}
+              className="text-xs text-blue-600 hover:underline font-medium flex items-center gap-1"
+            >
+              <span>{showNotasi ? '▾' : '▸'}</span>
+              <span>Notasi Algoritma (referensi)</span>
+            </button>
+            {showNotasi && (
+              <pre className="mt-2 bg-white border border-gray-200 rounded-lg px-4 py-3 text-[12px] font-mono text-gray-700 overflow-x-auto leading-relaxed">
+                {soal.notasiAlgoritma}
+              </pre>
+            )}
+          </div>
+        )}
+
+        {/* Answer area */}
+        <div className="px-4 py-3">
+          <textarea
+            key={soal.id}
+            value={jawaban[soal.id] ?? ''}
+            onChange={(e) => setJawaban((prev) => ({ ...prev, [soal.id]: e.target.value }))}
+            placeholder={soal.tipe === 'implementasi' ? '// Tulis kode C kamu di sini...' : 'Tulis jawabanmu di sini...'}
+            rows={soal.tipe === 'implementasi' ? 12 : 6}
+            className={`w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent resize-y transition ${soal.tipe === 'implementasi' ? 'font-mono bg-gray-900 text-green-300' : 'bg-white text-gray-700'}`}
+            spellCheck={false}
+          />
+        </div>
+      </div>
+
+      {/* Error */}
+      {error && (
+        <div className="mt-3 bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700">
+          <span className="font-semibold">Error: </span>{error}
+        </div>
+      )}
+
+      {/* Bottom nav */}
+      <div className="mt-4 flex items-center justify-between gap-3">
+        {/* Prev */}
+        <button
+          onClick={() => goTo(idx - 1)}
+          disabled={isFirst}
+          className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        >
+          ← Sebelumnya
+        </button>
+
+        {/* Center: progress */}
+        <span className="text-sm text-gray-400 shrink-0">
+          Soal {idx + 1} dari {SOAL.length}
+        </span>
+
+        {/* Right side: Next OR Analisis on last */}
+        <div className="flex items-center gap-2">
+          {!isLast && (
+            <button
+              onClick={() => goTo(idx + 1)}
+              className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              Berikutnya →
+            </button>
+          )}
+          {(isLast || canAnalyze) && (
+            <button
+              onClick={handleAnalisis}
+              disabled={!canAnalyze || loading}
+              className="flex items-center gap-2 px-5 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition-colors"
+            >
+              {loading ? (
+                <>
+                  <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                  </svg>
+                  Menganalisis...
+                </>
+              ) : (
+                'Analisis Jawabanku'
+              )}
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Placeholder tabs
 // ---------------------------------------------------------------------------
 function ComingSoon({ icon, label }) {
@@ -1147,9 +1629,7 @@ export default function PengantarPage() {
           <div className="max-w-3xl mx-auto px-8 py-6">
             {activeTab === 'MATERI' && <MateriContent />}
             {activeTab === 'CONTOH' && <ContohContent />}
-            {activeTab === 'LATIHAN' && (
-              <ComingSoon icon="✏️" label="Latihan interaktif sedang disiapkan" />
-            )}
+            {activeTab === 'LATIHAN' && <LatihanContent />}
             {activeTab === 'RINGKASAN' && (
               <ComingSoon icon="📋" label="Ringkasan sedang disiapkan" />
             )}
