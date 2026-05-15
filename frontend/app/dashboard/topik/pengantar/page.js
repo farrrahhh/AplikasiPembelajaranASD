@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 // ---------------------------------------------------------------------------
 // Sidebar section definitions
@@ -1531,17 +1532,176 @@ function LatihanContent() {
 }
 
 // ---------------------------------------------------------------------------
-// Placeholder tabs
+// RINGKASAN content
 // ---------------------------------------------------------------------------
-function ComingSoon({ icon, label }) {
+function RingkasanContent() {
   return (
-    <div className="flex flex-col items-center justify-center py-28 text-gray-400 gap-3">
-      <span className="text-5xl">{icon}</span>
-      <p className="font-medium text-base">{label}</p>
-      <p className="text-sm">Segera hadir</p>
+    <div className="text-[15px] text-gray-700">
+
+      {/* ── Title ── */}
+      <div className="mb-5">
+        <h2 className="text-xl font-bold text-gray-900">Ringkasan — Pengantar ASD</h2>
+        <p className="text-sm text-gray-400 mt-0.5">IF2111 Algoritma dan Struktur Data</p>
+      </div>
+
+      {/* ── Infografis ── */}
+      <div className="mb-6 rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
+        <Image
+          src="/pengantar_infografis.png"
+          alt="Infografis Pengantar Algoritma dan Struktur Data"
+          width={1200}
+          height={800}
+          className="w-full h-auto object-contain"
+          priority
+        />
+      </div>
+
+      {/* ── 4 key takeaways ── */}
+      <div className="grid grid-cols-1 gap-4 mb-6">
+
+        {/* 1 */}
+        <div className="border border-blue-100 rounded-xl overflow-hidden">
+          <div className="bg-blue-600 px-4 py-2.5 flex items-center gap-2">
+            <span className="w-6 h-6 rounded-full bg-white text-blue-600 text-xs font-bold flex items-center justify-center shrink-0">1</span>
+            <span className="text-white font-bold text-sm">Algoritma &amp; Struktur Data</span>
+          </div>
+          <div className="px-4 py-3 text-sm text-gray-700 leading-relaxed">
+            Dua pilar utama dalam membangun program.{' '}
+            <strong>Algoritma</strong> adalah langkah-langkah terurut untuk menyelesaikan masalah;{' '}
+            <strong>Struktur data</strong> adalah cara mengorganisir data agar algoritma dapat bekerja efisien.
+            <div className="mt-2 bg-blue-50 rounded-lg px-3 py-2 font-mono text-blue-800 text-center text-[13px]">
+              Algoritma + Struktur Data = Program
+            </div>
+          </div>
+        </div>
+
+        {/* 2 */}
+        <div className="border border-teal-100 rounded-xl overflow-hidden">
+          <div className="bg-teal-600 px-4 py-2.5 flex items-center gap-2">
+            <span className="w-6 h-6 rounded-full bg-white text-teal-600 text-xs font-bold flex items-center justify-center shrink-0">2</span>
+            <span className="text-white font-bold text-sm">Abstract Data Type (ADT)</span>
+          </div>
+          <div className="px-4 py-3 text-sm text-gray-700 leading-relaxed">
+            ADT <strong>mengabstraksi data beserta operasinya</strong> sehingga kode lebih rapi dan mudah dipakai ulang.
+            Kita hanya perlu tahu <em>apa</em> yang bisa dilakukan, bukan <em>bagaimana</em> cara kerjanya di dalam.
+            <div className="mt-2 grid grid-cols-2 gap-2 text-[12px]">
+              <div className="bg-teal-50 border border-teal-100 rounded-lg px-3 py-2">
+                <div className="font-bold text-teal-700 mb-0.5">Data</div>
+                <div className="text-gray-600">Nilai yang disimpan</div>
+              </div>
+              <div className="bg-teal-50 border border-teal-100 rounded-lg px-3 py-2">
+                <div className="font-bold text-teal-700 mb-0.5">Operasi</div>
+                <div className="text-gray-600">Apa yang bisa dilakukan</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 3 */}
+        <div className="border border-purple-100 rounded-xl overflow-hidden">
+          <div className="bg-purple-600 px-4 py-2.5 flex items-center gap-2">
+            <span className="w-6 h-6 rounded-full bg-white text-purple-600 text-xs font-bold flex items-center justify-center shrink-0">3</span>
+            <span className="text-white font-bold text-sm">Struktur Data Umum yang Perlu Dikuasai</span>
+          </div>
+          <div className="px-4 py-3">
+            <div className="grid grid-cols-2 gap-2 text-[13px]">
+              {[
+                { name: 'Array', desc: 'Akses cepat via indeks, ukuran tetap', color: 'bg-blue-50 border-blue-100 text-blue-800' },
+                { name: 'Linked List', desc: 'Fleksibel, tambah/hapus mudah', color: 'bg-indigo-50 border-indigo-100 text-indigo-800' },
+                { name: 'Stack (LIFO)', desc: 'Last In, First Out — Undo, call stack', color: 'bg-green-50 border-green-100 text-green-800' },
+                { name: 'Queue (FIFO)', desc: 'First In, First Out — antrian, scheduler', color: 'bg-emerald-50 border-emerald-100 text-emerald-800' },
+                { name: 'Tree', desc: 'Hierarkis — folder, DOM, org chart', color: 'bg-yellow-50 border-yellow-100 text-yellow-800' },
+                { name: 'BST', desc: 'Tree terurut — pencarian O(log n)', color: 'bg-orange-50 border-orange-100 text-orange-800' },
+                { name: 'Graph', desc: 'Node & edge — peta, social network', color: 'bg-red-50 border-red-100 text-red-800' },
+              ].map((item) => (
+                <div key={item.name} className={`border rounded-lg px-3 py-2 ${item.color}`}>
+                  <div className="font-bold mb-0.5">{item.name}</div>
+                  <div className="text-[11px] opacity-80">{item.desc}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* 4 */}
+        <div className="border border-gray-200 rounded-xl overflow-hidden">
+          <div className="bg-gray-800 px-4 py-2.5 flex items-center gap-2">
+            <span className="w-6 h-6 rounded-full bg-white text-gray-800 text-xs font-bold flex items-center justify-center shrink-0">4</span>
+            <span className="text-white font-bold text-sm">Bahasa C — Implementasi</span>
+          </div>
+          <div className="px-4 py-3">
+            <div className="grid grid-cols-3 gap-2 text-[12px]">
+              {[
+                ['Variabel & Tipe', 'int, float, char, char[]'],
+                ['Percabangan', 'if-else, switch'],
+                ['Pengulangan', 'while, do-while, for'],
+                ['Fungsi', 'return type, return value'],
+                ['Prosedur', 'void, efek samping'],
+                ['Pointer', '&addr, *deref, pass by ref'],
+                ['Modularitas', '.h deklarasi, .c implementasi'],
+                ['Notasi Alg.', 'input(), output(), ←'],
+              ].map(([label, detail]) => (
+                <div key={label} className="bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-2">
+                  <div className="font-bold text-gray-700 mb-0.5">{label}</div>
+                  <div className="text-gray-500 text-[11px] leading-tight">{detail}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {/* ── Urutan belajar ── */}
+      <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
+        <p className="text-sm font-bold text-blue-800 mb-2">Urutan Belajar yang Disarankan</p>
+        <div className="flex items-center gap-0 flex-wrap text-[12px]">
+          {[
+            'Algoritma Dasar',
+            'Tipe Data & Struct',
+            'Array & Linked List',
+            'ADT',
+            'Stack, Queue, Tree, Graph',
+            'Modularitas .h & .c',
+          ].map((step, i, arr) => (
+            <span key={step} className="flex items-center gap-0">
+              <span className="bg-white border border-blue-200 text-blue-800 font-medium px-2.5 py-1 rounded-full my-0.5">
+                {step}
+              </span>
+              {i < arr.length - 1 && <span className="text-blue-300 px-1">→</span>}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Quick cheat: LIFO vs FIFO ── */}
+      <div className="grid grid-cols-2 gap-3 mb-2">
+        <div className="border border-green-200 rounded-xl p-3 text-center bg-green-50">
+          <p className="text-xs font-bold text-green-700 uppercase tracking-widest mb-1">Stack — LIFO</p>
+          <pre className="font-mono text-[12px] text-green-800 leading-loose">{`┌────┐
+│ 30 │ ← top
+├────┤
+│ 20 │
+├────┤
+│ 10 │
+└────┘`}</pre>
+          <p className="text-[11px] text-green-700 mt-1">push / pop / top</p>
+        </div>
+        <div className="border border-blue-200 rounded-xl p-3 text-center bg-blue-50">
+          <p className="text-xs font-bold text-blue-700 uppercase tracking-widest mb-1">Queue — FIFO</p>
+          <pre className="font-mono text-[12px] text-blue-800 leading-loose">{`        enqueue ↓
+┌──┬──┬──┐
+│10│20│30│
+└──┴──┴──┘
+↑ dequeue`}</pre>
+          <p className="text-[11px] text-blue-700 mt-1">enqueue / dequeue / front</p>
+        </div>
+      </div>
+
     </div>
   );
 }
+
 
 // ---------------------------------------------------------------------------
 // Main Page
@@ -1630,9 +1790,7 @@ export default function PengantarPage() {
             {activeTab === 'MATERI' && <MateriContent />}
             {activeTab === 'CONTOH' && <ContohContent />}
             {activeTab === 'LATIHAN' && <LatihanContent />}
-            {activeTab === 'RINGKASAN' && (
-              <ComingSoon icon="📋" label="Ringkasan sedang disiapkan" />
-            )}
+            {activeTab === 'RINGKASAN' && <RingkasanContent />}
           </div>
         </div>
       </div>
