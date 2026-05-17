@@ -4,6 +4,18 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
+function calcMesinKarakterProgress() {
+  try {
+    const d = JSON.parse(localStorage.getItem('asd_progress_mesin_karakter')) ?? {};
+    let count = 0;
+    if (d.materi) count++;
+    if (d.contoh) count++;
+    if (d.latihan) count++;
+    if (d.ringkasan) count++;
+    return count * 25;
+  } catch { return 0; }
+}
+
 function calcListProgress() {
   try {
     const d = JSON.parse(localStorage.getItem('asd_progress_list')) ?? {};
@@ -83,11 +95,11 @@ const topics = [
   {
     id: 'mesin-karakter',
     title: 'Mesin Karakter & Kata',
-    description: 'Pemrosesan karakter dan kata menggunakan mesin abstrak.',
+    description: 'Mesin abstrak untuk pemrosesan pita karakter dan kata: primitif start/adv, tiga versi model akuisisi kata, dan implementasi dalam C.',
     progress: 0,
-    href: null,
-    available: false,
-    bg: 'bg-gray-400',
+    href: '/dashboard/topik/mesin-karakter',
+    available: true,
+    bg: 'bg-sky-600',
     icon: null,
   },
   {
@@ -146,11 +158,13 @@ export default function TopikPage() {
   const [pengantarProgress, setPengantarProgress] = useState(0);
   const [adtSederhanaProgress, setAdtSederhanaProgress] = useState(0);
   const [listProgress, setListProgress] = useState(0);
+  const [mesinKarakterProgress, setMesinKarakterProgress] = useState(0);
 
   useEffect(() => {
     setPengantarProgress(calcPengantarProgress());
     setAdtSederhanaProgress(calcAdtSederhanaProgress());
     setListProgress(calcListProgress());
+    setMesinKarakterProgress(calcMesinKarakterProgress());
   }, []);
 
   return (
@@ -163,6 +177,7 @@ export default function TopikPage() {
             topic.id === 'pengantar' ? pengantarProgress :
             topic.id === 'adt-sederhana' ? adtSederhanaProgress :
             topic.id === 'list' ? listProgress :
+            topic.id === 'mesin-karakter' ? mesinKarakterProgress :
             topic.progress;
           return (
             <div
