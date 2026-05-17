@@ -1302,7 +1302,7 @@ function LatihanContent() {
         <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-xl font-bold text-gray-900">Hasil Latihan</h2>
-            <p className="text-sm text-gray-500">IF2111 Algoritma dan Struktur Data — Pengantar</p>
+            <p className="text-sm text-gray-500">Algoritma dan Struktur Data — Pengantar</p>
           </div>
         </div>
 
@@ -1449,7 +1449,7 @@ function LatihanContent() {
     <div className="text-[15px] text-gray-700">
       <div className="mb-4">
         <h2 className="text-xl font-bold text-gray-900">Soal Latihan</h2>
-        <p className="text-sm text-gray-500 mt-0.5">IF2111 Algoritma dan Struktur Data — Pengantar</p>
+        <p className="text-sm text-gray-500 mt-0.5">Algoritma dan Struktur Data — Pengantar</p>
       </div>
 
       {/* Dot navigation */}
@@ -1603,7 +1603,7 @@ function RingkasanContent() {
       {/* ── Title ── */}
       <div className="mb-5">
         <h2 className="text-xl font-bold text-gray-900">Ringkasan — Pengantar ASD</h2>
-        <p className="text-sm text-gray-400 mt-0.5">IF2111 Algoritma dan Struktur Data</p>
+        <p className="text-sm text-gray-400 mt-0.5">Algoritma dan Struktur Data</p>
       </div>
 
       {/* ── Infografis ── */}

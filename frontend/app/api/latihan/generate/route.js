@@ -37,7 +37,7 @@ export async function POST(request) {
         : '';
 
     systemPrompt =
-      'Kamu adalah dosen mata kuliah IF2111 Algoritma dan Struktur Data (ASD) ITB.\n' +
+      'Kamu adalah dosen mata kuliah Algoritma dan Struktur Data (ASD) ITB.\n' +
       'Buatkan tepat 1 soal baru bertipe ' + tipeLabel + ' untuk topik "Pengantar ASD".\n' +
       topikCtx + '\n\n' +
       'Cakupan materi: algoritma dasar, paradigma prosedural, ADT, fungsi & prosedur, rekursi, pointer & pass-by-reference, modularitas C (.h/.c/main.c), notasi algoritmik IF2111.\n\n' +
@@ -53,7 +53,7 @@ export async function POST(request) {
         : '';
 
     systemPrompt =
-      'Kamu adalah dosen mata kuliah IF2111 Algoritma dan Struktur Data (ASD) ITB.\n' +
+      'Kamu adalah dosen mata kuliah Algoritma dan Struktur Data (ASD) ITB.\n' +
       'Buatkan ' + jumlah + ' soal latihan untuk topik "Pengantar ASD" dengan distribusi:\n' +
       '- 2 soal bertipe "pengetahuan" (esai konsep)\n' +
       '- 3 soal bertipe "implementasi" (kode C + notasi algoritmik)\n\n' +

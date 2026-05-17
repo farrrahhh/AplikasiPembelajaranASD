@@ -55,7 +55,7 @@ export async function POST(request) {
     .map((r) => `- ${r.nama} (0–${r.maks} poin): ${r.panduan}`)
     .join('\n');
 
-  const systemPrompt = `Kamu adalah tutor mata kuliah IF2111 Algoritma dan Struktur Data (ASD) untuk program studi STI ITB.
+  const systemPrompt = `Kamu adalah tutor mata kuliah Algoritma dan Struktur Data  (ASD) untuk program studi STI ITB.
 Evaluasi jawaban mahasiswa secara objektif menggunakan rubrik penilaian yang ditentukan.
 
 Materi: Pengantar ASD — algoritma, struktur data, paradigma prosedural, ADT, fungsi & prosedur, rekursi, pointer, modularitas program C (.h, .c, main.c).
