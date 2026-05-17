@@ -171,7 +171,7 @@ function W3Table({ headers, rows }) {
 
 function SideBySide({ leftLabel, rightLabel, left, right }) {
   return (
-    <div className="my-4 grid grid-cols-2 gap-4">
+    <div className="my-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div>
         <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">{leftLabel}</div>
         {left}
@@ -915,7 +915,7 @@ function ContohContent() {
       {/* Contoh I/O */}
       <div className="mb-5">
         <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-2">Contoh</h3>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className="border border-gray-200 rounded-lg overflow-hidden">
             <div className="bg-gray-100 px-3 py-1.5 text-xs font-bold text-gray-500 border-b border-gray-200">
               Input
@@ -1560,30 +1560,32 @@ function LatihanContent({ onQuestionEvaluated }) {
       )}
 
       {/* Bottom nav */}
-      <div className="mt-4 flex items-center justify-between gap-3">
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
         <button
           onClick={() => { setIdx(Math.max(0, idx - 1)); setShowNotasi(false); setEvalError(''); }}
           disabled={idx === 0}
-          className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          className="flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors min-h-10"
         >
           ← Sebelumnya
         </button>
 
-        <span className="text-sm text-gray-400 shrink-0">Soal {idx + 1} dari {soalList.length}</span>
+        <span className="text-sm text-gray-400 shrink-0 order-last sm:order-0 w-full sm:w-auto text-center">
+          Soal {idx + 1} dari {soalList.length}
+        </span>
 
         <div className="flex items-center gap-2">
           {!currentFeedback ? (
             <button
               onClick={evaluasiSoal}
               disabled={isEvaluating || !currentJawaban.trim()}
-              className="flex items-center gap-2 px-5 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition-colors"
+              className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition-colors min-h-10"
             >
               {isEvaluating ? <><Spinner /> Menilai...</> : 'Nilai Soal Ini'}
             </button>
           ) : (
             <button
               onClick={handleLanjut}
-              className="flex items-center gap-1.5 px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors"
+              className="flex items-center gap-1.5 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-sm font-semibold rounded-lg transition-colors min-h-10"
             >
               {isLast ? 'Lihat Hasil' : 'Soal Berikutnya →'}
             </button>
@@ -1738,7 +1740,7 @@ function RingkasanContent() {
       </div>
 
       {/* ── Quick cheat: LIFO vs FIFO ── */}
-      <div className="grid grid-cols-2 gap-3 mb-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2">
         <div className="border border-green-200 rounded-xl p-3 text-center bg-green-50">
           <p className="text-xs font-bold text-green-700 uppercase tracking-widest mb-1">Stack — LIFO</p>
           <pre className="font-mono text-[12px] text-green-800 leading-loose">{`┌────┐
@@ -1788,6 +1790,7 @@ function saveProgress(updates) {
 export default function PengantarPage() {
   const [activeTab, setActiveTab] = useState('MATERI');
   const [activeSection, setActiveSection] = useState('intro');
+  const [showToc, setShowToc] = useState(false);
   const [completed, setCompleted] = useState(() => {
     if (typeof window === 'undefined') return { materi: false, contoh: false, latihan: false, ringkasan: false };
     const prog = readProgress();
@@ -1797,6 +1800,7 @@ export default function PengantarPage() {
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
+    setShowToc(false);
   };
 
   const handleComplete = (tab) => {
@@ -1842,9 +1846,9 @@ export default function PengantarPage() {
   };
 
   return (
-    <div className="flex" style={{ height: 'calc(100vh - 56px)' }}>
-      {/* ── Sidebar ── */}
-      <aside className="w-56 shrink-0 bg-white border-r border-gray-200 overflow-y-auto">
+    <div className="flex flex-col lg:flex-row overflow-hidden" style={{ height: 'calc(100vh - 56px)' }}>
+      {/* ── Sidebar (desktop only) ── */}
+      <aside className="hidden lg:block w-56 shrink-0 bg-white border-r border-gray-200 overflow-y-auto">
         <div className="py-3">
           <div className="px-4 py-2 text-[11px] font-bold text-gray-400 uppercase tracking-widest">
             Pengantar
@@ -1868,51 +1872,97 @@ export default function PengantarPage() {
       </aside>
 
       {/* ── Main area ── */}
-      <div className="flex-1 flex flex-col min-w-0 bg-white">
-        {/* Tabs */}
-        <div className="shrink-0 border-b border-gray-200 flex gap-1 px-6 pt-3 bg-white">
-          {TABS.map((tab) => {
-            const isDone = completed[TAB_KEYS[tab]];
-            const isActive = activeTab === tab;
-            return (
-              <button
-                key={tab}
-                onClick={() => handleTabClick(tab)}
-                className={`px-6 py-2.5 text-sm font-semibold rounded-t-lg transition-colors flex items-center gap-1.5 ${
-                  isActive
-                    ? 'bg-blue-700 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                {tab}
-                {isDone && (
-                  <svg
-                    className={`w-4 h-4 ${isActive ? 'text-green-300' : 'text-green-500'}`}
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                )}
-              </button>
-            );
-          })}
+      <div className="flex-1 flex flex-col min-w-0 bg-white overflow-hidden">
+        {/* Tabs — horizontally scrollable on mobile */}
+        <div className="shrink-0 border-b border-gray-200 bg-white overflow-x-auto">
+          <div className="flex gap-1 px-3 sm:px-6 pt-3 min-w-max">
+            {TABS.map((tab) => {
+              const isDone = completed[TAB_KEYS[tab]];
+              const isActive = activeTab === tab;
+              return (
+                <button
+                  key={tab}
+                  onClick={() => handleTabClick(tab)}
+                  className={`shrink-0 px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-t-lg transition-colors flex items-center gap-1.5 ${
+                    isActive
+                      ? 'bg-blue-700 text-white'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  {tab}
+                  {isDone && (
+                    <svg
+                      className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isActive ? 'text-green-300' : 'text-green-500'}`}
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  )}
+                </button>
+              );
+            })}
+          </div>
         </div>
+
+        {/* Mobile TOC toggle — MATERI tab only, hidden on lg */}
+        {activeTab === 'MATERI' && (
+          <div className="lg:hidden shrink-0 bg-gray-50 border-b border-gray-200">
+            <button
+              onClick={() => setShowToc((v) => !v)}
+              className="w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium text-gray-700 active:bg-gray-100"
+            >
+              <span className="flex items-center gap-2">
+                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h10" />
+                </svg>
+                Daftar Isi
+              </span>
+              <svg
+                className={`w-4 h-4 text-gray-400 transition-transform ${showToc ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {showToc && (
+              <div className="max-h-52 overflow-y-auto border-t border-gray-100 bg-white">
+                {SECTIONS.map((s) => (
+                  <button
+                    key={s.id}
+                    onClick={() => { scrollToSection(s.id); setShowToc(false); }}
+                    className={`w-full text-left text-[13px] px-4 py-2 transition-colors ${
+                      s.level === 1 ? 'pl-8' : ''
+                    } ${
+                      activeSection === s.id
+                        ? 'bg-blue-50 text-blue-700 font-semibold'
+                        : 'text-gray-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    {s.title}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Scrollable content */}
         <div ref={mainRef} className="flex-1 overflow-y-auto">
-          <div className="max-w-3xl mx-auto px-8 py-6">
+          <div className="max-w-3xl mx-auto px-4 sm:px-8 py-5 sm:py-6">
             {activeTab === 'MATERI' && <MateriContent />}
             {activeTab === 'CONTOH' && <ContohContent />}
             {activeTab === 'LATIHAN' && <LatihanContent onQuestionEvaluated={handleQuestionEvaluated} />}
             {activeTab === 'RINGKASAN' && <RingkasanContent />}
 
             {/* Section completion footer */}
-            <div className="mt-10 pt-6 border-t border-gray-200 flex items-center justify-between">
+            <div className="mt-10 pt-6 border-t border-gray-200 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-0 justify-between">
               <p className="text-sm text-gray-400">
                 {Object.values(completed).filter(Boolean).length} dari 4 seksi diselesaikan
               </p>
@@ -1930,7 +1980,7 @@ export default function PengantarPage() {
               ) : (
                 <button
                   onClick={() => handleComplete(activeTab)}
-                  className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors"
+                  className="w-full sm:w-auto px-5 py-2.5 sm:py-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-sm font-semibold rounded-lg transition-colors"
                 >
                   Tandai Selesai
                 </button>

@@ -126,32 +126,33 @@ export default function TopikPage() {
   }, []);
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Topik Pembelajaran</h1>
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+      <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Topik Pembelajaran</h1>
 
-      <div className="space-y-4">
-        {topics.map((topic) => (
-          <div
-            key={topic.id}
-            className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex"
-          >
+      <div className="space-y-3 sm:space-y-4">
+        {topics.map((topic) => {
+          const pct = topic.id === 'pengantar' ? pengantarProgress : topic.progress;
+          return (
             <div
-              className={`w-52 flex-shrink-0 flex items-center justify-center overflow-hidden ${topic.bg}`}
-              style={{ minHeight: '120px' }}
+              key={topic.id}
+              className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col sm:flex-row"
             >
-              {topic.icon ?? (
-                <span className="text-white text-opacity-40 text-4xl select-none">🔒</span>
-              )}
-            </div>
+              {/* Thumbnail */}
+              <div
+                className={`w-full h-36 sm:w-48 sm:h-auto md:w-52 shrink-0 flex items-center justify-center overflow-hidden ${topic.bg}`}
+              >
+                {topic.icon ?? (
+                  <span className="text-white text-opacity-40 text-4xl select-none">🔒</span>
+                )}
+              </div>
 
-            <div className="flex-1 p-5 flex items-center gap-4">
-              <div className="flex-1 min-w-0">
-                <h2 className="text-base font-semibold text-gray-900">{topic.title}</h2>
-                <p className="text-sm text-gray-500 mt-1 leading-relaxed">{topic.description}</p>
+              {/* Body */}
+              <div className="flex-1 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-sm sm:text-base font-semibold text-gray-900">{topic.title}</h2>
+                  <p className="text-xs sm:text-sm text-gray-500 mt-1 leading-relaxed">{topic.description}</p>
 
-                {topic.available && (() => {
-                  const pct = topic.id === 'pengantar' ? pengantarProgress : topic.progress;
-                  return (
+                  {topic.available && (
                     <div className="mt-3 flex items-center gap-2">
                       <div className="flex-1 bg-gray-200 rounded-full h-1.5">
                         <div
@@ -159,38 +160,39 @@ export default function TopikPage() {
                           style={{ width: `${pct}%` }}
                         />
                       </div>
-                      <span className="text-xs text-gray-400 w-10 text-right">{pct}%</span>
+                      <span className="text-xs text-gray-400 w-8 text-right shrink-0">{pct}%</span>
                     </div>
-                  );
-                })()}
+                  )}
 
-                {!topic.available && (
-                  <span className="inline-block mt-2 text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
-                    Segera hadir
-                  </span>
-                )}
-              </div>
+                  {!topic.available && (
+                    <span className="inline-block mt-2 text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
+                      Segera hadir
+                    </span>
+                  )}
+                </div>
 
-              <div className="flex-shrink-0">
-                {topic.available && topic.href ? (
-                  <Link
-                    href={topic.href}
-                    className="px-4 py-2 border border-gray-300 rounded text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors whitespace-nowrap"
-                  >
-                    {(topic.id === 'pengantar' ? pengantarProgress : topic.progress) > 0 ? 'Lanjutkan' : 'Mulai'}
-                  </Link>
-                ) : (
-                  <button
-                    disabled
-                    className="px-4 py-2 border border-gray-200 rounded text-sm font-medium text-gray-400 cursor-not-allowed"
-                  >
-                    Terkunci
-                  </button>
-                )}
+                {/* Action button */}
+                <div className="shrink-0 self-start sm:self-auto">
+                  {topic.available && topic.href ? (
+                    <Link
+                      href={topic.href}
+                      className="flex items-center px-4 py-2 border border-gray-300 rounded text-sm font-medium text-gray-700 hover:bg-gray-50 active:bg-gray-100 transition-colors whitespace-nowrap min-h-10"
+                    >
+                      {pct > 0 ? 'Lanjutkan' : 'Mulai'}
+                    </Link>
+                  ) : (
+                    <button
+                      disabled
+                      className="px-4 py-2 border border-gray-200 rounded text-sm font-medium text-gray-400 cursor-not-allowed min-h-10"
+                    >
+                      Terkunci
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

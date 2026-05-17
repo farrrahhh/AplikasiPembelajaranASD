@@ -66,9 +66,9 @@ export default function RegisterPage() {
       </div>
 
       {/* Right panel */}
-      <div className="flex flex-1 items-center justify-center bg-white px-8 py-12">
+      <div className="flex flex-1 items-center justify-center bg-white px-5 sm:px-8 py-10 sm:py-12">
         <div className="w-full max-w-md">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Ayo Daftar!</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Ayo Daftar!</h1>
           <p className="text-gray-500 mb-8 text-sm">
             Mulai perjalanan belajarmu dan pahami konsep Algoritma & Struktur Data langkah demi langkah.
           </p>
