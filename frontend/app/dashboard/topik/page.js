@@ -4,6 +4,18 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
+function calcAdtSederhanaProgress() {
+  try {
+    const d = JSON.parse(localStorage.getItem('asd_progress_adt_sederhana')) ?? {};
+    let count = 0;
+    if (d.materi) count++;
+    if (d.contoh) count++;
+    if (d.latihan) count++;
+    if (d.ringkasan) count++;
+    return count * 25;
+  } catch { return 0; }
+}
+
 function calcPengantarProgress() {
   try {
     const d = JSON.parse(localStorage.getItem('asd_progress_pengantar')) ?? {};
@@ -39,11 +51,11 @@ const topics = [
   {
     id: 'adt-sederhana',
     title: 'ADT Sederhana',
-    description: 'Mempelajari implementasi Abstract Data Type sederhana seperti Point, Time, dan Date.',
+    description: 'Mempelajari implementasi Abstract Data Type sederhana seperti Point, Time, dan Date dalam bahasa C menggunakan file .h dan .c.',
     progress: 0,
-    href: null,
-    available: false,
-    bg: 'bg-gray-400',
+    href: '/dashboard/topik/adt-sederhana',
+    available: true,
+    bg: 'bg-purple-600',
     icon: null,
   },
   {
@@ -120,9 +132,11 @@ const topics = [
 
 export default function TopikPage() {
   const [pengantarProgress, setPengantarProgress] = useState(0);
+  const [adtSederhanaProgress, setAdtSederhanaProgress] = useState(0);
 
   useEffect(() => {
     setPengantarProgress(calcPengantarProgress());
+    setAdtSederhanaProgress(calcAdtSederhanaProgress());
   }, []);
 
   return (
@@ -131,7 +145,10 @@ export default function TopikPage() {
 
       <div className="space-y-3 sm:space-y-4">
         {topics.map((topic) => {
-          const pct = topic.id === 'pengantar' ? pengantarProgress : topic.progress;
+          const pct =
+            topic.id === 'pengantar' ? pengantarProgress :
+            topic.id === 'adt-sederhana' ? adtSederhanaProgress :
+            topic.progress;
           return (
             <div
               key={topic.id}
@@ -142,7 +159,11 @@ export default function TopikPage() {
                 className={`w-full h-36 sm:w-48 sm:h-auto md:w-52 shrink-0 flex items-center justify-center overflow-hidden ${topic.bg}`}
               >
                 {topic.icon ?? (
-                  <span className="text-white text-opacity-40 text-4xl select-none">🔒</span>
+                  topic.available ? (
+                    <span className="text-white text-2xl font-bold select-none font-mono opacity-80 tracking-tight">{`{ ADT }`}</span>
+                  ) : (
+                    <span className="text-white text-opacity-40 text-4xl select-none">🔒</span>
+                  )
                 )}
               </div>
 
