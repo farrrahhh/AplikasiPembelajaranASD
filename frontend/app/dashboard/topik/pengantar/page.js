@@ -1135,7 +1135,7 @@ function FeedbackBody({ fb, soal, jawaban }) {
   );
 }
 
-function LatihanContent() {
+function LatihanContent({ onQuestionEvaluated }) {
   const [fase, setFase] = useState('loading');
   const [soalList, setSoalList] = useState([]);
   const [genError, setGenError] = useState('');
@@ -1204,6 +1204,7 @@ function LatihanContent() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? 'Evaluasi gagal');
       setFeedbackMap((prev) => ({ ...prev, [soal.id]: data }));
+      onQuestionEvaluated?.(soal.id);
     } catch (e) {
       setEvalError(e.message);
     } finally {
@@ -1766,12 +1767,51 @@ function RingkasanContent() {
 
 
 // ---------------------------------------------------------------------------
+// Progress helpers
+// ---------------------------------------------------------------------------
+const PROGRESS_KEY = 'asd_progress_pengantar';
+
+const TAB_KEYS = { MATERI: 'materi', CONTOH: 'contoh', LATIHAN: 'latihan', RINGKASAN: 'ringkasan' };
+
+function readProgress() {
+  try { return JSON.parse(localStorage.getItem(PROGRESS_KEY)) ?? {}; }
+  catch { return {}; }
+}
+
+function saveProgress(updates) {
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify({ ...readProgress(), ...updates }));
+}
+
+// ---------------------------------------------------------------------------
 // Main Page
 // ---------------------------------------------------------------------------
 export default function PengantarPage() {
   const [activeTab, setActiveTab] = useState('MATERI');
   const [activeSection, setActiveSection] = useState('intro');
+  const [completed, setCompleted] = useState(() => {
+    if (typeof window === 'undefined') return { materi: false, contoh: false, latihan: false, ringkasan: false };
+    const prog = readProgress();
+    return { materi: !!prog.materi, contoh: !!prog.contoh, latihan: !!prog.latihan, ringkasan: !!prog.ringkasan };
+  });
   const mainRef = useRef(null);
+
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);
+  };
+
+  const handleComplete = (tab) => {
+    const key = TAB_KEYS[tab];
+    if (!key || completed[key]) return;
+    saveProgress({ [key]: true });
+    setCompleted((prev) => ({ ...prev, [key]: true }));
+  };
+
+  const handleQuestionEvaluated = useCallback((questionId) => {
+    const prog = readProgress();
+    const evaluated = new Set(prog.latihanEvaluated ?? []);
+    evaluated.add(questionId);
+    saveProgress({ latihanEvaluated: [...evaluated] });
+  }, []);
 
   // Update sidebar highlight based on scroll position
   useEffect(() => {
@@ -1831,19 +1871,36 @@ export default function PengantarPage() {
       <div className="flex-1 flex flex-col min-w-0 bg-white">
         {/* Tabs */}
         <div className="shrink-0 border-b border-gray-200 flex gap-1 px-6 pt-3 bg-white">
-          {TABS.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-6 py-2.5 text-sm font-semibold rounded-t-lg transition-colors ${
-                activeTab === tab
-                  ? 'bg-blue-700 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
+          {TABS.map((tab) => {
+            const isDone = completed[TAB_KEYS[tab]];
+            const isActive = activeTab === tab;
+            return (
+              <button
+                key={tab}
+                onClick={() => handleTabClick(tab)}
+                className={`px-6 py-2.5 text-sm font-semibold rounded-t-lg transition-colors flex items-center gap-1.5 ${
+                  isActive
+                    ? 'bg-blue-700 text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                {tab}
+                {isDone && (
+                  <svg
+                    className={`w-4 h-4 ${isActive ? 'text-green-300' : 'text-green-500'}`}
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                )}
+              </button>
+            );
+          })}
         </div>
 
         {/* Scrollable content */}
@@ -1851,8 +1908,34 @@ export default function PengantarPage() {
           <div className="max-w-3xl mx-auto px-8 py-6">
             {activeTab === 'MATERI' && <MateriContent />}
             {activeTab === 'CONTOH' && <ContohContent />}
-            {activeTab === 'LATIHAN' && <LatihanContent />}
+            {activeTab === 'LATIHAN' && <LatihanContent onQuestionEvaluated={handleQuestionEvaluated} />}
             {activeTab === 'RINGKASAN' && <RingkasanContent />}
+
+            {/* Section completion footer */}
+            <div className="mt-10 pt-6 border-t border-gray-200 flex items-center justify-between">
+              <p className="text-sm text-gray-400">
+                {Object.values(completed).filter(Boolean).length} dari 4 seksi diselesaikan
+              </p>
+              {completed[TAB_KEYS[activeTab]] ? (
+                <div className="flex items-center gap-2 text-green-600 text-sm font-semibold">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  Seksi ini telah diselesaikan
+                </div>
+              ) : (
+                <button
+                  onClick={() => handleComplete(activeTab)}
+                  className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors"
+                >
+                  Tandai Selesai
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>

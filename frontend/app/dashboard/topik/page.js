@@ -1,7 +1,20 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+
+function calcPengantarProgress() {
+  try {
+    const d = JSON.parse(localStorage.getItem('asd_progress_pengantar')) ?? {};
+    let count = 0;
+    if (d.materi) count++;
+    if (d.contoh) count++;
+    if (d.latihan) count++;
+    if (d.ringkasan) count++;
+    return count * 25;
+  } catch { return 0; }
+}
 
 const topics = [
   {
@@ -106,6 +119,12 @@ const topics = [
 ];
 
 export default function TopikPage() {
+  const [pengantarProgress, setPengantarProgress] = useState(0);
+
+  useEffect(() => {
+    setPengantarProgress(calcPengantarProgress());
+  }, []);
+
   return (
     <div className="max-w-5xl mx-auto px-6 py-8">
       <h1 className="text-2xl font-bold text-gray-900 mb-6">Topik Pembelajaran</h1>
@@ -130,17 +149,20 @@ export default function TopikPage() {
                 <h2 className="text-base font-semibold text-gray-900">{topic.title}</h2>
                 <p className="text-sm text-gray-500 mt-1 leading-relaxed">{topic.description}</p>
 
-                {topic.available && (
-                  <div className="mt-3 flex items-center gap-2">
-                    <div className="flex-1 bg-gray-200 rounded-full h-1.5">
-                      <div
-                        className="bg-blue-600 h-1.5 rounded-full transition-all"
-                        style={{ width: `${topic.progress}%` }}
-                      />
+                {topic.available && (() => {
+                  const pct = topic.id === 'pengantar' ? pengantarProgress : topic.progress;
+                  return (
+                    <div className="mt-3 flex items-center gap-2">
+                      <div className="flex-1 bg-gray-200 rounded-full h-1.5">
+                        <div
+                          className="bg-blue-600 h-1.5 rounded-full transition-all"
+                          style={{ width: `${pct}%` }}
+                        />
+                      </div>
+                      <span className="text-xs text-gray-400 w-10 text-right">{pct}%</span>
                     </div>
-                    <span className="text-xs text-gray-400 w-10 text-right">{topic.progress}%</span>
-                  </div>
-                )}
+                  );
+                })()}
 
                 {!topic.available && (
                   <span className="inline-block mt-2 text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
@@ -155,7 +177,7 @@ export default function TopikPage() {
                     href={topic.href}
                     className="px-4 py-2 border border-gray-300 rounded text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors whitespace-nowrap"
                   >
-                    {topic.progress > 0 ? 'Lanjutkan' : 'Mulai'}
+                    {(topic.id === 'pengantar' ? pengantarProgress : topic.progress) > 0 ? 'Lanjutkan' : 'Mulai'}
                   </Link>
                 ) : (
                   <button
