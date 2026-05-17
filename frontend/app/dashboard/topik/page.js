@@ -28,6 +28,18 @@ function calcListProgress() {
   } catch { return 0; }
 }
 
+function calcStackQueueProgress() {
+  try {
+    const d = JSON.parse(localStorage.getItem('asd_progress_stack_queue')) ?? {};
+    let count = 0;
+    if (d.materi) count++;
+    if (d.contoh) count++;
+    if (d.latihan) count++;
+    if (d.ringkasan) count++;
+    return count * 25;
+  } catch { return 0; }
+}
+
 function calcAdtSederhanaProgress() {
   try {
     const d = JSON.parse(localStorage.getItem('asd_progress_adt_sederhana')) ?? {};
@@ -105,11 +117,11 @@ const topics = [
   {
     id: 'stack-queue',
     title: 'Stack & Queue',
-    description: 'Implementasi Stack (LIFO) dan Queue (FIFO) dalam berbagai konteks.',
+    description: 'Implementasi Stack (LIFO) dan Queue (FIFO) dengan array: tiga alternatif queue (termasuk circular buffer), algoritma push/pop, dan aplikasi evaluasi ekspresi postfix.',
     progress: 0,
-    href: null,
-    available: false,
-    bg: 'bg-gray-400',
+    href: '/dashboard/topik/stack-queue',
+    available: true,
+    bg: 'bg-rose-600',
     icon: null,
   },
   {
@@ -159,12 +171,14 @@ export default function TopikPage() {
   const [adtSederhanaProgress, setAdtSederhanaProgress] = useState(0);
   const [listProgress, setListProgress] = useState(0);
   const [mesinKarakterProgress, setMesinKarakterProgress] = useState(0);
+  const [stackQueueProgress, setStackQueueProgress] = useState(0);
 
   useEffect(() => {
     setPengantarProgress(calcPengantarProgress());
     setAdtSederhanaProgress(calcAdtSederhanaProgress());
     setListProgress(calcListProgress());
     setMesinKarakterProgress(calcMesinKarakterProgress());
+    setStackQueueProgress(calcStackQueueProgress());
   }, []);
 
   return (
@@ -178,6 +192,7 @@ export default function TopikPage() {
             topic.id === 'adt-sederhana' ? adtSederhanaProgress :
             topic.id === 'list' ? listProgress :
             topic.id === 'mesin-karakter' ? mesinKarakterProgress :
+            topic.id === 'stack-queue' ? stackQueueProgress :
             topic.progress;
           return (
             <div
