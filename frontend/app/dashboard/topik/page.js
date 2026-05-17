@@ -64,6 +64,18 @@ function calcBinaryTreeProgress() {
   } catch { return 0; }
 }
 
+function calcAplikasiProgress() {
+  try {
+    const d = JSON.parse(localStorage.getItem('asd_progress_aplikasi')) ?? {};
+    let count = 0;
+    if (d.materi) count++;
+    if (d.contoh) count++;
+    if (d.latihan) count++;
+    if (d.ringkasan) count++;
+    return count * 25;
+  } catch { return 0; }
+}
+
 function calcGraphProgress() {
   try {
     const d = JSON.parse(localStorage.getItem('asd_progress_graph')) ?? {};
@@ -203,11 +215,11 @@ const topics = [
   {
     id: 'aplikasi',
     title: 'Aplikasi',
-    description: 'Aplikasi struktur data dalam pemecahan masalah nyata.',
+    description: 'Studi kasus: Polinom (kontigu & berkait), Pengelolaan Memori (First Fit/Best Fit, zone kosong, GarbageCollection), Multi-List (pegawai-anak), dan Representasi Relasi M-N (dosen-MK, prosedur AddRel).',
     progress: 0,
-    href: null,
-    available: false,
-    bg: 'bg-gray-400',
+    href: '/dashboard/topik/aplikasi',
+    available: true,
+    bg: 'bg-orange-600',
     icon: null,
   },
 ];
@@ -221,6 +233,7 @@ export default function TopikPage() {
   const [setMapProgress, setSetMapProgress] = useState(0);
   const [binaryTreeProgress, setBinaryTreeProgress] = useState(0);
   const [graphProgress, setGraphProgress] = useState(0);
+  const [aplikasiProgress, setAplikasiProgress] = useState(0);
 
   useEffect(() => {
     setPengantarProgress(calcPengantarProgress());
@@ -231,6 +244,7 @@ export default function TopikPage() {
     setSetMapProgress(calcSetMapProgress());
     setBinaryTreeProgress(calcBinaryTreeProgress());
     setGraphProgress(calcGraphProgress());
+    setAplikasiProgress(calcAplikasiProgress());
   }, []);
 
   return (
@@ -248,6 +262,7 @@ export default function TopikPage() {
             topic.id === 'set-map' ? setMapProgress :
             topic.id === 'binary-tree' ? binaryTreeProgress :
             topic.id === 'graph' ? graphProgress :
+            topic.id === 'aplikasi' ? aplikasiProgress :
             topic.progress;
           return (
             <div
