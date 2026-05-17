@@ -52,6 +52,18 @@ function calcStackQueueProgress() {
   } catch { return 0; }
 }
 
+function calcBinaryTreeProgress() {
+  try {
+    const d = JSON.parse(localStorage.getItem('asd_progress_binary_tree')) ?? {};
+    let count = 0;
+    if (d.materi) count++;
+    if (d.contoh) count++;
+    if (d.latihan) count++;
+    if (d.ringkasan) count++;
+    return count * 25;
+  } catch { return 0; }
+}
+
 function calcAdtSederhanaProgress() {
   try {
     const d = JSON.parse(localStorage.getItem('asd_progress_adt_sederhana')) ?? {};
@@ -159,11 +171,11 @@ const topics = [
   {
     id: 'binary-tree',
     title: 'Binary Tree',
-    description: 'Pohon biner: traversal, BST, dan operasi pada tree.',
+    description: 'Pohon biner: representasi berkait, traversal (pre/in/post-order), fungsi rekursif (nbElmt/depth/nbLeaf), pohon seimbang, dan BST (insert, delete, pencarian).',
     progress: 0,
-    href: null,
-    available: false,
-    bg: 'bg-gray-400',
+    href: '/dashboard/topik/binary-tree',
+    available: true,
+    bg: 'bg-amber-600',
     icon: null,
   },
   {
@@ -195,6 +207,7 @@ export default function TopikPage() {
   const [mesinKarakterProgress, setMesinKarakterProgress] = useState(0);
   const [stackQueueProgress, setStackQueueProgress] = useState(0);
   const [setMapProgress, setSetMapProgress] = useState(0);
+  const [binaryTreeProgress, setBinaryTreeProgress] = useState(0);
 
   useEffect(() => {
     setPengantarProgress(calcPengantarProgress());
@@ -203,6 +216,7 @@ export default function TopikPage() {
     setMesinKarakterProgress(calcMesinKarakterProgress());
     setStackQueueProgress(calcStackQueueProgress());
     setSetMapProgress(calcSetMapProgress());
+    setBinaryTreeProgress(calcBinaryTreeProgress());
   }, []);
 
   return (
@@ -218,6 +232,7 @@ export default function TopikPage() {
             topic.id === 'mesin-karakter' ? mesinKarakterProgress :
             topic.id === 'stack-queue' ? stackQueueProgress :
             topic.id === 'set-map' ? setMapProgress :
+            topic.id === 'binary-tree' ? binaryTreeProgress :
             topic.progress;
           return (
             <div

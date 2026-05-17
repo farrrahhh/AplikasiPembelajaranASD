@@ -1,33 +1,33 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useRef, useCallback } from 'react';
-import Link from 'next/link';
+import { useState, useEffect, useRef, useCallback } from "react";
+import Link from "next/link";
 
 // ---------------------------------------------------------------------------
 // Sidebar section definitions
 // ---------------------------------------------------------------------------
 const SECTIONS = [
-  { id: 'intro',        title: 'ADT dalam Bahasa C',       level: 0 },
-  { id: 'komponen',     title: 'Komponen ADT',              level: 0 },
-  { id: 'contoh-point', title: 'Contoh ADT: POINT',         level: 0 },
-  { id: 'konstruktor',  title: 'Konstruktor',               level: 1 },
-  { id: 'selektor',     title: 'Selektor',                  level: 1 },
-  { id: 'operasi-lain', title: 'Operasi Lain',              level: 1 },
-  { id: 'predikat',     title: 'Predikat',                  level: 1 },
-  { id: 'operasi-io',   title: 'Operasi I/O',               level: 1 },
-  { id: 'selektor-macro', title: 'Selektor & Macro C',      level: 0 },
-  { id: 'implementasi', title: 'Implementasi dalam C',      level: 0 },
-  { id: 'boolean-h',    title: 'boolean.h',                 level: 1 },
-  { id: 'point-h',      title: 'point.h',                   level: 1 },
-  { id: 'point-c',      title: 'point.c',                   level: 1 },
-  { id: 'main-c',       title: 'main_point.c',              level: 1 },
-  { id: 'kompilasi',    title: 'Cara Kompilasi',            level: 0 },
-  { id: 'alur',         title: 'Alur Implementasi ADT',     level: 0 },
-  { id: 'perbandingan', title: 'Perbandingan Notasi',       level: 0 },
-  { id: 'tips',         title: 'Tips Implementasi',         level: 0 },
+  { id: "intro", title: "ADT dalam Bahasa C", level: 0 },
+  { id: "komponen", title: "Komponen ADT", level: 0 },
+  { id: "contoh-point", title: "Contoh ADT: POINT", level: 0 },
+  { id: "konstruktor", title: "Konstruktor", level: 1 },
+  { id: "selektor", title: "Selektor", level: 1 },
+  { id: "operasi-lain", title: "Operasi Lain", level: 1 },
+  { id: "predikat", title: "Predikat", level: 1 },
+  { id: "operasi-io", title: "Operasi I/O", level: 1 },
+  { id: "selektor-macro", title: "Selektor & Macro C", level: 0 },
+  { id: "implementasi", title: "Implementasi dalam C", level: 0 },
+  { id: "boolean-h", title: "boolean.h", level: 1 },
+  { id: "point-h", title: "point.h", level: 1 },
+  { id: "point-c", title: "point.c", level: 1 },
+  { id: "main-c", title: "main_point.c", level: 1 },
+  { id: "kompilasi", title: "Cara Kompilasi", level: 0 },
+  { id: "alur", title: "Alur Implementasi ADT", level: 0 },
+  { id: "perbandingan", title: "Perbandingan Notasi", level: 0 },
+  { id: "tips", title: "Tips Implementasi", level: 0 },
 ];
 
-const TABS = ['MATERI', 'CONTOH', 'LATIHAN', 'RINGKASAN'];
+const TABS = ["MATERI", "CONTOH", "LATIHAN", "RINGKASAN"];
 
 // ---------------------------------------------------------------------------
 // Primitive building blocks
@@ -37,7 +37,7 @@ function SectionHeading({ id, children }) {
   return (
     <h2
       id={id}
-      className="text-xl font-bold text-gray-900 mt-10 mb-3 pb-2 border-b-2 border-gray-200 scroll-mt-28"
+      className='text-xl font-bold text-gray-900 mt-10 mb-3 pb-2 border-b-2 border-gray-200 scroll-mt-28'
     >
       {children}
     </h2>
@@ -48,20 +48,20 @@ function SubHeading({ id, children }) {
   return (
     <h3
       id={id}
-      className="text-base font-bold text-gray-800 mt-6 mb-2 scroll-mt-28"
+      className='text-base font-bold text-gray-800 mt-6 mb-2 scroll-mt-28'
     >
       {children}
     </h3>
   );
 }
 
-function P({ children, className = '' }) {
+function P({ children, className = "" }) {
   return <p className={`mb-3 leading-relaxed ${className}`}>{children}</p>;
 }
 
 function Mono({ children }) {
   return (
-    <code className="bg-gray-100 text-purple-700 text-[13px] px-1.5 py-0.5 rounded font-mono border border-gray-200">
+    <code className='bg-gray-100 text-purple-700 text-[13px] px-1.5 py-0.5 rounded font-mono border border-gray-200'>
       {children}
     </code>
   );
@@ -69,13 +69,13 @@ function Mono({ children }) {
 
 function CodeBlock({ language, children }) {
   return (
-    <div className="my-4 rounded-lg overflow-hidden border border-gray-200 text-[13px]">
+    <div className='my-4 rounded-lg overflow-hidden border border-gray-200 text-[13px]'>
       {language && (
-        <div className="bg-gray-700 text-gray-300 px-4 py-1 font-mono text-xs tracking-wide">
+        <div className='bg-gray-700 text-gray-300 px-4 py-1 font-mono text-xs tracking-wide'>
           {language}
         </div>
       )}
-      <pre className="bg-gray-900 text-green-300 px-5 py-4 overflow-x-auto font-mono leading-relaxed">
+      <pre className='bg-gray-900 text-green-300 px-5 py-4 overflow-x-auto font-mono leading-relaxed'>
         <code>{children.trim()}</code>
       </pre>
     </div>
@@ -84,7 +84,7 @@ function CodeBlock({ language, children }) {
 
 function Pseudocode({ children }) {
   return (
-    <pre className="my-4 bg-gray-50 border border-gray-200 rounded-lg px-5 py-4 text-[13px] font-mono text-gray-800 overflow-x-auto leading-relaxed">
+    <pre className='my-4 bg-gray-50 border border-gray-200 rounded-lg px-5 py-4 text-[13px] font-mono text-gray-800 overflow-x-auto leading-relaxed'>
       {children.trim()}
     </pre>
   );
@@ -92,7 +92,7 @@ function Pseudocode({ children }) {
 
 function AsciiBox({ children }) {
   return (
-    <pre className="my-4 bg-purple-50 border border-purple-100 rounded-lg px-5 py-4 text-[13px] font-mono text-purple-900 overflow-x-auto leading-relaxed">
+    <pre className='my-4 bg-purple-50 border border-purple-100 rounded-lg px-5 py-4 text-[13px] font-mono text-purple-900 overflow-x-auto leading-relaxed'>
       {children.trim()}
     </pre>
   );
@@ -100,8 +100,8 @@ function AsciiBox({ children }) {
 
 function NoteBox({ children }) {
   return (
-    <div className="my-4 bg-yellow-50 border-l-4 border-yellow-400 px-4 py-3 rounded-r-lg text-sm text-gray-700">
-      <span className="font-semibold text-yellow-700">Catatan: </span>
+    <div className='my-4 bg-yellow-50 border-l-4 border-yellow-400 px-4 py-3 rounded-r-lg text-sm text-gray-700'>
+      <span className='font-semibold text-yellow-700'>Catatan: </span>
       {children}
     </div>
   );
@@ -109,7 +109,7 @@ function NoteBox({ children }) {
 
 function InfoBox({ children }) {
   return (
-    <div className="my-4 bg-purple-50 border-l-4 border-purple-500 px-4 py-3 rounded-r-lg text-sm text-gray-700">
+    <div className='my-4 bg-purple-50 border-l-4 border-purple-500 px-4 py-3 rounded-r-lg text-sm text-gray-700'>
       {children}
     </div>
   );
@@ -117,7 +117,7 @@ function InfoBox({ children }) {
 
 function UL({ items }) {
   return (
-    <ul className="my-3 space-y-1 list-disc list-inside ml-2 text-[15px] text-gray-700">
+    <ul className='my-3 space-y-1 list-disc list-inside ml-2 text-[15px] text-gray-700'>
       {items.map((item, i) => (
         <li key={i}>{item}</li>
       ))}
@@ -127,14 +127,14 @@ function UL({ items }) {
 
 function W3Table({ headers, rows }) {
   return (
-    <div className="my-4 overflow-x-auto rounded-lg border border-gray-200">
-      <table className="w-full border-collapse text-sm">
+    <div className='my-4 overflow-x-auto rounded-lg border border-gray-200'>
+      <table className='w-full border-collapse text-sm'>
         <thead>
           <tr>
             {headers.map((h, i) => (
               <th
                 key={i}
-                className="bg-gray-800 text-white px-4 py-2.5 text-left font-semibold border-r border-gray-600 last:border-r-0"
+                className='bg-gray-800 text-white px-4 py-2.5 text-left font-semibold border-r border-gray-600 last:border-r-0'
               >
                 {h}
               </th>
@@ -143,11 +143,11 @@ function W3Table({ headers, rows }) {
         </thead>
         <tbody>
           {rows.map((row, i) => (
-            <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+            <tr key={i} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
               {row.map((cell, j) => (
                 <td
                   key={j}
-                  className="px-4 py-2.5 text-gray-700 border-t border-gray-100 border-r last:border-r-0"
+                  className='px-4 py-2.5 text-gray-700 border-t border-gray-100 border-r last:border-r-0'
                 >
                   {cell}
                 </td>
@@ -161,7 +161,7 @@ function W3Table({ headers, rows }) {
 }
 
 function Divider() {
-  return <hr className="my-8 border-gray-200" />;
+  return <hr className='my-8 border-gray-200' />;
 }
 
 // ---------------------------------------------------------------------------
@@ -169,24 +169,25 @@ function Divider() {
 // ---------------------------------------------------------------------------
 function MateriContent() {
   return (
-    <div className="text-[15px] text-gray-700">
-
+    <div className='text-[15px] text-gray-700'>
       {/* ── 1. Intro ──────────────────────────────────────────── */}
-      <SectionHeading id="intro">ADT dalam Bahasa C</SectionHeading>
+      <SectionHeading id='intro'>ADT dalam Bahasa C</SectionHeading>
       <P>
-        <strong>ADT (Abstract Data Type)</strong> adalah tipe data yang didefinisikan berdasarkan{' '}
-        <em>data yang disimpan</em> dan <em>operasi yang bisa dilakukan</em> terhadap data tersebut.
+        <strong>ADT (Abstract Data Type)</strong> adalah tipe data yang
+        didefinisikan berdasarkan <em>data yang disimpan</em> dan{" "}
+        <em>operasi yang bisa dilakukan</em> terhadap data tersebut.
       </P>
       <P>
-        Dalam bahasa C, ADT diimplementasikan menggunakan <strong>modul program</strong> yang terdiri
-        dari file header <Mono>.h</Mono> dan file implementasi <Mono>.c</Mono>.
+        Dalam bahasa C, ADT diimplementasikan menggunakan{" "}
+        <strong>modul program</strong> yang terdiri dari file header{" "}
+        <Mono>.h</Mono> dan file implementasi <Mono>.c</Mono>.
       </P>
       <AsciiBox>{`File .h  →  antarmuka (apa yang bisa dilakukan)
 File .c  →  implementasi (bagaimana caranya)`}</AsciiBox>
       <Divider />
 
       {/* ── 2. Komponen ───────────────────────────────────────── */}
-      <SectionHeading id="komponen">Komponen ADT dalam Bahasa C</SectionHeading>
+      <SectionHeading id='komponen'>Komponen ADT dalam Bahasa C</SectionHeading>
       <P>Setiap ADT biasanya memiliki komponen-komponen berikut:</P>
       <AsciiBox>{`Konstruktor  → membentuk/menginisialisasi data
 Selektor     → mengakses atau mengubah komponen data
@@ -194,22 +195,39 @@ Predikat     → mengecek kondisi data
 Operasi I/O  → membaca dan menampilkan data
 Operasi lain → fungsi tambahan terhadap data`}</AsciiBox>
       <W3Table
-        headers={['Komponen', 'Fungsi', 'Contoh']}
+        headers={["Komponen", "Fungsi", "Contoh"]}
         rows={[
-          ['Konstruktor', 'Membentuk/menginisialisasi sebuah nilai ADT', 'CreatePoint(p, x, y)'],
-          ['Selektor',    'Mengakses atau mengubah komponen dalam ADT',  'getAbsis(p), setOrdinat(p, y)'],
-          ['Predikat',   'Mengecek kondisi tertentu pada ADT',           'isOrigin(p)'],
-          ['Operasi I/O','Membaca dari keyboard atau menulis ke layar',  'readPoint(p), displayPoint(p)'],
-          ['Operasi lain','Fungsi/prosedur tambahan terhadap ADT',       'move(p, dx, dy)'],
+          [
+            "Konstruktor",
+            "Membentuk/menginisialisasi sebuah nilai ADT",
+            "CreatePoint(p, x, y)",
+          ],
+          [
+            "Selektor",
+            "Mengakses atau mengubah komponen dalam ADT",
+            "getAbsis(p), setOrdinat(p, y)",
+          ],
+          ["Predikat", "Mengecek kondisi tertentu pada ADT", "isOrigin(p)"],
+          [
+            "Operasi I/O",
+            "Membaca dari keyboard atau menulis ke layar",
+            "readPoint(p), displayPoint(p)",
+          ],
+          [
+            "Operasi lain",
+            "Fungsi/prosedur tambahan terhadap ADT",
+            "move(p, dx, dy)",
+          ],
         ]}
       />
       <Divider />
 
       {/* ── 3. Contoh ADT POINT ───────────────────────────────── */}
-      <SectionHeading id="contoh-point">Contoh ADT: POINT</SectionHeading>
+      <SectionHeading id='contoh-point'>Contoh ADT: POINT</SectionHeading>
       <P>
-        ADT <Mono>POINT</Mono> merepresentasikan sebuah titik dalam bidang dua dimensi dengan
-        komponen absis (<Mono>x</Mono>) dan ordinat (<Mono>y</Mono>).
+        ADT <Mono>POINT</Mono> merepresentasikan sebuah titik dalam bidang dua
+        dimensi dengan komponen absis (<Mono>x</Mono>) dan ordinat (
+        <Mono>y</Mono>).
       </P>
 
       <SubHeading>Definisi dalam Notasi Algoritmik</SubHeading>
@@ -217,19 +235,20 @@ Operasi lain → fungsi tambahan terhadap data`}</AsciiBox>
               y: real >  { ordinat }`}</Pseudocode>
 
       {/* ── 3a. Konstruktor ───────────────────────────────────── */}
-      <SubHeading id="konstruktor">Konstruktor</SubHeading>
+      <SubHeading id='konstruktor'>Konstruktor</SubHeading>
       <P>
-        Konstruktor membentuk sebuah nilai ADT dari komponen-komponennya. Selalu gunakan
-        konstruktor — jangan langsung mengisi field struct dari luar modul.
+        Konstruktor membentuk sebuah nilai ADT dari komponen-komponennya. Selalu
+        gunakan konstruktor — jangan langsung mengisi field struct dari luar
+        modul.
       </P>
       <Pseudocode>{`procedure CreatePoint(output p: Point, input x: real, input y: real)
 { membentuk sebuah Point p dari x dan y }`}</Pseudocode>
 
       {/* ── 3b. Selektor ──────────────────────────────────────── */}
-      <SubHeading id="selektor">Selektor</SubHeading>
+      <SubHeading id='selektor'>Selektor</SubHeading>
       <P>
-        Selektor mengakses atau mengubah komponen ADT. Ada dua jenis: <em>getter</em> (membaca nilai)
-        dan <em>setter</em> (mengubah nilai).
+        Selektor mengakses atau mengubah komponen ADT. Ada dua jenis:{" "}
+        <em>getter</em> (membaca nilai) dan <em>setter</em> (mengubah nilai).
       </P>
       <Pseudocode>{`function getAbsis (p: Point) → real
 { mengirimkan komponen absis dari p }
@@ -244,26 +263,28 @@ procedure setOrdinat (input/output p: Point, input newY: real)
 { mengubah nilai komponen ordinat dari p menjadi newY }`}</Pseudocode>
 
       {/* ── 3c. Operasi Lain ──────────────────────────────────── */}
-      <SubHeading id="operasi-lain">Operasi Lain</SubHeading>
+      <SubHeading id='operasi-lain'>Operasi Lain</SubHeading>
       <P>
-        Fungsi <Mono>move</Mono> menggeser titik sejauh <Mono>dx</Mono> dan <Mono>dy</Mono> dan
-        menghasilkan titik baru.
+        Fungsi <Mono>move</Mono> menggeser titik sejauh <Mono>dx</Mono> dan{" "}
+        <Mono>dy</Mono> dan menghasilkan titik baru.
       </P>
       <Pseudocode>{`function move (p1: Point, dx, dy: real) → Point
 { menghasilkan Point hasil penggeseran p1 sebesar dx dan dy }`}</Pseudocode>
 
       {/* ── 3d. Predikat ──────────────────────────────────────── */}
-      <SubHeading id="predikat">Predikat</SubHeading>
+      <SubHeading id='predikat'>Predikat</SubHeading>
       <P>
-        Predikat mengembalikan nilai boolean. Predikat <em>tidak</em> mengubah nilai ADT.
+        Predikat mengembalikan nilai boolean. Predikat <em>tidak</em> mengubah
+        nilai ADT.
       </P>
       <Pseudocode>{`function isOrigin (p: Point) → boolean
 { mengirimkan true jika p adalah titik origin <0,0> }`}</Pseudocode>
 
       {/* ── 3e. Operasi I/O ───────────────────────────────────── */}
-      <SubHeading id="operasi-io">Operasi I/O</SubHeading>
+      <SubHeading id='operasi-io'>Operasi I/O</SubHeading>
       <P>
-        Prosedur I/O menghubungkan ADT dengan perangkat input/output (keyboard dan layar).
+        Prosedur I/O menghubungkan ADT dengan perangkat input/output (keyboard
+        dan layar).
       </P>
       <Pseudocode>{`procedure readPoint (output p: Point)
 { membentuk p dari x dan y yang dibaca }
@@ -273,29 +294,37 @@ procedure displayPoint (input p: Point)
       <Divider />
 
       {/* ── 4. Selektor Macro ─────────────────────────────────── */}
-      <SectionHeading id="selektor-macro">Catatan Khusus: Selektor ADT dalam Bahasa C</SectionHeading>
+      <SectionHeading id='selektor-macro'>
+        Catatan Khusus: Selektor ADT dalam Bahasa C
+      </SectionHeading>
       <P>
-        Selektor <Mono>get*</Mono> dan <Mono>set*</Mono> pada bahasa C dapat diganti dengan{' '}
-        <strong>C preprocessor macro berparameter</strong>, yaitu:
+        Selektor <Mono>get*</Mono> dan <Mono>set*</Mono> pada bahasa C dapat
+        diganti dengan <strong>C preprocessor macro berparameter</strong>,
+        yaitu:
       </P>
-      <CodeBlock language="c">{`
+      <CodeBlock language='c'>{`
 #define ABSIS(p)   (p).x
 #define ORDINAT(p) (p).y
 `}</CodeBlock>
       <P>Kelebihan menggunakan macro dibanding fungsi biasa:</P>
-      <UL items={[
-        'Lebih ringkas — tidak perlu menulis fungsi getter/setter terpisah',
-        'Tidak ada overhead pemanggilan fungsi (inline substitution oleh preprocessor)',
-        'Akses langsung ke field struct tetap terkontrol melalui nama yang bermakna',
-      ]} />
+      <UL
+        items={[
+          "Lebih ringkas — tidak perlu menulis fungsi getter/setter terpisah",
+          "Tidak ada overhead pemanggilan fungsi (inline substitution oleh preprocessor)",
+          "Akses langsung ke field struct tetap terkontrol melalui nama yang bermakna",
+        ]}
+      />
       <NoteBox>
-        Macro <Mono>ABSIS(*p) = x</Mono> sama artinya dengan <Mono>(*p).x = x</Mono>.
-        Dengan macro, kode lebih ekspresif dan sesuai notasi algoritmik.
+        Macro <Mono>ABSIS(*p) = x</Mono> sama artinya dengan{" "}
+        <Mono>(*p).x = x</Mono>. Dengan macro, kode lebih ekspresif dan sesuai
+        notasi algoritmik.
       </NoteBox>
       <Divider />
 
       {/* ── 5. Implementasi ───────────────────────────────────── */}
-      <SectionHeading id="implementasi">Implementasi ADT POINT dalam Bahasa C</SectionHeading>
+      <SectionHeading id='implementasi'>
+        Implementasi ADT POINT dalam Bahasa C
+      </SectionHeading>
       <P>ADT POINT dibagi menjadi beberapa file dengan struktur berikut:</P>
       <AsciiBox>{`project/
 ├── boolean.h        ← definisi tipe boolean
@@ -304,12 +333,14 @@ procedure displayPoint (input p: Point)
 └── main_point.c     ← program utama yang menggunakan ADT`}</AsciiBox>
 
       {/* ── 5a. boolean.h ─────────────────────────────────────── */}
-      <SubHeading id="boolean-h">File <code className="font-mono text-[14px]">boolean.h</code></SubHeading>
+      <SubHeading id='boolean-h'>
+        File <code className='font-mono text-[14px]'>boolean.h</code>
+      </SubHeading>
       <P>
-        Bahasa C tidak memiliki tipe boolean bawaan. Kita mendefinisikannya secara manual
-        menggunakan preprocessor macro.
+        Bahasa C tidak memiliki tipe boolean bawaan. Kita mendefinisikannya
+        secara manual menggunakan preprocessor macro.
       </P>
-      <CodeBlock language="c">{`
+      <CodeBlock language='c'>{`
 /* File: boolean.h */
 /* Definisi type boolean */
 
@@ -323,17 +354,20 @@ procedure displayPoint (input p: Point)
 #endif
 `}</CodeBlock>
       <P>
-        File ini perlu diinclude di setiap file yang membutuhkan tipe <Mono>boolean</Mono>.
-        Include guard (<Mono>#ifndef</Mono>) mencegah file diinclude lebih dari sekali.
+        File ini perlu diinclude di setiap file yang membutuhkan tipe{" "}
+        <Mono>boolean</Mono>. Include guard (<Mono>#ifndef</Mono>) mencegah file
+        diinclude lebih dari sekali.
       </P>
 
       {/* ── 5b. point.h ───────────────────────────────────────── */}
-      <SubHeading id="point-h">File <code className="font-mono text-[14px]">point.h</code></SubHeading>
+      <SubHeading id='point-h'>
+        File <code className='font-mono text-[14px]'>point.h</code>
+      </SubHeading>
       <P>
-        File <Mono>.h</Mono> berisi definisi tipe data, macro selektor, dan prototype
-        (deklarasi) setiap fungsi dan prosedur.
+        File <Mono>.h</Mono> berisi definisi tipe data, macro selektor, dan
+        prototype (deklarasi) setiap fungsi dan prosedur.
       </P>
-      <CodeBlock language="c">{`
+      <CodeBlock language='c'>{`
 #ifndef POINT_H
 #define POINT_H
 
@@ -371,23 +405,37 @@ point move (point p, float dx, float dy);
 #endif
 `}</CodeBlock>
       <InfoBox>
-        <p className="text-sm font-semibold text-purple-800 mb-1">Catatan penting</p>
-        <ul className="mt-1 text-sm text-purple-700 space-y-0.5 list-disc list-inside">
-          <li><Mono>#ifndef / #define</Mono> di awal — include guard mencegah duplikasi</li>
-          <li><Mono>#include "boolean.h"</Mono> — agar tipe boolean dikenali</li>
-          <li><Mono>#define ABSIS(p) (p).x</Mono> — macro selektor menggantikan fungsi get/set</li>
+        <p className='text-sm font-semibold text-purple-800 mb-1'>
+          Catatan penting
+        </p>
+        <ul className='mt-1 text-sm text-purple-700 space-y-0.5 list-disc list-inside'>
+          <li>
+            <Mono>#ifndef / #define</Mono> di awal — include guard mencegah
+            duplikasi
+          </li>
+          <li>
+            <Mono>#include "boolean.h"</Mono> — agar tipe boolean dikenali
+          </li>
+          <li>
+            <Mono>#define ABSIS(p) (p).x</Mono> — macro selektor menggantikan
+            fungsi get/set
+          </li>
         </ul>
       </InfoBox>
 
       {/* ── 5c. point.c ───────────────────────────────────────── */}
-      <SubHeading id="point-c">File <code className="font-mono text-[14px]">point.c</code></SubHeading>
+      <SubHeading id='point-c'>
+        File <code className='font-mono text-[14px]'>point.c</code>
+      </SubHeading>
       <P>
-        File <Mono>.c</Mono> berisi implementasi dari setiap fungsi dan prosedur yang
-        dideklarasikan di <Mono>.h</Mono>.
+        File <Mono>.c</Mono> berisi implementasi dari setiap fungsi dan prosedur
+        yang dideklarasikan di <Mono>.h</Mono>.
       </P>
 
-      <P><strong>Konstruktor</strong></P>
-      <CodeBlock language="c">{`
+      <P>
+        <strong>Konstruktor</strong>
+      </P>
+      <CodeBlock language='c'>{`
 #include <stdio.h>
 #include "point.h"
 
@@ -399,12 +447,15 @@ void CreatePoint (point *p, float x, float y) {
 }
 `}</CodeBlock>
       <NoteBox>
-        <Mono>ABSIS(*p) = x</Mono> menggunakan macro selektor. Ini sama artinya dengan{' '}
-        <Mono>(*p).x = x</Mono>, namun lebih ekspresif dan konsisten dengan notasi algoritmik.
+        <Mono>ABSIS(*p) = x</Mono> menggunakan macro selektor. Ini sama artinya
+        dengan <Mono>(*p).x = x</Mono>, namun lebih ekspresif dan konsisten
+        dengan notasi algoritmik.
       </NoteBox>
 
-      <P><strong>Predikat</strong></P>
-      <CodeBlock language="c">{`
+      <P>
+        <strong>Predikat</strong>
+      </P>
+      <CodeBlock language='c'>{`
 boolean isOrigin (point p) {
     /* Mengirimkan nilai benar jika p adalah titik origin <0,0> */
     /* ALGORITMA */
@@ -412,12 +463,16 @@ boolean isOrigin (point p) {
 }
 `}</CodeBlock>
       <NoteBox>
-        Gunakan ekspresi boolean langsung: <Mono>return (kondisi);</Mono> — hindari
-        konstruksi <Mono>if (kondisi) return TRUE; else return FALSE;</Mono> yang tidak perlu.
+        Gunakan ekspresi boolean langsung: <Mono>return (kondisi);</Mono> —
+        hindari konstruksi{" "}
+        <Mono>if (kondisi) return TRUE; else return FALSE;</Mono> yang tidak
+        perlu.
       </NoteBox>
 
-      <P><strong>Operasi I/O</strong></P>
-      <CodeBlock language="c">{`
+      <P>
+        <strong>Operasi I/O</strong>
+      </P>
+      <CodeBlock language='c'>{`
 void readPoint (point *p) {
     /* Membentuk p dari x dan y yang dibaca dari keyboard */
     /* KAMUS */
@@ -434,8 +489,10 @@ void displayPoint (point p) {
 }
 `}</CodeBlock>
 
-      <P><strong>Operasi Lain</strong></P>
-      <CodeBlock language="c">{`
+      <P>
+        <strong>Operasi Lain</strong>
+      </P>
+      <CodeBlock language='c'>{`
 point move (point p, float dx, float dy) {
     /* Menghasilkan point hasil penggeseran p sebesar dx dan dy */
     /* KAMUS */
@@ -449,12 +506,15 @@ point move (point p, float dx, float dy) {
 ORDINAT(p) + dy  → ordinat baru = ordinat lama + pergeseran y`}</AsciiBox>
 
       {/* ── 5d. main_point.c ──────────────────────────────────── */}
-      <SubHeading id="main-c">File <code className="font-mono text-[14px]">main_point.c</code></SubHeading>
+      <SubHeading id='main-c'>
+        File <code className='font-mono text-[14px]'>main_point.c</code>
+      </SubHeading>
       <P>
-        File <Mono>main.c</Mono> berisi program utama yang <em>menggunakan</em> ADT.
-        Program utama tidak perlu tahu detail implementasi — cukup include <Mono>point.h</Mono>.
+        File <Mono>main.c</Mono> berisi program utama yang <em>menggunakan</em>{" "}
+        ADT. Program utama tidak perlu tahu detail implementasi — cukup include{" "}
+        <Mono>point.h</Mono>.
       </P>
-      <CodeBlock language="c">{`
+      <CodeBlock language='c'>{`
 #include <stdio.h>
 #include "point.h"
 
@@ -492,13 +552,13 @@ int main () {
       <Divider />
 
       {/* ── 6. Kompilasi ──────────────────────────────────────── */}
-      <SectionHeading id="kompilasi">Cara Kompilasi</SectionHeading>
+      <SectionHeading id='kompilasi'>Cara Kompilasi</SectionHeading>
       <P>Untuk mengkompilasi program dengan beberapa file sekaligus:</P>
-      <CodeBlock language="bash">{`
+      <CodeBlock language='bash'>{`
 gcc main_point.c point.c -o main_point
 `}</CodeBlock>
       <P>Atau menggunakan Makefile agar lebih praktis:</P>
-      <CodeBlock language="makefile">{`
+      <CodeBlock language='makefile'>{`
 all: main_point
 
 main_point: main_point.c point.c point.h boolean.h
@@ -510,7 +570,7 @@ clean:
       <Divider />
 
       {/* ── 7. Alur ───────────────────────────────────────────── */}
-      <SectionHeading id="alur">Ringkasan Alur Implementasi ADT</SectionHeading>
+      <SectionHeading id='alur'>Ringkasan Alur Implementasi ADT</SectionHeading>
       <AsciiBox>{`1. Tentukan data dan operasi ADT
         ↓
 2. Tulis notasi algoritmik
@@ -525,36 +585,53 @@ clean:
       <Divider />
 
       {/* ── 8. Perbandingan ───────────────────────────────────── */}
-      <SectionHeading id="perbandingan">Perbandingan Notasi Algoritmik vs Bahasa C</SectionHeading>
+      <SectionHeading id='perbandingan'>
+        Perbandingan Notasi Algoritmik vs Bahasa C
+      </SectionHeading>
       <W3Table
-        headers={['Notasi Algoritmik', 'Bahasa C']}
+        headers={["Notasi Algoritmik", "Bahasa C"]}
         rows={[
-          ['type Point: <x: real, y: real>', 'typedef struct Point { float x; float y; } point;'],
-          ['function getAbsis(p) → real',    '#define ABSIS(p) (p).x'],
-          ['procedure setAbsis(p, newX)',     'ABSIS(p) = newX;'],
-          ['procedure CreatePoint(p, x, y)', 'void CreatePoint(point *p, float x, float y)'],
-          ['function isOrigin(p) → boolean', 'boolean isOrigin(point p)'],
-          ['procedure readPoint(p)',          'void readPoint(point *p)'],
-          ['procedure displayPoint(p)',       'void displayPoint(point p)'],
-          ['function move(p, dx, dy) → Point','point move(point p, float dx, float dy)'],
+          [
+            "type Point: <x: real, y: real>",
+            "typedef struct Point { float x; float y; } point;",
+          ],
+          ["function getAbsis(p) → real", "#define ABSIS(p) (p).x"],
+          ["procedure setAbsis(p, newX)", "ABSIS(p) = newX;"],
+          [
+            "procedure CreatePoint(p, x, y)",
+            "void CreatePoint(point *p, float x, float y)",
+          ],
+          ["function isOrigin(p) → boolean", "boolean isOrigin(point p)"],
+          ["procedure readPoint(p)", "void readPoint(point *p)"],
+          ["procedure displayPoint(p)", "void displayPoint(point p)"],
+          [
+            "function move(p, dx, dy) → Point",
+            "point move(point p, float dx, float dy)",
+          ],
         ]}
       />
       <Divider />
 
       {/* ── 9. Tips ───────────────────────────────────────────── */}
-      <SectionHeading id="tips">Tips Implementasi ADT</SectionHeading>
-      <div className="space-y-4">
-        <div className="bg-green-50 border border-green-200 rounded-xl p-4">
-          <p className="text-sm font-bold text-green-800 mb-2">Gunakan macro untuk selektor</p>
-          <UL items={[
-            'Lebih efisien dari pemanggilan fungsi',
-            'Kode lebih mudah dibaca dan konsisten dengan notasi algoritmik',
-            'Akses field struct tetap terkontrol melalui nama yang bermakna',
-          ]} />
+      <SectionHeading id='tips'>Tips Implementasi ADT</SectionHeading>
+      <div className='space-y-4'>
+        <div className='bg-green-50 border border-green-200 rounded-xl p-4'>
+          <p className='text-sm font-bold text-green-800 mb-2'>
+            Gunakan macro untuk selektor
+          </p>
+          <UL
+            items={[
+              "Lebih efisien dari pemanggilan fungsi",
+              "Kode lebih mudah dibaca dan konsisten dengan notasi algoritmik",
+              "Akses field struct tetap terkontrol melalui nama yang bermakna",
+            ]}
+          />
         </div>
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-          <p className="text-sm font-bold text-blue-800 mb-2">Selalu gunakan include guard</p>
-          <CodeBlock language="c">{`
+        <div className='bg-blue-50 border border-blue-200 rounded-xl p-4'>
+          <p className='text-sm font-bold text-blue-800 mb-2'>
+            Selalu gunakan include guard
+          </p>
+          <CodeBlock language='c'>{`
 #ifndef NAMA_FILE_H
 #define NAMA_FILE_H
 
@@ -563,34 +640,41 @@ clean:
 #endif
 `}</CodeBlock>
         </div>
-        <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-          <p className="text-sm font-bold text-yellow-800 mb-2">Gunakan konstruktor untuk menginisialisasi data</p>
-          <p className="text-sm text-yellow-900">
-            Jangan langsung mengakses field struct dari luar modul. Gunakan selalu{' '}
-            <Mono>CreatePoint</Mono>, bukan <Mono>p.x = 3; p.y = 4;</Mono>.
+        <div className='bg-yellow-50 border border-yellow-200 rounded-xl p-4'>
+          <p className='text-sm font-bold text-yellow-800 mb-2'>
+            Gunakan konstruktor untuk menginisialisasi data
+          </p>
+          <p className='text-sm text-yellow-900'>
+            Jangan langsung mengakses field struct dari luar modul. Gunakan
+            selalu <Mono>CreatePoint</Mono>, bukan{" "}
+            <Mono>p.x = 3; p.y = 4;</Mono>.
           </p>
         </div>
-        <div className="bg-purple-50 border border-purple-200 rounded-xl p-4">
-          <p className="text-sm font-bold text-purple-800 mb-2">Pisahkan file .h dan .c</p>
+        <div className='bg-purple-50 border border-purple-200 rounded-xl p-4'>
+          <p className='text-sm font-bold text-purple-800 mb-2'>
+            Pisahkan file .h dan .c
+          </p>
           <AsciiBox>{`.h → antarmuka (apa yang bisa dilakukan)
 .c → implementasi (bagaimana caranya)`}</AsciiBox>
         </div>
       </div>
 
       {/* Summary card */}
-      <div className="mt-10 mb-6 bg-purple-50 border border-purple-200 rounded-xl p-6">
-        <h3 className="font-bold text-purple-900 text-base mb-3">Ringkasan Penting</h3>
-        <ul className="space-y-1.5 text-sm text-purple-900">
+      <div className='mt-10 mb-6 bg-purple-50 border border-purple-200 rounded-xl p-6'>
+        <h3 className='font-bold text-purple-900 text-base mb-3'>
+          Ringkasan Penting
+        </h3>
+        <ul className='space-y-1.5 text-sm text-purple-900'>
           {[
-            'ADT mendefinisikan data dan operasinya secara bersamaan.',
-            'Komponen ADT: Konstruktor, Selektor, Predikat, Operasi I/O, Operasi Lain.',
-            'Selektor di C diganti dengan macro preprocessor (#define).',
-            'File .h berisi antarmuka; file .c berisi implementasi.',
-            'Include guard (#ifndef) mencegah file diinclude lebih dari sekali.',
-            'Selalu inisialisasi ADT melalui konstruktor, bukan akses field langsung.',
+            "ADT mendefinisikan data dan operasinya secara bersamaan.",
+            "Komponen ADT: Konstruktor, Selektor, Predikat, Operasi I/O, Operasi Lain.",
+            "Selektor di C diganti dengan macro preprocessor (#define).",
+            "File .h berisi antarmuka; file .c berisi implementasi.",
+            "Include guard (#ifndef) mencegah file diinclude lebih dari sekali.",
+            "Selalu inisialisasi ADT melalui konstruktor, bukan akses field langsung.",
           ].map((item, i) => (
-            <li key={i} className="flex gap-2">
-              <span className="text-purple-500 font-bold">✓</span>
+            <li key={i} className='flex gap-2'>
+              <span className='text-purple-500 font-bold'>✓</span>
               <span>{item}</span>
             </li>
           ))}
@@ -608,135 +692,173 @@ function ContohContent() {
   const [showJawaban, setShowJawaban] = useState(false);
 
   return (
-    <div className="text-[15px] text-gray-700">
-
+    <div className='text-[15px] text-gray-700'>
       {/* Header */}
-      <div className="mb-6">
-        <div className="flex items-center gap-2 mb-3 flex-wrap">
-          <span className="bg-green-100 text-green-700 text-xs font-bold px-2.5 py-1 rounded-full border border-green-200">
+      <div className='mb-6'>
+        <div className='flex items-center gap-2 mb-3 flex-wrap'>
+          <span className='bg-green-100 text-green-700 text-xs font-bold px-2.5 py-1 rounded-full border border-green-200'>
             Easy
           </span>
-          <span className="bg-purple-50 text-purple-700 text-xs font-medium px-2.5 py-1 rounded-full border border-purple-100">
+          <span className='bg-purple-50 text-purple-700 text-xs font-medium px-2.5 py-1 rounded-full border border-purple-100'>
             ADT POINT
           </span>
-          <span className="bg-purple-50 text-purple-700 text-xs font-medium px-2.5 py-1 rounded-full border border-purple-100">
+          <span className='bg-purple-50 text-purple-700 text-xs font-medium px-2.5 py-1 rounded-full border border-purple-100'>
             Operasi Lain
           </span>
-          <span className="bg-purple-50 text-purple-700 text-xs font-medium px-2.5 py-1 rounded-full border border-purple-100">
+          <span className='bg-purple-50 text-purple-700 text-xs font-medium px-2.5 py-1 rounded-full border border-purple-100'>
             Implementasi C
           </span>
         </div>
-        <h2 className="text-xl font-bold text-gray-900">Menghitung Jarak Dua Titik</h2>
+        <h2 className='text-xl font-bold text-gray-900'>
+          Menghitung Jarak Dua Titik
+        </h2>
       </div>
 
       {/* Deskripsi */}
-      <div className="mb-5">
-        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-2">Deskripsi</h3>
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 leading-relaxed">
+      <div className='mb-5'>
+        <h3 className='text-sm font-bold text-gray-500 uppercase tracking-widest mb-2'>
+          Deskripsi
+        </h3>
+        <div className='bg-gray-50 border border-gray-200 rounded-lg p-4 leading-relaxed'>
           <p>
-            Diberikan dua titik{' '}
-            <code className="bg-white border border-gray-200 text-purple-700 px-1 rounded font-mono text-[13px]">p1</code>{' '}
-            dan{' '}
-            <code className="bg-white border border-gray-200 text-purple-700 px-1 rounded font-mono text-[13px]">p2</code>{' '}
-            yang direpresentasikan sebagai ADT <code className="bg-white border border-gray-200 text-purple-700 px-1 rounded font-mono text-[13px]">POINT</code>.
-            Tambahkan fungsi <code className="bg-white border border-gray-200 text-purple-700 px-1 rounded font-mono text-[13px]">distance</code> ke
-            dalam ADT POINT yang menghitung jarak Euclidean antara dua titik, kemudian panggil fungsi tersebut dari{' '}
-            <code className="bg-white border border-gray-200 text-purple-700 px-1 rounded font-mono text-[13px]">main</code>.
+            Diberikan dua titik{" "}
+            <code className='bg-white border border-gray-200 text-purple-700 px-1 rounded font-mono text-[13px]'>
+              p1
+            </code>{" "}
+            dan{" "}
+            <code className='bg-white border border-gray-200 text-purple-700 px-1 rounded font-mono text-[13px]'>
+              p2
+            </code>{" "}
+            yang direpresentasikan sebagai ADT{" "}
+            <code className='bg-white border border-gray-200 text-purple-700 px-1 rounded font-mono text-[13px]'>
+              POINT
+            </code>
+            . Tambahkan fungsi{" "}
+            <code className='bg-white border border-gray-200 text-purple-700 px-1 rounded font-mono text-[13px]'>
+              distance
+            </code>{" "}
+            ke dalam ADT POINT yang menghitung jarak Euclidean antara dua titik,
+            kemudian panggil fungsi tersebut dari{" "}
+            <code className='bg-white border border-gray-200 text-purple-700 px-1 rounded font-mono text-[13px]'>
+              main
+            </code>
+            .
           </p>
-          <p className="mt-2 text-sm text-gray-500">
-            Rumus jarak Euclidean: <code className="font-mono">d = √((x2−x1)² + (y2−y1)²)</code>
+          <p className='mt-2 text-sm text-gray-500'>
+            Rumus jarak Euclidean:{" "}
+            <code className='font-mono'>d = √((x2−x1)² + (y2−y1)²)</code>
           </p>
         </div>
       </div>
 
       {/* Input / Output / Constraint */}
-      <div className="grid grid-cols-3 gap-3 mb-5">
-        <div className="border border-gray-200 rounded-lg p-3">
-          <div className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1">Input</div>
-          <p className="text-sm text-gray-700">
+      <div className='grid grid-cols-3 gap-3 mb-5'>
+        <div className='border border-gray-200 rounded-lg p-3'>
+          <div className='text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1'>
+            Input
+          </div>
+          <p className='text-sm text-gray-700'>
             Dua titik (absis &amp; ordinat masing-masing)
           </p>
         </div>
-        <div className="border border-gray-200 rounded-lg p-3">
-          <div className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1">Output</div>
-          <p className="text-sm text-gray-700">Jarak antara dua titik (float, 2 desimal)</p>
+        <div className='border border-gray-200 rounded-lg p-3'>
+          <div className='text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1'>
+            Output
+          </div>
+          <p className='text-sm text-gray-700'>
+            Jarak antara dua titik (float, 2 desimal)
+          </p>
         </div>
-        <div className="border border-gray-200 rounded-lg p-3">
-          <div className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1">Constraint</div>
-          <p className="text-sm font-mono text-gray-700">−1000 ≤ x,y ≤ 1000</p>
+        <div className='border border-gray-200 rounded-lg p-3'>
+          <div className='text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1'>
+            Constraint
+          </div>
+          <p className='text-sm font-mono text-gray-700'>−1000 ≤ x,y ≤ 1000</p>
         </div>
       </div>
 
       {/* Contoh I/O */}
-      <div className="mb-5">
-        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-2">Contoh</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div className="border border-gray-200 rounded-lg overflow-hidden">
-            <div className="bg-gray-100 px-3 py-1.5 text-xs font-bold text-gray-500 border-b border-gray-200">
+      <div className='mb-5'>
+        <h3 className='text-sm font-bold text-gray-500 uppercase tracking-widest mb-2'>
+          Contoh
+        </h3>
+        <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
+          <div className='border border-gray-200 rounded-lg overflow-hidden'>
+            <div className='bg-gray-100 px-3 py-1.5 text-xs font-bold text-gray-500 border-b border-gray-200'>
               Input (p1 lalu p2)
             </div>
-            <pre className="bg-white px-4 py-3 font-mono text-sm text-gray-800">{`3 0\n0 4`}</pre>
+            <pre className='bg-white px-4 py-3 font-mono text-sm text-gray-800'>{`3 0\n0 4`}</pre>
           </div>
-          <div className="border border-gray-200 rounded-lg overflow-hidden">
-            <div className="bg-gray-100 px-3 py-1.5 text-xs font-bold text-gray-500 border-b border-gray-200">
+          <div className='border border-gray-200 rounded-lg overflow-hidden'>
+            <div className='bg-gray-100 px-3 py-1.5 text-xs font-bold text-gray-500 border-b border-gray-200'>
               Output
             </div>
-            <pre className="bg-white px-4 py-3 font-mono text-sm text-gray-800">5.00</pre>
+            <pre className='bg-white px-4 py-3 font-mono text-sm text-gray-800'>
+              5.00
+            </pre>
           </div>
         </div>
       </div>
 
       {/* Hint (collapsible) */}
-      <div className="mb-5">
+      <div className='mb-5'>
         <button
           onClick={() => setShowHint(!showHint)}
-          className="flex items-center gap-2 text-sm font-semibold text-yellow-700 bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-2.5 hover:bg-yellow-100 transition-colors w-full"
+          className='flex items-center gap-2 text-sm font-semibold text-yellow-700 bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-2.5 hover:bg-yellow-100 transition-colors w-full'
         >
-          <span>{showHint ? '▾' : '▸'}</span>
+          <span>{showHint ? "▾" : "▸"}</span>
           <span>Hint</span>
         </button>
         {showHint && (
-          <div className="mt-2 bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-3 text-sm text-gray-700">
-            <p className="mb-2">Gunakan macro selektor yang sudah ada dan fungsi <code className="font-mono">sqrt</code> dari <code className="font-mono">&lt;math.h&gt;</code>:</p>
-            <pre className="bg-white border border-yellow-100 rounded px-3 py-2 font-mono text-[13px] text-gray-800">
+          <div className='mt-2 bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-3 text-sm text-gray-700'>
+            <p className='mb-2'>
+              Gunakan macro selektor yang sudah ada dan fungsi{" "}
+              <code className='font-mono'>sqrt</code> dari{" "}
+              <code className='font-mono'>&lt;math.h&gt;</code>:
+            </p>
+            <pre className='bg-white border border-yellow-100 rounded px-3 py-2 font-mono text-[13px] text-gray-800'>
               {`#include <math.h>\n\nfloat dx = ABSIS(p2) - ABSIS(p1);\nfloat dy = ORDINAT(p2) - ORDINAT(p1);\nreturn sqrt(dx*dx + dy*dy);`}
             </pre>
-            <p className="mt-2">Kompilasi dengan flag <code className="font-mono">-lm</code> untuk link library math.</p>
+            <p className='mt-2'>
+              Kompilasi dengan flag <code className='font-mono'>-lm</code> untuk
+              link library math.
+            </p>
           </div>
         )}
       </div>
 
-      <hr className="my-6 border-gray-200" />
+      <hr className='my-6 border-gray-200' />
 
       {/* Pembahasan (collapsible) */}
       <div>
         <button
           onClick={() => setShowJawaban(!showJawaban)}
-          className="flex items-center gap-2 text-sm font-semibold text-purple-700 bg-purple-50 border border-purple-200 rounded-lg px-4 py-2.5 hover:bg-purple-100 transition-colors w-full mb-4"
+          className='flex items-center gap-2 text-sm font-semibold text-purple-700 bg-purple-50 border border-purple-200 rounded-lg px-4 py-2.5 hover:bg-purple-100 transition-colors w-full mb-4'
         >
-          <span>{showJawaban ? '▾' : '▸'}</span>
+          <span>{showJawaban ? "▾" : "▸"}</span>
           <span>Lihat Pembahasan</span>
         </button>
 
         {showJawaban && (
-          <div className="space-y-6">
-
+          <div className='space-y-6'>
             {/* Algoritma */}
             <div>
-              <h3 className="text-base font-bold text-gray-800 mb-2">Algoritma</h3>
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <ol className="list-decimal list-inside space-y-2 text-sm text-gray-700">
+              <h3 className='text-base font-bold text-gray-800 mb-2'>
+                Algoritma
+              </h3>
+              <div className='bg-gray-50 border border-gray-200 rounded-lg p-4'>
+                <ol className='list-decimal list-inside space-y-2 text-sm text-gray-700'>
                   <li>Input p1 (absis dan ordinat pertama)</li>
                   <li>Input p2 (absis dan ordinat kedua)</li>
                   <li>
-                    Hitung selisih:{' '}
-                    <code className="bg-white border border-gray-200 text-purple-700 px-1.5 rounded font-mono text-[12px]">
+                    Hitung selisih:{" "}
+                    <code className='bg-white border border-gray-200 text-purple-700 px-1.5 rounded font-mono text-[12px]'>
                       dx = x2 - x1, dy = y2 - y1
                     </code>
                   </li>
                   <li>
-                    Hitung jarak:{' '}
-                    <code className="bg-white border border-gray-200 text-purple-700 px-1.5 rounded font-mono text-[12px]">
+                    Hitung jarak:{" "}
+                    <code className='bg-white border border-gray-200 text-purple-700 px-1.5 rounded font-mono text-[12px]'>
                       d = √(dx² + dy²)
                     </code>
                   </li>
@@ -747,9 +869,11 @@ function ContohContent() {
 
             {/* Notasi Algoritmik */}
             <div>
-              <h3 className="text-base font-bold text-gray-800 mb-2">Notasi Algoritmik</h3>
-              <pre className="bg-gray-50 border border-gray-200 rounded-lg px-5 py-4 text-[13px] font-mono text-gray-800 overflow-x-auto leading-relaxed">
-{`function distance (p1: Point, p2: Point) → real
+              <h3 className='text-base font-bold text-gray-800 mb-2'>
+                Notasi Algoritmik
+              </h3>
+              <pre className='bg-gray-50 border border-gray-200 rounded-lg px-5 py-4 text-[13px] font-mono text-gray-800 overflow-x-auto leading-relaxed'>
+                {`function distance (p1: Point, p2: Point) → real
 { menghasilkan jarak Euclidean antara p1 dan p2 }
 { IS: p1 dan p2 adalah Point yang valid }
 { FS: mengirimkan sqrt((x2-x1)^2 + (y2-y1)^2) }
@@ -766,11 +890,16 @@ ALGORITMA
 
             {/* Tambahan ke point.h */}
             <div>
-              <h3 className="text-base font-bold text-gray-800 mb-2">Tambahan di <code className="font-mono text-[14px]">point.h</code></h3>
-              <div className="rounded-lg overflow-hidden border border-gray-200 text-[13px]">
-                <div className="bg-gray-700 text-gray-300 px-4 py-1 font-mono text-xs tracking-wide">c</div>
-                <pre className="bg-gray-900 text-green-300 px-5 py-4 overflow-x-auto font-mono leading-relaxed">
-{`/* Tambahkan setelah deklarasi move: */
+              <h3 className='text-base font-bold text-gray-800 mb-2'>
+                Tambahan di{" "}
+                <code className='font-mono text-[14px]'>point.h</code>
+              </h3>
+              <div className='rounded-lg overflow-hidden border border-gray-200 text-[13px]'>
+                <div className='bg-gray-700 text-gray-300 px-4 py-1 font-mono text-xs tracking-wide'>
+                  c
+                </div>
+                <pre className='bg-gray-900 text-green-300 px-5 py-4 overflow-x-auto font-mono leading-relaxed'>
+                  {`/* Tambahkan setelah deklarasi move: */
 float distance (point p1, point p2);
 /* Menghasilkan jarak Euclidean antara p1 dan p2 */`}
                 </pre>
@@ -779,11 +908,16 @@ float distance (point p1, point p2);
 
             {/* Implementasi C */}
             <div>
-              <h3 className="text-base font-bold text-gray-800 mb-2">Implementasi di <code className="font-mono text-[14px]">point.c</code></h3>
-              <div className="rounded-lg overflow-hidden border border-gray-200 text-[13px]">
-                <div className="bg-gray-700 text-gray-300 px-4 py-1 font-mono text-xs tracking-wide">c</div>
-                <pre className="bg-gray-900 text-green-300 px-5 py-4 overflow-x-auto font-mono leading-relaxed">
-{`#include <math.h>
+              <h3 className='text-base font-bold text-gray-800 mb-2'>
+                Implementasi di{" "}
+                <code className='font-mono text-[14px]'>point.c</code>
+              </h3>
+              <div className='rounded-lg overflow-hidden border border-gray-200 text-[13px]'>
+                <div className='bg-gray-700 text-gray-300 px-4 py-1 font-mono text-xs tracking-wide'>
+                  c
+                </div>
+                <pre className='bg-gray-900 text-green-300 px-5 py-4 overflow-x-auto font-mono leading-relaxed'>
+                  {`#include <math.h>
 #include "point.h"
 
 float distance (point p1, point p2) {
@@ -801,36 +935,56 @@ float distance (point p1, point p2) {
 
             {/* Penggunaan di main */}
             <div>
-              <h3 className="text-base font-bold text-gray-800 mb-2">Penggunaan di <code className="font-mono text-[14px]">main_point.c</code></h3>
-              <div className="rounded-lg overflow-hidden border border-gray-200 text-[13px]">
-                <div className="bg-gray-700 text-gray-300 px-4 py-1 font-mono text-xs tracking-wide">c</div>
-                <pre className="bg-gray-900 text-green-300 px-5 py-4 overflow-x-auto font-mono leading-relaxed">
-{`point p1, p2;
+              <h3 className='text-base font-bold text-gray-800 mb-2'>
+                Penggunaan di{" "}
+                <code className='font-mono text-[14px]'>main_point.c</code>
+              </h3>
+              <div className='rounded-lg overflow-hidden border border-gray-200 text-[13px]'>
+                <div className='bg-gray-700 text-gray-300 px-4 py-1 font-mono text-xs tracking-wide'>
+                  c
+                </div>
+                <pre className='bg-gray-900 text-green-300 px-5 py-4 overflow-x-auto font-mono leading-relaxed'>
+                  {`point p1, p2;
 readPoint(&p1);   /* Input: 3 0  */
 readPoint(&p2);   /* Input: 0 4  */
 printf("%.2f\\n", distance(p1, p2));  /* Output: 5.00 */`}
                 </pre>
               </div>
-              <div className="mt-3 bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm">
-                <span className="font-semibold text-gray-600">Trace untuk p1=(3,0), p2=(0,4):</span>
-                <div className="mt-1 font-mono text-[13px] text-gray-700 space-y-0.5">
-                  <div>dx = 0 − 3 = <span className="text-purple-700 font-bold">−3</span></div>
-                  <div>dy = 4 − 0 = <span className="text-purple-700 font-bold">4</span></div>
-                  <div>d = √(9 + 16) = √25 = <span className="text-green-700 font-bold">5.00</span></div>
+              <div className='mt-3 bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm'>
+                <span className='font-semibold text-gray-600'>
+                  Trace untuk p1=(3,0), p2=(0,4):
+                </span>
+                <div className='mt-1 font-mono text-[13px] text-gray-700 space-y-0.5'>
+                  <div>
+                    dx = 0 − 3 ={" "}
+                    <span className='text-purple-700 font-bold'>−3</span>
+                  </div>
+                  <div>
+                    dy = 4 − 0 ={" "}
+                    <span className='text-purple-700 font-bold'>4</span>
+                  </div>
+                  <div>
+                    d = √(9 + 16) = √25 ={" "}
+                    <span className='text-green-700 font-bold'>5.00</span>
+                  </div>
                 </div>
               </div>
-              <div className="mt-3 bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
-                <strong>Kompilasi:</strong>{' '}
-                <code className="font-mono text-[13px]">gcc main_point.c point.c -o main_point -lm</code>
+              <div className='mt-3 bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800'>
+                <strong>Kompilasi:</strong>{" "}
+                <code className='font-mono text-[13px]'>
+                  gcc main_point.c point.c -o main_point -lm
+                </code>
                 <br />
-                <span className="text-xs text-blue-600 mt-0.5 block">Flag <code className="font-mono">-lm</code> diperlukan karena kita menggunakan fungsi <code className="font-mono">sqrt</code> dari library math.</span>
+                <span className='text-xs text-blue-600 mt-0.5 block'>
+                  Flag <code className='font-mono'>-lm</code> diperlukan karena
+                  kita menggunakan fungsi{" "}
+                  <code className='font-mono'>sqrt</code> dari library math.
+                </span>
               </div>
             </div>
-
           </div>
         )}
       </div>
-
     </div>
   );
 }
@@ -839,46 +993,73 @@ printf("%.2f\\n", distance(p1, p2));  /* Output: 5.00 */`}
 // Latihan helpers (shared)
 // ---------------------------------------------------------------------------
 const NILAI_COLOR = {
-  'Sangat Baik': 'bg-green-100 text-green-700 border-green-200',
-  Baik: 'bg-blue-100 text-blue-700 border-blue-200',
-  Cukup: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-  'Perlu Perbaikan': 'bg-red-100 text-red-700 border-red-200',
-  'Belum Dijawab': 'bg-gray-100 text-gray-500 border-gray-200',
+  "Sangat Baik": "bg-green-100 text-green-700 border-green-200",
+  Baik: "bg-blue-100 text-blue-700 border-blue-200",
+  Cukup: "bg-yellow-100 text-yellow-700 border-yellow-200",
+  "Perlu Perbaikan": "bg-red-100 text-red-700 border-red-200",
+  "Belum Dijawab": "bg-gray-100 text-gray-500 border-gray-200",
 };
 
 const SKOR_BAR = (skor) => {
-  if (skor >= 85) return 'bg-green-500';
-  if (skor >= 70) return 'bg-blue-500';
-  if (skor >= 50) return 'bg-yellow-500';
-  return 'bg-red-500';
+  if (skor >= 85) return "bg-green-500";
+  if (skor >= 70) return "bg-blue-500";
+  if (skor >= 50) return "bg-yellow-500";
+  return "bg-red-500";
 };
 
 function Spinner() {
   return (
-    <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
-      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+    <svg className='animate-spin w-4 h-4' viewBox='0 0 24 24' fill='none'>
+      <circle
+        className='opacity-25'
+        cx='12'
+        cy='12'
+        r='10'
+        stroke='currentColor'
+        strokeWidth='4'
+      />
+      <path
+        className='opacity-75'
+        fill='currentColor'
+        d='M4 12a8 8 0 018-8v8z'
+      />
     </svg>
   );
 }
 
 function MetrikBar({ metrik }) {
   return (
-    <div className="px-4 py-3 border-t border-gray-100 space-y-2.5">
-      <div className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Rincian Penilaian</div>
+    <div className='px-4 py-3 border-t border-gray-100 space-y-2.5'>
+      <div className='text-[11px] font-bold text-gray-400 uppercase tracking-widest'>
+        Rincian Penilaian
+      </div>
       {metrik.map((m) => {
         const pct = m.maks > 0 ? (m.skor / m.maks) * 100 : 0;
-        const barColor = pct >= 70 ? 'bg-green-500' : pct >= 50 ? 'bg-yellow-500' : 'bg-red-400';
+        const barColor =
+          pct >= 70
+            ? "bg-green-500"
+            : pct >= 50
+              ? "bg-yellow-500"
+              : "bg-red-400";
         return (
           <div key={m.nama}>
-            <div className="flex items-center justify-between text-xs mb-0.5">
-              <span className="text-gray-600 font-medium">{m.nama}</span>
-              <span className="text-gray-500 font-mono">{m.skor}/{m.maks}</span>
+            <div className='flex items-center justify-between text-xs mb-0.5'>
+              <span className='text-gray-600 font-medium'>{m.nama}</span>
+              <span className='text-gray-500 font-mono'>
+                {m.skor}/{m.maks}
+              </span>
             </div>
-            <div className="bg-gray-100 rounded-full h-1.5 mb-0.5">
-              <div className={`h-1.5 rounded-full ${barColor}`} style={{ width: `${pct}%` }} />
+            <div className='bg-gray-100 rounded-full h-1.5 mb-0.5'>
+              <div
+                className={`h-1.5 rounded-full ${barColor}`}
+                style={{ width: `${pct}%` }}
+              />
             </div>
-            {m.keterangan && <p className="text-[11px] text-gray-400 leading-tight">{m.keterangan}</p>}
+            {m.keterangan && (
+              <p className='text-[11px] text-gray-400 leading-tight'>
+                {m.keterangan}
+              </p>
+            )}
           </div>
         );
       })}
@@ -888,31 +1069,46 @@ function MetrikBar({ metrik }) {
 
 function FeedbackBody({ fb, soal, jawaban }) {
   return (
-    <div className="px-4 py-4 border-t border-gray-100 space-y-3">
+    <div className='px-4 py-4 border-t border-gray-100 space-y-3'>
       {jawaban?.trim() && (
         <div>
-          <div className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1">Jawabanmu</div>
-          <pre className={`whitespace-pre-wrap text-sm rounded-lg px-3 py-2.5 border border-gray-200 overflow-x-auto ${soal.tipe === 'implementasi' ? 'font-mono bg-gray-900 text-green-300 text-[12px]' : 'bg-gray-50 text-gray-700 font-sans'}`}>
+          <div className='text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1'>
+            Jawabanmu
+          </div>
+          <pre
+            className={`whitespace-pre-wrap text-sm rounded-lg px-3 py-2.5 border border-gray-200 overflow-x-auto ${soal.tipe === "implementasi" ? "font-mono bg-gray-900 text-green-300 text-[12px]" : "bg-gray-50 text-gray-700 font-sans"}`}
+          >
             {jawaban}
           </pre>
         </div>
       )}
-      <p className="text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 leading-relaxed">{fb.komentar}</p>
+      <p className='text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 leading-relaxed'>
+        {fb.komentar}
+      </p>
       {fb.yang_benar && (
-        <div className="bg-green-50 border border-green-200 rounded-lg px-3 py-2.5 text-sm text-green-800 leading-relaxed">
-          <span className="font-semibold">✓ Yang sudah benar: </span>{fb.yang_benar}
+        <div className='bg-green-50 border border-green-200 rounded-lg px-3 py-2.5 text-sm text-green-800 leading-relaxed'>
+          <span className='font-semibold'>✓ Yang sudah benar: </span>
+          {fb.yang_benar}
         </div>
       )}
       {fb.yang_perlu_diperbaiki && (
-        <div className="bg-red-50 border border-red-200 rounded-lg px-3 py-2.5 text-sm text-red-800 leading-relaxed">
-          <span className="font-semibold">✗ Perlu diperbaiki: </span>{fb.yang_perlu_diperbaiki}
+        <div className='bg-red-50 border border-red-200 rounded-lg px-3 py-2.5 text-sm text-red-800 leading-relaxed'>
+          <span className='font-semibold'>✗ Perlu diperbaiki: </span>
+          {fb.yang_perlu_diperbaiki}
         </div>
       )}
       {fb.konsep_lemah?.length > 0 && (
-        <div className="flex items-center gap-2 flex-wrap pt-1">
-          <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Pelajari:</span>
+        <div className='flex items-center gap-2 flex-wrap pt-1'>
+          <span className='text-[11px] font-bold text-gray-400 uppercase tracking-widest'>
+            Pelajari:
+          </span>
           {fb.konsep_lemah.map((k) => (
-            <span key={k} className="text-[11px] bg-orange-50 border border-orange-200 text-orange-700 px-2 py-0.5 rounded-full">{k}</span>
+            <span
+              key={k}
+              className='text-[11px] bg-orange-50 border border-orange-200 text-orange-700 px-2 py-0.5 rounded-full'
+            >
+              {k}
+            </span>
           ))}
         </div>
       )}
@@ -924,41 +1120,41 @@ function FeedbackBody({ fb, soal, jawaban }) {
 // LATIHAN component — AI-generated questions for ADT Sederhana
 // ---------------------------------------------------------------------------
 function LatihanContent({ onQuestionEvaluated }) {
-  const [fase, setFase] = useState('loading');
+  const [fase, setFase] = useState("loading");
   const [soalList, setSoalList] = useState([]);
-  const [genError, setGenError] = useState('');
+  const [genError, setGenError] = useState("");
   const [idx, setIdx] = useState(0);
   const [jawaban, setJawaban] = useState({});
   const [feedbackMap, setFeedbackMap] = useState({});
   const [isEvaluating, setIsEvaluating] = useState(false);
-  const [evalError, setEvalError] = useState('');
+  const [evalError, setEvalError] = useState("");
   const [showNotasi, setShowNotasi] = useState(false);
   const [resultIdx, setResultIdx] = useState(0);
   const [regeneratingIdx, setRegeneratingIdx] = useState(null);
 
-  const STORAGE_KEY = 'asd_latihan_adt_sederhana_soal';
+  const STORAGE_KEY = "asd_latihan_adt_sederhana_soal";
 
   const generateSoal = useCallback(async (kelemahan = []) => {
-    setFase('loading');
-    setGenError('');
+    setFase("loading");
+    setGenError("");
     try {
-      const res = await fetch('/api/latihan-adt-sederhana/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/latihan-adt-sederhana/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ jumlah: 5, kelemahan }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? 'Gagal generate soal');
+      if (!res.ok) throw new Error(data.error ?? "Gagal generate soal");
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data.soal));
       setSoalList(data.soal);
       setIdx(0);
       setJawaban({});
       setFeedbackMap({});
       setShowNotasi(false);
-      setFase('latihan');
+      setFase("latihan");
     } catch (e) {
       setGenError(e.message);
-      setFase('error');
+      setFase("error");
     }
   }, []);
 
@@ -969,7 +1165,7 @@ function LatihanContent({ onQuestionEvaluated }) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
           setSoalList(parsed);
-          setFase('latihan');
+          setFase("latihan");
           return;
         }
       }
@@ -982,15 +1178,15 @@ function LatihanContent({ onQuestionEvaluated }) {
   const evaluasiSoal = async () => {
     const soal = soalList[idx];
     setIsEvaluating(true);
-    setEvalError('');
+    setEvalError("");
     try {
-      const res = await fetch('/api/latihan-adt-sederhana/evaluasi', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ soal, jawaban: jawaban[soal.id] ?? '' }),
+      const res = await fetch("/api/latihan-adt-sederhana/evaluasi", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ soal, jawaban: jawaban[soal.id] ?? "" }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? 'Evaluasi gagal');
+      if (!res.ok) throw new Error(data.error ?? "Evaluasi gagal");
       setFeedbackMap((prev) => ({ ...prev, [soal.id]: data }));
       onQuestionEvaluated?.(soal.id);
     } catch (e) {
@@ -1004,17 +1200,19 @@ function LatihanContent({ onQuestionEvaluated }) {
     if (idx < soalList.length - 1) {
       setIdx(idx + 1);
       setShowNotasi(false);
-      setEvalError('');
+      setEvalError("");
     } else {
       setResultIdx(0);
-      setFase('ringkasan');
+      setFase("ringkasan");
     }
   };
 
   const handleGenerateBaru = () => {
-    const kelemahan = [...new Set(
-      Object.values(feedbackMap).flatMap((f) => f.konsep_lemah ?? [])
-    )];
+    const kelemahan = [
+      ...new Set(
+        Object.values(feedbackMap).flatMap((f) => f.konsep_lemah ?? []),
+      ),
+    ];
     generateSoal(kelemahan);
   };
 
@@ -1022,9 +1220,9 @@ function LatihanContent({ onQuestionEvaluated }) {
     const target = soalList[soalIdx];
     setRegeneratingIdx(soalIdx);
     try {
-      const res = await fetch('/api/latihan-adt-sederhana/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/latihan-adt-sederhana/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           jumlah: 1,
           tipe_paksa: target.tipe,
@@ -1032,13 +1230,21 @@ function LatihanContent({ onQuestionEvaluated }) {
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? 'Gagal generate soal');
+      if (!res.ok) throw new Error(data.error ?? "Gagal generate soal");
       const newSoal = { ...data.soal[0], id: target.id };
       const updatedList = soalList.map((s, i) => (i === soalIdx ? newSoal : s));
       localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedList));
       setSoalList(updatedList);
-      setJawaban((prev) => { const next = { ...prev }; delete next[target.id]; return next; });
-      setFeedbackMap((prev) => { const next = { ...prev }; delete next[target.id]; return next; });
+      setJawaban((prev) => {
+        const next = { ...prev };
+        delete next[target.id];
+        return next;
+      });
+      setFeedbackMap((prev) => {
+        const next = { ...prev };
+        delete next[target.id];
+        return next;
+      });
       setShowNotasi(false);
     } catch {
       // silently ignore — user can retry
@@ -1048,26 +1254,43 @@ function LatihanContent({ onQuestionEvaluated }) {
   };
 
   // ── Loading ────────────────────────────────────────────────────────────────
-  if (fase === 'loading') {
+  if (fase === "loading") {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-gray-500">
-        <svg className="animate-spin w-8 h-8 mb-4 text-purple-500" viewBox="0 0 24 24" fill="none">
-          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+      <div className='flex flex-col items-center justify-center py-20 text-gray-500'>
+        <svg
+          className='animate-spin w-8 h-8 mb-4 text-purple-500'
+          viewBox='0 0 24 24'
+          fill='none'
+        >
+          <circle
+            className='opacity-25'
+            cx='12'
+            cy='12'
+            r='10'
+            stroke='currentColor'
+            strokeWidth='4'
+          />
+          <path
+            className='opacity-75'
+            fill='currentColor'
+            d='M4 12a8 8 0 018-8v8z'
+          />
         </svg>
-        <p className="text-sm font-medium">Menyiapkan soal latihan...</p>
-        <p className="text-xs text-gray-400 mt-1">AI sedang membuat soal untukmu</p>
+        <p className='text-sm font-medium'>Menyiapkan soal latihan...</p>
+        <p className='text-xs text-gray-400 mt-1'>
+          AI sedang membuat soal untukmu
+        </p>
       </div>
     );
   }
 
-  if (fase === 'error') {
+  if (fase === "error") {
     return (
-      <div className="py-10 text-center">
-        <p className="text-red-600 text-sm mb-3">{genError}</p>
+      <div className='py-10 text-center'>
+        <p className='text-red-600 text-sm mb-3'>{genError}</p>
         <button
           onClick={() => generateSoal([])}
-          className="px-4 py-2 bg-purple-600 text-white text-sm rounded-lg hover:bg-purple-700"
+          className='px-4 py-2 bg-purple-600 text-white text-sm rounded-lg hover:bg-purple-700'
         >
           Coba Lagi
         </button>
@@ -1076,52 +1299,79 @@ function LatihanContent({ onQuestionEvaluated }) {
   }
 
   // ── Ringkasan ──────────────────────────────────────────────────────────────
-  if (fase === 'ringkasan') {
+  if (fase === "ringkasan") {
     const allFeedbacks = soalList.map((s) => feedbackMap[s.id]).filter(Boolean);
     const avgSkor = allFeedbacks.length
-      ? Math.round(allFeedbacks.reduce((a, f) => a + f.skor, 0) / allFeedbacks.length)
+      ? Math.round(
+          allFeedbacks.reduce((a, f) => a + f.skor, 0) / allFeedbacks.length,
+        )
       : 0;
-    const konsepLemah = [...new Set(allFeedbacks.flatMap((f) => f.konsep_lemah ?? []))];
-    const soalLemah = soalList.filter((s) => (feedbackMap[s.id]?.skor ?? 100) < 70);
+    const konsepLemah = [
+      ...new Set(allFeedbacks.flatMap((f) => f.konsep_lemah ?? [])),
+    ];
+    const soalLemah = soalList.filter(
+      (s) => (feedbackMap[s.id]?.skor ?? 100) < 70,
+    );
     const curSoal = soalList[resultIdx];
     const curFb = feedbackMap[curSoal?.id];
 
     return (
-      <div className="text-[15px] text-gray-700">
-        <div className="flex items-center justify-between mb-4">
+      <div className='text-[15px] text-gray-700'>
+        <div className='flex items-center justify-between mb-4'>
           <div>
-            <h2 className="text-xl font-bold text-gray-900">Hasil Latihan</h2>
-            <p className="text-sm text-gray-500">ADT Sederhana — POINT</p>
+            <h2 className='text-xl font-bold text-gray-900'>Hasil Latihan</h2>
+            <p className='text-sm text-gray-500'>ADT Sederhana — POINT</p>
           </div>
         </div>
 
         {/* Overall score */}
-        <div className="bg-gradient-to-r from-purple-600 to-purple-700 rounded-xl p-5 text-white mb-5">
-          <div className="flex items-center justify-between">
+        <div className='bg-gradient-to-r from-purple-600 to-purple-700 rounded-xl p-5 text-white mb-5'>
+          <div className='flex items-center justify-between'>
             <div>
-              <p className="text-purple-200 text-sm font-medium">Nilai Rata-rata</p>
-              <p className="text-4xl font-bold">{avgSkor}<span className="text-xl text-purple-300">/100</span></p>
+              <p className='text-purple-200 text-sm font-medium'>
+                Nilai Rata-rata
+              </p>
+              <p className='text-4xl font-bold'>
+                {avgSkor}
+                <span className='text-xl text-purple-300'>/100</span>
+              </p>
             </div>
-            <div className="text-right">
-              <p className="text-purple-200 text-sm">Soal dievaluasi</p>
-              <p className="text-2xl font-bold">{allFeedbacks.length}/{soalList.length}</p>
+            <div className='text-right'>
+              <p className='text-purple-200 text-sm'>Soal dievaluasi</p>
+              <p className='text-2xl font-bold'>
+                {allFeedbacks.length}/{soalList.length}
+              </p>
             </div>
           </div>
-          <div className="mt-3 bg-purple-500 rounded-full h-2">
-            <div className="bg-white h-2 rounded-full" style={{ width: `${avgSkor}%` }} />
+          <div className='mt-3 bg-purple-500 rounded-full h-2'>
+            <div
+              className='bg-white h-2 rounded-full'
+              style={{ width: `${avgSkor}%` }}
+            />
           </div>
         </div>
 
         {/* Dot nav */}
-        <div className="flex items-center gap-2 mb-5">
+        <div className='flex items-center gap-2 mb-5'>
           {soalList.map((sq, i) => {
             const f = feedbackMap[sq.id];
-            let cls = 'border-2 ';
-            if (f) cls += f.skor >= 70 ? 'bg-green-500 border-green-500 text-white' : 'bg-red-400 border-red-400 text-white';
-            else cls += i === resultIdx ? 'bg-white border-purple-600 text-purple-600' : 'bg-gray-100 border-gray-300 text-gray-400';
+            let cls = "border-2 ";
+            if (f)
+              cls +=
+                f.skor >= 70
+                  ? "bg-green-500 border-green-500 text-white"
+                  : "bg-red-400 border-red-400 text-white";
+            else
+              cls +=
+                i === resultIdx
+                  ? "bg-white border-purple-600 text-purple-600"
+                  : "bg-gray-100 border-gray-300 text-gray-400";
             return (
-              <button key={sq.id} onClick={() => setResultIdx(i)}
-                className={`w-8 h-8 rounded-full text-xs font-bold transition-all ${cls}`}>
+              <button
+                key={sq.id}
+                onClick={() => setResultIdx(i)}
+                className={`w-8 h-8 rounded-full text-xs font-bold transition-all ${cls}`}
+              >
                 {sq.id}
               </button>
             );
@@ -1130,77 +1380,124 @@ function LatihanContent({ onQuestionEvaluated }) {
 
         {/* Feedback card */}
         {curSoal && curFb && (
-          <div className="border border-gray-200 rounded-xl overflow-hidden mb-4">
-            <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 flex items-start gap-3">
-              <div className="w-7 h-7 rounded-full bg-purple-600 text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">{curSoal.id}</div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap mb-1">
-                  <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${curSoal.tipe === 'implementasi' ? 'bg-purple-50 text-purple-700 border-purple-200' : 'bg-teal-50 text-teal-700 border-teal-200'}`}>
-                    {curSoal.tipe === 'implementasi' ? 'Implementasi' : 'Pengetahuan'}
+          <div className='border border-gray-200 rounded-xl overflow-hidden mb-4'>
+            <div className='bg-gray-50 px-4 py-3 border-b border-gray-200 flex items-start gap-3'>
+              <div className='w-7 h-7 rounded-full bg-purple-600 text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5'>
+                {curSoal.id}
+              </div>
+              <div className='flex-1 min-w-0'>
+                <div className='flex items-center gap-2 flex-wrap mb-1'>
+                  <span
+                    className={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${curSoal.tipe === "implementasi" ? "bg-purple-50 text-purple-700 border-purple-200" : "bg-teal-50 text-teal-700 border-teal-200"}`}
+                  >
+                    {curSoal.tipe === "implementasi"
+                      ? "Implementasi"
+                      : "Pengetahuan"}
                   </span>
                   {curSoal.topik.map((t) => (
-                    <span key={t} className="text-[11px] text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">{t}</span>
+                    <span
+                      key={t}
+                      className='text-[11px] text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full'
+                    >
+                      {t}
+                    </span>
                   ))}
                 </div>
-                <p className="text-sm text-gray-800 font-medium whitespace-pre-line">{curSoal.pertanyaan}</p>
+                <p className='text-sm text-gray-800 font-medium whitespace-pre-line'>
+                  {curSoal.pertanyaan}
+                </p>
               </div>
               <button
                 onClick={async () => {
                   await regenerateSoal(resultIdx);
                   setIdx(resultIdx);
-                  setFase('latihan');
+                  setFase("latihan");
                 }}
                 disabled={regeneratingIdx !== null}
-                title="Ganti soal ini dengan soal baru bertipe sama"
-                className="shrink-0 flex items-center gap-1.5 text-[11px] font-medium text-gray-400 hover:text-purple-600 hover:bg-purple-50 border border-gray-200 hover:border-purple-200 rounded-lg px-2.5 py-1.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed mt-0.5"
+                title='Ganti soal ini dengan soal baru bertipe sama'
+                className='shrink-0 flex items-center gap-1.5 text-[11px] font-medium text-gray-400 hover:text-purple-600 hover:bg-purple-50 border border-gray-200 hover:border-purple-200 rounded-lg px-2.5 py-1.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed mt-0.5'
               >
                 {regeneratingIdx === resultIdx ? (
-                  <><Spinner /> Generating...</>
+                  <>
+                    <Spinner /> Generating...
+                  </>
                 ) : (
                   <>↻ Ganti Soal</>
                 )}
               </button>
             </div>
-            <div className="px-4 py-3 border-b border-gray-100 flex items-center gap-3">
-              <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${NILAI_COLOR[curFb.nilai] ?? NILAI_COLOR['Cukup']}`}>{curFb.nilai}</span>
-              <span className="text-sm font-semibold text-gray-700">{curFb.skor}/100</span>
-              <div className="flex-1 bg-gray-200 rounded-full h-2">
-                <div className={`h-2 rounded-full ${SKOR_BAR(curFb.skor)}`} style={{ width: `${curFb.skor}%` }} />
+            <div className='px-4 py-3 border-b border-gray-100 flex items-center gap-3'>
+              <span
+                className={`text-xs font-bold px-2.5 py-1 rounded-full border ${NILAI_COLOR[curFb.nilai] ?? NILAI_COLOR["Cukup"]}`}
+              >
+                {curFb.nilai}
+              </span>
+              <span className='text-sm font-semibold text-gray-700'>
+                {curFb.skor}/100
+              </span>
+              <div className='flex-1 bg-gray-200 rounded-full h-2'>
+                <div
+                  className={`h-2 rounded-full ${SKOR_BAR(curFb.skor)}`}
+                  style={{ width: `${curFb.skor}%` }}
+                />
               </div>
             </div>
             {curFb.metrik?.length > 0 && <MetrikBar metrik={curFb.metrik} />}
-            <FeedbackBody fb={curFb} soal={curSoal} jawaban={jawaban[curSoal.id]} />
+            <FeedbackBody
+              fb={curFb}
+              soal={curSoal}
+              jawaban={jawaban[curSoal.id]}
+            />
           </div>
         )}
 
         {/* Result prev/next */}
-        <div className="flex items-center justify-between mb-6">
-          <button onClick={() => setResultIdx(Math.max(0, resultIdx - 1))} disabled={resultIdx === 0}
-            className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+        <div className='flex items-center justify-between mb-6'>
+          <button
+            onClick={() => setResultIdx(Math.max(0, resultIdx - 1))}
+            disabled={resultIdx === 0}
+            className='flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors'
+          >
             ← Sebelumnya
           </button>
-          <span className="text-sm text-gray-400">Soal {resultIdx + 1} dari {soalList.length}</span>
-          <button onClick={() => setResultIdx(Math.min(soalList.length - 1, resultIdx + 1))} disabled={resultIdx === soalList.length - 1}
-            className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+          <span className='text-sm text-gray-400'>
+            Soal {resultIdx + 1} dari {soalList.length}
+          </span>
+          <button
+            onClick={() =>
+              setResultIdx(Math.min(soalList.length - 1, resultIdx + 1))
+            }
+            disabled={resultIdx === soalList.length - 1}
+            className='flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors'
+          >
             Berikutnya →
           </button>
         </div>
 
         {/* Weakness summary */}
         {konsepLemah.length > 0 && (
-          <div className="border border-orange-200 rounded-xl overflow-hidden mb-4">
-            <div className="bg-orange-50 px-4 py-2.5 border-b border-orange-200">
-              <span className="text-orange-700 font-bold text-sm">Analisis Kelemahan</span>
+          <div className='border border-orange-200 rounded-xl overflow-hidden mb-4'>
+            <div className='bg-orange-50 px-4 py-2.5 border-b border-orange-200'>
+              <span className='text-orange-700 font-bold text-sm'>
+                Analisis Kelemahan
+              </span>
             </div>
-            <div className="px-4 py-3">
+            <div className='px-4 py-3'>
               {soalLemah.length > 0 && (
-                <p className="text-sm text-gray-700 mb-3">
-                  {soalLemah.length} soal dengan skor di bawah 70 ({soalLemah.map((s) => `Soal ${s.id}`).join(', ')}). Fokus belajar di:
+                <p className='text-sm text-gray-700 mb-3'>
+                  {soalLemah.length} soal dengan skor di bawah 70 (
+                  {soalLemah.map((s) => `Soal ${s.id}`).join(", ")}). Fokus
+                  belajar di:
                 </p>
               )}
-              <div className="flex flex-wrap gap-2">
+              <div className='flex flex-wrap gap-2'>
                 {konsepLemah.map((k) => (
-                  <span key={k} className="text-[11px] bg-orange-50 border border-orange-300 text-orange-700 px-2.5 py-1 rounded-full font-medium">{k}</span>
+                  <span
+                    key={k}
+                    className='text-[11px] bg-orange-50 border border-orange-300 text-orange-700 px-2.5 py-1 rounded-full font-medium'
+                  >
+                    {k}
+                  </span>
                 ))}
               </div>
             </div>
@@ -1208,17 +1505,21 @@ function LatihanContent({ onQuestionEvaluated }) {
         )}
 
         {/* Generate new CTA */}
-        <div className="border border-purple-200 rounded-xl p-4 text-center bg-purple-50">
-          <p className="text-sm font-semibold text-purple-800 mb-1">
-            {konsepLemah.length > 0 ? 'Latihan soal baru untuk perkuat kelemahanmu' : 'Kerjakan soal latihan baru'}
-          </p>
-          <p className="text-xs text-purple-600 mb-3">
+        <div className='border border-purple-200 rounded-xl p-4 text-center bg-purple-50'>
+          <p className='text-sm font-semibold text-purple-800 mb-1'>
             {konsepLemah.length > 0
-              ? `AI akan fokus pada: ${konsepLemah.slice(0, 3).join(', ')}${konsepLemah.length > 3 ? '...' : ''}`
-              : 'AI akan membuat soal baru dengan tingkat kesulitan serupa'}
+              ? "Latihan soal baru untuk perkuat kelemahanmu"
+              : "Kerjakan soal latihan baru"}
           </p>
-          <button onClick={handleGenerateBaru}
-            className="px-5 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold rounded-lg transition-colors">
+          <p className='text-xs text-purple-600 mb-3'>
+            {konsepLemah.length > 0
+              ? `AI akan fokus pada: ${konsepLemah.slice(0, 3).join(", ")}${konsepLemah.length > 3 ? "..." : ""}`
+              : "AI akan membuat soal baru dengan tingkat kesulitan serupa"}
+          </p>
+          <button
+            onClick={handleGenerateBaru}
+            className='px-5 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold rounded-lg transition-colors'
+          >
             Generate Soal Baru
           </button>
         </div>
@@ -1229,63 +1530,95 @@ function LatihanContent({ onQuestionEvaluated }) {
   // ── Latihan view ───────────────────────────────────────────────────────────
   if (!soalList.length) return null;
   const soal = soalList[idx];
-  const currentJawaban = jawaban[soal.id] ?? '';
+  const currentJawaban = jawaban[soal.id] ?? "";
   const currentFeedback = feedbackMap[soal.id];
   const isLast = idx === soalList.length - 1;
   const totalEvaluated = soalList.filter((s) => feedbackMap[s.id]).length;
 
   return (
-    <div className="text-[15px] text-gray-700">
-      <div className="mb-4">
-        <h2 className="text-xl font-bold text-gray-900">Soal Latihan</h2>
-        <p className="text-sm text-gray-500 mt-0.5">ADT Sederhana — POINT</p>
+    <div className='text-[15px] text-gray-700'>
+      <div className='mb-4'>
+        <h2 className='text-xl font-bold text-gray-900'>Soal Latihan</h2>
+        <p className='text-sm text-gray-500 mt-0.5'>ADT Sederhana — POINT</p>
       </div>
 
       {/* Dot navigation */}
-      <div className="flex items-center gap-2 mb-5">
+      <div className='flex items-center gap-2 mb-5'>
         {soalList.map((sq, i) => {
           const f = feedbackMap[sq.id];
           const isCur = i === idx;
-          let cls = 'border-2 ';
-          if (f) cls += f.skor >= 70 ? 'bg-green-500 border-green-500 text-white' : 'bg-red-400 border-red-400 text-white';
-          else if (isCur) cls += jawaban[sq.id]?.trim() ? 'bg-purple-600 border-purple-600 text-white' : 'bg-white border-purple-600 text-purple-600';
-          else cls += jawaban[sq.id]?.trim() ? 'bg-purple-100 border-purple-400 text-purple-700' : 'bg-gray-100 border-gray-300 text-gray-400';
+          let cls = "border-2 ";
+          if (f)
+            cls +=
+              f.skor >= 70
+                ? "bg-green-500 border-green-500 text-white"
+                : "bg-red-400 border-red-400 text-white";
+          else if (isCur)
+            cls += jawaban[sq.id]?.trim()
+              ? "bg-purple-600 border-purple-600 text-white"
+              : "bg-white border-purple-600 text-purple-600";
+          else
+            cls += jawaban[sq.id]?.trim()
+              ? "bg-purple-100 border-purple-400 text-purple-700"
+              : "bg-gray-100 border-gray-300 text-gray-400";
           return (
-            <button key={sq.id} onClick={() => { setIdx(i); setShowNotasi(false); setEvalError(''); }}
-              className={`w-8 h-8 rounded-full text-xs font-bold transition-all ${cls}`}>
-              {f ? sq.id : (jawaban[sq.id]?.trim() ? '✓' : sq.id)}
+            <button
+              key={sq.id}
+              onClick={() => {
+                setIdx(i);
+                setShowNotasi(false);
+                setEvalError("");
+              }}
+              className={`w-8 h-8 rounded-full text-xs font-bold transition-all ${cls}`}
+            >
+              {f ? sq.id : jawaban[sq.id]?.trim() ? "✓" : sq.id}
             </button>
           );
         })}
-        <span className="ml-2 text-xs text-gray-400">{totalEvaluated}/{soalList.length} dinilai</span>
+        <span className='ml-2 text-xs text-gray-400'>
+          {totalEvaluated}/{soalList.length} dinilai
+        </span>
       </div>
 
       {/* Question card */}
-      <div className="border border-gray-200 rounded-xl overflow-hidden">
+      <div className='border border-gray-200 rounded-xl overflow-hidden'>
         {/* Card header */}
-        <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 flex items-start gap-3">
-          <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 ${currentFeedback ? (currentFeedback.skor >= 70 ? 'bg-green-500 text-white' : 'bg-red-400 text-white') : (currentJawaban.trim() ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-500')}`}>
-            {currentJawaban.trim() && !currentFeedback ? '✓' : soal.id}
+        <div className='bg-gray-50 px-4 py-3 border-b border-gray-200 flex items-start gap-3'>
+          <div
+            className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 ${currentFeedback ? (currentFeedback.skor >= 70 ? "bg-green-500 text-white" : "bg-red-400 text-white") : currentJawaban.trim() ? "bg-purple-600 text-white" : "bg-gray-200 text-gray-500"}`}
+          >
+            {currentJawaban.trim() && !currentFeedback ? "✓" : soal.id}
           </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap mb-1.5">
-              <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${soal.tipe === 'implementasi' ? 'bg-purple-50 text-purple-700 border-purple-200' : 'bg-teal-50 text-teal-700 border-teal-200'}`}>
-                {soal.tipe === 'implementasi' ? 'Implementasi' : 'Pengetahuan'}
+          <div className='flex-1 min-w-0'>
+            <div className='flex items-center gap-2 flex-wrap mb-1.5'>
+              <span
+                className={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${soal.tipe === "implementasi" ? "bg-purple-50 text-purple-700 border-purple-200" : "bg-teal-50 text-teal-700 border-teal-200"}`}
+              >
+                {soal.tipe === "implementasi" ? "Implementasi" : "Pengetahuan"}
               </span>
               {soal.topik.map((t) => (
-                <span key={t} className="text-[11px] text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">{t}</span>
+                <span
+                  key={t}
+                  className='text-[11px] text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full'
+                >
+                  {t}
+                </span>
               ))}
             </div>
-            <p className="text-sm text-gray-800 font-medium leading-relaxed whitespace-pre-line">{soal.pertanyaan}</p>
+            <p className='text-sm text-gray-800 font-medium leading-relaxed whitespace-pre-line'>
+              {soal.pertanyaan}
+            </p>
           </div>
           <button
             onClick={() => regenerateSoal(idx)}
             disabled={regeneratingIdx !== null || isEvaluating}
-            title="Ganti soal ini dengan soal baru bertipe sama"
-            className="shrink-0 flex items-center gap-1.5 text-[11px] font-medium text-gray-400 hover:text-purple-600 hover:bg-purple-50 border border-gray-200 hover:border-purple-200 rounded-lg px-2.5 py-1.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed mt-0.5"
+            title='Ganti soal ini dengan soal baru bertipe sama'
+            className='shrink-0 flex items-center gap-1.5 text-[11px] font-medium text-gray-400 hover:text-purple-600 hover:bg-purple-50 border border-gray-200 hover:border-purple-200 rounded-lg px-2.5 py-1.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed mt-0.5'
           >
             {regeneratingIdx === idx ? (
-              <><Spinner /> Generating...</>
+              <>
+                <Spinner /> Generating...
+              </>
             ) : (
               <>↻ Ganti Soal</>
             )}
@@ -1294,14 +1627,16 @@ function LatihanContent({ onQuestionEvaluated }) {
 
         {/* Notasi Algoritma */}
         {soal.notasiAlgoritma && (
-          <div className="px-4 py-2.5 bg-gray-50 border-b border-gray-200">
-            <button onClick={() => setShowNotasi((v) => !v)}
-              className="text-xs text-purple-600 hover:underline font-medium flex items-center gap-1">
-              <span>{showNotasi ? '▾' : '▸'}</span>
+          <div className='px-4 py-2.5 bg-gray-50 border-b border-gray-200'>
+            <button
+              onClick={() => setShowNotasi((v) => !v)}
+              className='text-xs text-purple-600 hover:underline font-medium flex items-center gap-1'
+            >
+              <span>{showNotasi ? "▾" : "▸"}</span>
               <span>Notasi Algoritma (referensi)</span>
             </button>
             {showNotasi && (
-              <pre className="mt-2 bg-white border border-gray-200 rounded-lg px-4 py-3 text-[12px] font-mono text-gray-700 overflow-x-auto leading-relaxed">
+              <pre className='mt-2 bg-white border border-gray-200 rounded-lg px-4 py-3 text-[12px] font-mono text-gray-700 overflow-x-auto leading-relaxed'>
                 {soal.notasiAlgoritma}
               </pre>
             )}
@@ -1310,14 +1645,20 @@ function LatihanContent({ onQuestionEvaluated }) {
 
         {/* Answer textarea */}
         {!currentFeedback && (
-          <div className="px-4 py-3">
+          <div className='px-4 py-3'>
             <textarea
               key={soal.id}
               value={currentJawaban}
-              onChange={(e) => setJawaban((prev) => ({ ...prev, [soal.id]: e.target.value }))}
-              placeholder={soal.tipe === 'implementasi' ? '// Tulis kode C kamu di sini...' : 'Tulis jawabanmu di sini...'}
-              rows={soal.tipe === 'implementasi' ? 12 : 6}
-              className={`w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent resize-y transition ${soal.tipe === 'implementasi' ? 'font-mono bg-gray-900 text-green-300' : 'bg-white text-gray-700'}`}
+              onChange={(e) =>
+                setJawaban((prev) => ({ ...prev, [soal.id]: e.target.value }))
+              }
+              placeholder={
+                soal.tipe === "implementasi"
+                  ? "// Tulis kode C kamu di sini..."
+                  : "Tulis jawabanmu di sini..."
+              }
+              rows={soal.tipe === "implementasi" ? 12 : 6}
+              className={`w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent resize-y transition ${soal.tipe === "implementasi" ? "font-mono bg-gray-900 text-green-300" : "bg-white text-gray-700"}`}
               spellCheck={false}
             />
           </div>
@@ -1326,56 +1667,80 @@ function LatihanContent({ onQuestionEvaluated }) {
         {/* Inline feedback */}
         {currentFeedback && (
           <>
-            <div className="px-4 py-3 border-t border-gray-100 flex items-center gap-3">
-              <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${NILAI_COLOR[currentFeedback.nilai] ?? NILAI_COLOR['Cukup']}`}>
+            <div className='px-4 py-3 border-t border-gray-100 flex items-center gap-3'>
+              <span
+                className={`text-xs font-bold px-2.5 py-1 rounded-full border ${NILAI_COLOR[currentFeedback.nilai] ?? NILAI_COLOR["Cukup"]}`}
+              >
                 {currentFeedback.nilai}
               </span>
-              <span className="text-sm font-semibold text-gray-700">{currentFeedback.skor}/100</span>
-              <div className="flex-1 bg-gray-200 rounded-full h-2">
-                <div className={`h-2 rounded-full ${SKOR_BAR(currentFeedback.skor)}`} style={{ width: `${currentFeedback.skor}%` }} />
+              <span className='text-sm font-semibold text-gray-700'>
+                {currentFeedback.skor}/100
+              </span>
+              <div className='flex-1 bg-gray-200 rounded-full h-2'>
+                <div
+                  className={`h-2 rounded-full ${SKOR_BAR(currentFeedback.skor)}`}
+                  style={{ width: `${currentFeedback.skor}%` }}
+                />
               </div>
             </div>
-            {currentFeedback.metrik?.length > 0 && <MetrikBar metrik={currentFeedback.metrik} />}
-            <FeedbackBody fb={currentFeedback} soal={soal} jawaban={jawaban[soal.id]} />
+            {currentFeedback.metrik?.length > 0 && (
+              <MetrikBar metrik={currentFeedback.metrik} />
+            )}
+            <FeedbackBody
+              fb={currentFeedback}
+              soal={soal}
+              jawaban={jawaban[soal.id]}
+            />
           </>
         )}
       </div>
 
       {evalError && (
-        <div className="mt-3 bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700">
-          <span className="font-semibold">Error: </span>{evalError}
+        <div className='mt-3 bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700'>
+          <span className='font-semibold'>Error: </span>
+          {evalError}
         </div>
       )}
 
       {/* Bottom nav */}
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
+      <div className='mt-4 flex flex-wrap items-center justify-between gap-2'>
         <button
-          onClick={() => { setIdx(Math.max(0, idx - 1)); setShowNotasi(false); setEvalError(''); }}
+          onClick={() => {
+            setIdx(Math.max(0, idx - 1));
+            setShowNotasi(false);
+            setEvalError("");
+          }}
           disabled={idx === 0}
-          className="flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors min-h-10"
+          className='flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors min-h-10'
         >
           ← Sebelumnya
         </button>
 
-        <span className="text-sm text-gray-400 shrink-0 order-last sm:order-0 w-full sm:w-auto text-center">
+        <span className='text-sm text-gray-400 shrink-0 order-last sm:order-0 w-full sm:w-auto text-center'>
           Soal {idx + 1} dari {soalList.length}
         </span>
 
-        <div className="flex items-center gap-2">
+        <div className='flex items-center gap-2'>
           {!currentFeedback ? (
             <button
               onClick={evaluasiSoal}
               disabled={isEvaluating || !currentJawaban.trim()}
-              className="flex items-center gap-2 px-5 py-2.5 bg-purple-600 hover:bg-purple-700 active:bg-purple-800 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition-colors min-h-10"
+              className='flex items-center gap-2 px-5 py-2.5 bg-purple-600 hover:bg-purple-700 active:bg-purple-800 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition-colors min-h-10'
             >
-              {isEvaluating ? <><Spinner /> Menilai...</> : 'Nilai Soal Ini'}
+              {isEvaluating ? (
+                <>
+                  <Spinner /> Menilai...
+                </>
+              ) : (
+                "Nilai Soal Ini"
+              )}
             </button>
           ) : (
             <button
               onClick={handleLanjut}
-              className="flex items-center gap-1.5 px-5 py-2.5 bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white text-sm font-semibold rounded-lg transition-colors min-h-10"
+              className='flex items-center gap-1.5 px-5 py-2.5 bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white text-sm font-semibold rounded-lg transition-colors min-h-10'
             >
-              {isLast ? 'Lihat Hasil' : 'Soal Berikutnya →'}
+              {isLast ? "Lihat Hasil" : "Soal Berikutnya →"}
             </button>
           )}
         </div>
@@ -1389,36 +1754,72 @@ function LatihanContent({ onQuestionEvaluated }) {
 // ---------------------------------------------------------------------------
 function RingkasanContent() {
   return (
-    <div className="text-[15px] text-gray-700">
-
+    <div className='text-[15px] text-gray-700'>
       {/* ── Title ── */}
-      <div className="mb-5">
-        <h2 className="text-xl font-bold text-gray-900">Ringkasan — ADT Sederhana</h2>
-        <p className="text-sm text-gray-400 mt-0.5">Implementasi ADT POINT dalam Bahasa C</p>
+      <div className='mb-5'>
+        <h2 className='text-xl font-bold text-gray-900'>
+          Ringkasan — ADT Sederhana
+        </h2>
+        <p className='text-sm text-gray-400 mt-0.5'>
+          Implementasi ADT POINT dalam Bahasa C
+        </p>
       </div>
 
       {/* ── 4 key takeaways ── */}
-      <div className="grid grid-cols-1 gap-4 mb-6">
-
+      <div className='grid grid-cols-1 gap-4 mb-6'>
         {/* 1 */}
-        <div className="border border-purple-100 rounded-xl overflow-hidden">
-          <div className="bg-purple-600 px-4 py-2.5 flex items-center gap-2">
-            <span className="w-6 h-6 rounded-full bg-white text-purple-600 text-xs font-bold flex items-center justify-center shrink-0">1</span>
-            <span className="text-white font-bold text-sm">Komponen ADT</span>
+        <div className='border border-purple-100 rounded-xl overflow-hidden'>
+          <div className='bg-purple-600 px-4 py-2.5 flex items-center gap-2'>
+            <span className='w-6 h-6 rounded-full bg-white text-purple-600 text-xs font-bold flex items-center justify-center shrink-0'>
+              1
+            </span>
+            <span className='text-white font-bold text-sm'>Komponen ADT</span>
           </div>
-          <div className="px-4 py-3">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[13px]">
+          <div className='px-4 py-3'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 gap-2 text-[13px]'>
               {[
-                { name: 'Konstruktor', desc: 'Membentuk nilai ADT baru', color: 'bg-purple-50 border-purple-100 text-purple-800', ex: 'CreatePoint(p, x, y)' },
-                { name: 'Selektor',    desc: 'Akses/ubah komponen data',  color: 'bg-indigo-50 border-indigo-100 text-indigo-800', ex: 'ABSIS(p), ORDINAT(p)' },
-                { name: 'Predikat',   desc: 'Cek kondisi, return boolean', color: 'bg-blue-50 border-blue-100 text-blue-800', ex: 'isOrigin(p)' },
-                { name: 'Operasi I/O','desc': 'Baca/tulis via keyboard & layar', color: 'bg-teal-50 border-teal-100 text-teal-800', ex: 'readPoint, displayPoint' },
-                { name: 'Operasi Lain','desc': 'Transformasi terhadap ADT', color: 'bg-green-50 border-green-100 text-green-800', ex: 'move(p, dx, dy)' },
+                {
+                  name: "Konstruktor",
+                  desc: "Membentuk nilai ADT baru",
+                  color: "bg-purple-50 border-purple-100 text-purple-800",
+                  ex: "CreatePoint(p, x, y)",
+                },
+                {
+                  name: "Selektor",
+                  desc: "Akses/ubah komponen data",
+                  color: "bg-indigo-50 border-indigo-100 text-indigo-800",
+                  ex: "ABSIS(p), ORDINAT(p)",
+                },
+                {
+                  name: "Predikat",
+                  desc: "Cek kondisi, return boolean",
+                  color: "bg-blue-50 border-blue-100 text-blue-800",
+                  ex: "isOrigin(p)",
+                },
+                {
+                  name: "Operasi I/O",
+                  desc: "Baca/tulis via keyboard & layar",
+                  color: "bg-teal-50 border-teal-100 text-teal-800",
+                  ex: "readPoint, displayPoint",
+                },
+                {
+                  name: "Operasi Lain",
+                  desc: "Transformasi terhadap ADT",
+                  color: "bg-green-50 border-green-100 text-green-800",
+                  ex: "move(p, dx, dy)",
+                },
               ].map((item) => (
-                <div key={item.name} className={`border rounded-lg px-3 py-2 ${item.color}`}>
-                  <div className="font-bold mb-0.5">{item.name}</div>
-                  <div className="text-[11px] opacity-80 mb-0.5">{item.desc}</div>
-                  <code className="text-[11px] font-mono opacity-70">{item.ex}</code>
+                <div
+                  key={item.name}
+                  className={`border rounded-lg px-3 py-2 ${item.color}`}
+                >
+                  <div className='font-bold mb-0.5'>{item.name}</div>
+                  <div className='text-[11px] opacity-80 mb-0.5'>
+                    {item.desc}
+                  </div>
+                  <code className='text-[11px] font-mono opacity-70'>
+                    {item.ex}
+                  </code>
                 </div>
               ))}
             </div>
@@ -1426,50 +1827,95 @@ function RingkasanContent() {
         </div>
 
         {/* 2 */}
-        <div className="border border-indigo-100 rounded-xl overflow-hidden">
-          <div className="bg-indigo-600 px-4 py-2.5 flex items-center gap-2">
-            <span className="w-6 h-6 rounded-full bg-white text-indigo-600 text-xs font-bold flex items-center justify-center shrink-0">2</span>
-            <span className="text-white font-bold text-sm">Selektor Macro vs Fungsi</span>
+        <div className='border border-indigo-100 rounded-xl overflow-hidden'>
+          <div className='bg-indigo-600 px-4 py-2.5 flex items-center gap-2'>
+            <span className='w-6 h-6 rounded-full bg-white text-indigo-600 text-xs font-bold flex items-center justify-center shrink-0'>
+              2
+            </span>
+            <span className='text-white font-bold text-sm'>
+              Selektor Macro vs Fungsi
+            </span>
           </div>
-          <div className="px-4 py-3 text-sm text-gray-700">
-            <p className="mb-3">Di C, selektor lebih efisien ditulis sebagai <strong>macro preprocessor</strong>:</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className='px-4 py-3 text-sm text-gray-700'>
+            <p className='mb-3'>
+              Di C, selektor lebih efisien ditulis sebagai{" "}
+              <strong>macro preprocessor</strong>:
+            </p>
+            <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
               <div>
-                <div className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1">Notasi Algoritmik</div>
-                <pre className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 font-mono text-[12px] text-gray-800">{`function getAbsis(p) → real
+                <div className='text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1'>
+                  Notasi Algoritmik
+                </div>
+                <pre className='bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 font-mono text-[12px] text-gray-800'>{`function getAbsis(p) → real
 procedure setAbsis(p, newX)`}</pre>
               </div>
               <div>
-                <div className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1">Bahasa C</div>
-                <pre className="bg-gray-900 text-green-300 rounded-lg px-3 py-2 font-mono text-[12px]">{`#define ABSIS(p)   (p).x
+                <div className='text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1'>
+                  Bahasa C
+                </div>
+                <pre className='bg-gray-900 text-green-300 rounded-lg px-3 py-2 font-mono text-[12px]'>{`#define ABSIS(p)   (p).x
 ABSIS(*p) = newX;`}</pre>
               </div>
             </div>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {['Tidak ada overhead fungsi', 'Inline substitution', 'Nama bermakna'].map((v) => (
-                <span key={v} className="text-[11px] bg-indigo-50 border border-indigo-200 text-indigo-700 px-2 py-0.5 rounded-full">{v}</span>
+            <div className='mt-3 flex flex-wrap gap-2'>
+              {[
+                "Tidak ada overhead fungsi",
+                "Inline substitution",
+                "Nama bermakna",
+              ].map((v) => (
+                <span
+                  key={v}
+                  className='text-[11px] bg-indigo-50 border border-indigo-200 text-indigo-700 px-2 py-0.5 rounded-full'
+                >
+                  {v}
+                </span>
               ))}
             </div>
           </div>
         </div>
 
         {/* 3 */}
-        <div className="border border-teal-100 rounded-xl overflow-hidden">
-          <div className="bg-teal-600 px-4 py-2.5 flex items-center gap-2">
-            <span className="w-6 h-6 rounded-full bg-white text-teal-600 text-xs font-bold flex items-center justify-center shrink-0">3</span>
-            <span className="text-white font-bold text-sm">Struktur File ADT</span>
+        <div className='border border-teal-100 rounded-xl overflow-hidden'>
+          <div className='bg-teal-600 px-4 py-2.5 flex items-center gap-2'>
+            <span className='w-6 h-6 rounded-full bg-white text-teal-600 text-xs font-bold flex items-center justify-center shrink-0'>
+              3
+            </span>
+            <span className='text-white font-bold text-sm'>
+              Struktur File ADT
+            </span>
           </div>
-          <div className="px-4 py-3">
-            <div className="grid grid-cols-2 gap-2 text-[13px]">
+          <div className='px-4 py-3'>
+            <div className='grid grid-cols-2 gap-2 text-[13px]'>
               {[
-                { file: 'boolean.h', role: 'Definisi tipe boolean (TRUE/FALSE)', color: 'bg-gray-50 border-gray-200 text-gray-700' },
-                { file: 'point.h',   role: 'Tipe data, macro, prototype fungsi',  color: 'bg-purple-50 border-purple-100 text-purple-800' },
-                { file: 'point.c',   role: 'Implementasi semua fungsi ADT',        color: 'bg-blue-50 border-blue-100 text-blue-800' },
-                { file: 'main_point.c', role: 'Program utama yang memakai ADT',   color: 'bg-green-50 border-green-100 text-green-800' },
+                {
+                  file: "boolean.h",
+                  role: "Definisi tipe boolean (TRUE/FALSE)",
+                  color: "bg-gray-50 border-gray-200 text-gray-700",
+                },
+                {
+                  file: "point.h",
+                  role: "Tipe data, macro, prototype fungsi",
+                  color: "bg-purple-50 border-purple-100 text-purple-800",
+                },
+                {
+                  file: "point.c",
+                  role: "Implementasi semua fungsi ADT",
+                  color: "bg-blue-50 border-blue-100 text-blue-800",
+                },
+                {
+                  file: "main_point.c",
+                  role: "Program utama yang memakai ADT",
+                  color: "bg-green-50 border-green-100 text-green-800",
+                },
               ].map((f) => (
-                <div key={f.file} className={`border rounded-lg px-3 py-2 ${f.color}`}>
-                  <code className="font-mono font-bold text-[12px] block mb-0.5">{f.file}</code>
-                  <div className="text-[11px] opacity-80">{f.role}</div>
+                <div
+                  key={f.file}
+                  className={`border rounded-lg px-3 py-2 ${f.color}`}
+                >
+                  <code className='font-mono font-bold text-[12px] block mb-0.5'>
+                    {f.file}
+                  </code>
+                  <div className='text-[11px] opacity-80'>{f.role}</div>
                 </div>
               ))}
             </div>
@@ -1477,59 +1923,91 @@ ABSIS(*p) = newX;`}</pre>
         </div>
 
         {/* 4 */}
-        <div className="border border-gray-200 rounded-xl overflow-hidden">
-          <div className="bg-gray-800 px-4 py-2.5 flex items-center gap-2">
-            <span className="w-6 h-6 rounded-full bg-white text-gray-800 text-xs font-bold flex items-center justify-center shrink-0">4</span>
-            <span className="text-white font-bold text-sm">Tips &amp; Aturan Penting</span>
+        <div className='border border-gray-200 rounded-xl overflow-hidden'>
+          <div className='bg-gray-800 px-4 py-2.5 flex items-center gap-2'>
+            <span className='w-6 h-6 rounded-full bg-white text-gray-800 text-xs font-bold flex items-center justify-center shrink-0'>
+              4
+            </span>
+            <span className='text-white font-bold text-sm'>
+              Tips &amp; Aturan Penting
+            </span>
           </div>
-          <div className="px-4 py-3">
-            <div className="grid grid-cols-1 gap-2 text-[13px]">
+          <div className='px-4 py-3'>
+            <div className='grid grid-cols-1 gap-2 text-[13px]'>
               {[
-                { tip: 'Include Guard',      detail: '#ifndef / #define / #endif — wajib di setiap .h', color: 'bg-yellow-50 border-yellow-100 text-yellow-800' },
-                { tip: 'Konstruktor dulu',   detail: 'Inisialisasi lewat CreateX(), bukan p.field = value', color: 'bg-orange-50 border-orange-100 text-orange-800' },
-                { tip: 'Return ekspresi boolean', detail: 'return (cond1 && cond2) — bukan if/else return', color: 'bg-red-50 border-red-100 text-red-800' },
-                { tip: 'Kompilasi multi-file', detail: 'gcc main.c point.c -o program', color: 'bg-blue-50 border-blue-100 text-blue-800' },
+                {
+                  tip: "Include Guard",
+                  detail: "#ifndef / #define / #endif — wajib di setiap .h",
+                  color: "bg-yellow-50 border-yellow-100 text-yellow-800",
+                },
+                {
+                  tip: "Konstruktor dulu",
+                  detail: "Inisialisasi lewat CreateX(), bukan p.field = value",
+                  color: "bg-orange-50 border-orange-100 text-orange-800",
+                },
+                {
+                  tip: "Return ekspresi boolean",
+                  detail: "return (cond1 && cond2) — bukan if/else return",
+                  color: "bg-red-50 border-red-100 text-red-800",
+                },
+                {
+                  tip: "Kompilasi multi-file",
+                  detail: "gcc main.c point.c -o program",
+                  color: "bg-blue-50 border-blue-100 text-blue-800",
+                },
               ].map((item) => (
-                <div key={item.tip} className={`border rounded-lg px-3 py-2 ${item.color}`}>
-                  <div className="font-bold mb-0.5">{item.tip}</div>
-                  <code className="text-[11px] font-mono opacity-80">{item.detail}</code>
+                <div
+                  key={item.tip}
+                  className={`border rounded-lg px-3 py-2 ${item.color}`}
+                >
+                  <div className='font-bold mb-0.5'>{item.tip}</div>
+                  <code className='text-[11px] font-mono opacity-80'>
+                    {item.detail}
+                  </code>
                 </div>
               ))}
             </div>
           </div>
         </div>
-
       </div>
 
       {/* ── Alur Implementasi ── */}
-      <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 mb-6">
-        <p className="text-sm font-bold text-purple-800 mb-2">Alur Implementasi ADT</p>
-        <div className="flex items-center gap-0 flex-wrap text-[12px]">
+      <div className='bg-purple-50 border border-purple-200 rounded-xl p-4 mb-6'>
+        <p className='text-sm font-bold text-purple-800 mb-2'>
+          Alur Implementasi ADT
+        </p>
+        <div className='flex items-center gap-0 flex-wrap text-[12px]'>
           {[
-            'Definisikan data & operasi',
-            'Notasi algoritmik',
-            'Buat .h',
-            'Buat .c',
-            'Buat main.c',
-            'Kompilasi',
+            "Definisikan data & operasi",
+            "Notasi algoritmik",
+            "Buat .h",
+            "Buat .c",
+            "Buat main.c",
+            "Kompilasi",
           ].map((step, i, arr) => (
-            <span key={step} className="flex items-center gap-0">
-              <span className="bg-white border border-purple-200 text-purple-800 font-medium px-2.5 py-1 rounded-full my-0.5">
+            <span key={step} className='flex items-center gap-0'>
+              <span className='bg-white border border-purple-200 text-purple-800 font-medium px-2.5 py-1 rounded-full my-0.5'>
                 {step}
               </span>
-              {i < arr.length - 1 && <span className="text-purple-300 px-1">→</span>}
+              {i < arr.length - 1 && (
+                <span className='text-purple-300 px-1'>→</span>
+              )}
             </span>
           ))}
         </div>
       </div>
 
       {/* ── ADT POINT Quick Reference ── */}
-      <div className="border border-gray-200 rounded-xl p-4 bg-gray-50">
-        <p className="text-sm font-bold text-gray-700 mb-3">ADT POINT — Referensi Cepat</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[12px]">
+      <div className='border border-gray-200 rounded-xl p-4 bg-gray-50'>
+        <p className='text-sm font-bold text-gray-700 mb-3'>
+          ADT POINT — Referensi Cepat
+        </p>
+        <div className='grid grid-cols-1 sm:grid-cols-2 gap-3 text-[12px]'>
           <div>
-            <div className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1">Struct &amp; Macro</div>
-            <pre className="bg-gray-900 text-green-300 rounded-lg px-3 py-2 font-mono text-[12px] leading-relaxed">{`typedef struct Point {
+            <div className='text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1'>
+              Struct &amp; Macro
+            </div>
+            <pre className='bg-gray-900 text-green-300 rounded-lg px-3 py-2 font-mono text-[12px] leading-relaxed'>{`typedef struct Point {
     float x; /* absis  */
     float y; /* ordinat */
 } point;
@@ -1538,8 +2016,10 @@ ABSIS(*p) = newX;`}</pre>
 #define ORDINAT(p) (p).y`}</pre>
           </div>
           <div>
-            <div className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1">Prototype Fungsi</div>
-            <pre className="bg-gray-900 text-green-300 rounded-lg px-3 py-2 font-mono text-[12px] leading-relaxed">{`void    CreatePoint(point *p, float x, float y);
+            <div className='text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1'>
+              Prototype Fungsi
+            </div>
+            <pre className='bg-gray-900 text-green-300 rounded-lg px-3 py-2 font-mono text-[12px] leading-relaxed'>{`void    CreatePoint(point *p, float x, float y);
 boolean isOrigin  (point p);
 void    readPoint (point *p);
 void    displayPoint(point p);
@@ -1547,7 +2027,6 @@ point   move(point p, float dx, float dy);`}</pre>
           </div>
         </div>
       </div>
-
     </div>
   );
 }
@@ -1555,29 +2034,46 @@ point   move(point p, float dx, float dy);`}</pre>
 // ---------------------------------------------------------------------------
 // Progress helpers
 // ---------------------------------------------------------------------------
-const PROGRESS_KEY = 'asd_progress_adt_sederhana';
-const TAB_KEYS = { MATERI: 'materi', CONTOH: 'contoh', LATIHAN: 'latihan', RINGKASAN: 'ringkasan' };
+const PROGRESS_KEY = "asd_progress_adt_sederhana";
+const TAB_KEYS = {
+  MATERI: "materi",
+  CONTOH: "contoh",
+  LATIHAN: "latihan",
+  RINGKASAN: "ringkasan",
+};
 
 function readProgress() {
-  try { return JSON.parse(localStorage.getItem(PROGRESS_KEY)) ?? {}; }
-  catch { return {}; }
+  try {
+    return JSON.parse(localStorage.getItem(PROGRESS_KEY)) ?? {};
+  } catch {
+    return {};
+  }
 }
 
 function saveProgress(updates) {
-  localStorage.setItem(PROGRESS_KEY, JSON.stringify({ ...readProgress(), ...updates }));
+  localStorage.setItem(
+    PROGRESS_KEY,
+    JSON.stringify({ ...readProgress(), ...updates }),
+  );
 }
 
 // ---------------------------------------------------------------------------
 // Main Page
 // ---------------------------------------------------------------------------
 export default function AdtSederhanaPage() {
-  const [activeTab, setActiveTab] = useState('MATERI');
-  const [activeSection, setActiveSection] = useState('intro');
+  const [activeTab, setActiveTab] = useState("MATERI");
+  const [activeSection, setActiveSection] = useState("intro");
   const [showToc, setShowToc] = useState(false);
   const [completed, setCompleted] = useState(() => {
-    if (typeof window === 'undefined') return { materi: false, contoh: false, latihan: false, ringkasan: false };
+    if (typeof window === "undefined")
+      return { materi: false, contoh: false, latihan: false, ringkasan: false };
     const prog = readProgress();
-    return { materi: !!prog.materi, contoh: !!prog.contoh, latihan: !!prog.latihan, ringkasan: !!prog.ringkasan };
+    return {
+      materi: !!prog.materi,
+      contoh: !!prog.contoh,
+      latihan: !!prog.latihan,
+      ringkasan: !!prog.ringkasan,
+    };
   });
   const mainRef = useRef(null);
 
@@ -1606,15 +2102,15 @@ export default function AdtSederhanaPage() {
     if (!main) return;
     const handleScroll = () => {
       const scrollY = main.scrollTop + 120;
-      let current = 'intro';
+      let current = "intro";
       for (const s of SECTIONS) {
         const el = document.getElementById(s.id);
         if (el && el.offsetTop <= scrollY) current = s.id;
       }
       setActiveSection(current);
     };
-    main.addEventListener('scroll', handleScroll, { passive: true });
-    return () => main.removeEventListener('scroll', handleScroll);
+    main.addEventListener("scroll", handleScroll, { passive: true });
+    return () => main.removeEventListener("scroll", handleScroll);
   }, []);
 
   const scrollToSection = (id) => {
@@ -1622,16 +2118,19 @@ export default function AdtSederhanaPage() {
     const el = document.getElementById(id);
     const main = mainRef.current;
     if (el && main) {
-      main.scrollTo({ top: el.offsetTop - 110, behavior: 'smooth' });
+      main.scrollTo({ top: el.offsetTop - 110, behavior: "smooth" });
     }
   };
 
   return (
-    <div className="flex flex-col lg:flex-row overflow-hidden" style={{ height: 'calc(100vh - 56px)' }}>
+    <div
+      className='flex flex-col lg:flex-row overflow-hidden'
+      style={{ height: "calc(100vh - 56px)" }}
+    >
       {/* ── Sidebar (desktop only) ── */}
-      <aside className="hidden lg:block w-56 shrink-0 bg-white border-r border-gray-200 overflow-y-auto">
-        <div className="py-3">
-          <div className="px-4 py-2 text-[11px] font-bold text-gray-400 uppercase tracking-widest">
+      <aside className='hidden lg:block w-56 shrink-0 bg-white border-r border-gray-200 overflow-y-auto'>
+        <div className='py-3'>
+          <div className='px-4 py-2 text-[11px] font-bold text-gray-400 uppercase tracking-widest'>
             ADT Sederhana
           </div>
           {SECTIONS.map((s) => (
@@ -1639,11 +2138,11 @@ export default function AdtSederhanaPage() {
               key={s.id}
               onClick={() => scrollToSection(s.id)}
               className={`w-full text-left text-[13px] px-4 py-1.5 transition-colors ${
-                s.level === 1 ? 'pl-7' : ''
+                s.level === 1 ? "pl-7" : ""
               } ${
                 activeSection === s.id
-                  ? 'bg-purple-50 text-purple-700 font-semibold border-r-2 border-purple-600'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                  ? "bg-purple-50 text-purple-700 font-semibold border-r-2 border-purple-600"
+                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
               }`}
             >
               {s.title}
@@ -1653,10 +2152,10 @@ export default function AdtSederhanaPage() {
       </aside>
 
       {/* ── Main area ── */}
-      <div className="flex-1 flex flex-col min-w-0 bg-white overflow-hidden">
+      <div className='flex-1 flex flex-col min-w-0 bg-white overflow-hidden'>
         {/* Tabs */}
-        <div className="shrink-0 border-b border-gray-200 bg-white overflow-x-auto">
-          <div className="flex gap-1 px-3 sm:px-6 pt-3 min-w-max">
+        <div className='shrink-0 border-b border-gray-200 bg-white overflow-x-auto'>
+          <div className='flex gap-1 px-3 sm:px-6 pt-3 min-w-max'>
             {TABS.map((tab) => {
               const isDone = completed[TAB_KEYS[tab]];
               const isActive = activeTab === tab;
@@ -1666,21 +2165,21 @@ export default function AdtSederhanaPage() {
                   onClick={() => handleTabClick(tab)}
                   className={`shrink-0 px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-t-lg transition-colors flex items-center gap-1.5 ${
                     isActive
-                      ? 'bg-purple-700 text-white'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      ? "bg-purple-700 text-white"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   }`}
                 >
                   {tab}
                   {isDone && (
                     <svg
-                      className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isActive ? 'text-green-300' : 'text-green-500'}`}
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
+                      className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isActive ? "text-green-300" : "text-green-500"}`}
+                      fill='currentColor'
+                      viewBox='0 0 20 20'
                     >
                       <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                        clipRule="evenodd"
+                        fillRule='evenodd'
+                        d='M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z'
+                        clipRule='evenodd'
                       />
                     </svg>
                   )}
@@ -1691,39 +2190,57 @@ export default function AdtSederhanaPage() {
         </div>
 
         {/* Mobile TOC toggle — MATERI tab only */}
-        {activeTab === 'MATERI' && (
-          <div className="lg:hidden shrink-0 bg-gray-50 border-b border-gray-200">
+        {activeTab === "MATERI" && (
+          <div className='lg:hidden shrink-0 bg-gray-50 border-b border-gray-200'>
             <button
               onClick={() => setShowToc((v) => !v)}
-              className="w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium text-gray-700 active:bg-gray-100"
+              className='w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium text-gray-700 active:bg-gray-100'
             >
-              <span className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h10" />
+              <span className='flex items-center gap-2'>
+                <svg
+                  className='w-4 h-4 text-gray-400'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth={2}
+                    d='M4 6h16M4 12h16M4 18h10'
+                  />
                 </svg>
                 Daftar Isi
               </span>
               <svg
-                className={`w-4 h-4 text-gray-400 transition-transform ${showToc ? 'rotate-180' : ''}`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+                className={`w-4 h-4 text-gray-400 transition-transform ${showToc ? "rotate-180" : ""}`}
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth={2}
+                  d='M19 9l-7 7-7-7'
+                />
               </svg>
             </button>
             {showToc && (
-              <div className="max-h-52 overflow-y-auto border-t border-gray-100 bg-white">
+              <div className='max-h-52 overflow-y-auto border-t border-gray-100 bg-white'>
                 {SECTIONS.map((s) => (
                   <button
                     key={s.id}
-                    onClick={() => { scrollToSection(s.id); setShowToc(false); }}
+                    onClick={() => {
+                      scrollToSection(s.id);
+                      setShowToc(false);
+                    }}
                     className={`w-full text-left text-[13px] px-4 py-2 transition-colors ${
-                      s.level === 1 ? 'pl-8' : ''
+                      s.level === 1 ? "pl-8" : ""
                     } ${
                       activeSection === s.id
-                        ? 'bg-purple-50 text-purple-700 font-semibold'
-                        : 'text-gray-600 hover:bg-gray-50'
+                        ? "bg-purple-50 text-purple-700 font-semibold"
+                        : "text-gray-600 hover:bg-gray-50"
                     }`}
                   >
                     {s.title}
@@ -1735,33 +2252,40 @@ export default function AdtSederhanaPage() {
         )}
 
         {/* Scrollable content */}
-        <div ref={mainRef} className="flex-1 overflow-y-auto">
-          <div className="max-w-3xl mx-auto px-4 sm:px-8 py-5 sm:py-6">
-            {activeTab === 'MATERI'    && <MateriContent />}
-            {activeTab === 'CONTOH'    && <ContohContent />}
-            {activeTab === 'LATIHAN'   && <LatihanContent onQuestionEvaluated={handleQuestionEvaluated} />}
-            {activeTab === 'RINGKASAN' && <RingkasanContent />}
+        <div ref={mainRef} className='flex-1 overflow-y-auto'>
+          <div className='max-w-3xl mx-auto px-4 sm:px-8 py-5 sm:py-6'>
+            {activeTab === "MATERI" && <MateriContent />}
+            {activeTab === "CONTOH" && <ContohContent />}
+            {activeTab === "LATIHAN" && (
+              <LatihanContent onQuestionEvaluated={handleQuestionEvaluated} />
+            )}
+            {activeTab === "RINGKASAN" && <RingkasanContent />}
 
             {/* Section completion footer */}
-            <div className="mt-10 pt-6 border-t border-gray-200 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-0 justify-between">
-              <p className="text-sm text-gray-400">
-                {Object.values(completed).filter(Boolean).length} dari 4 seksi diselesaikan
+            <div className='mt-10 pt-6 border-t border-gray-200 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-0 justify-between'>
+              <p className='text-sm text-gray-400'>
+                {Object.values(completed).filter(Boolean).length} dari 4 sesi
+                diselesaikan
               </p>
               {completed[TAB_KEYS[activeTab]] ? (
-                <div className="flex items-center gap-2 text-green-600 text-sm font-semibold">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <div className='flex items-center gap-2 text-green-600 text-sm font-semibold'>
+                  <svg
+                    className='w-5 h-5'
+                    fill='currentColor'
+                    viewBox='0 0 20 20'
+                  >
                     <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
+                      fillRule='evenodd'
+                      d='M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z'
+                      clipRule='evenodd'
                     />
                   </svg>
-                  Seksi ini telah diselesaikan
+                  sesi ini telah diselesaikan
                 </div>
               ) : (
                 <button
                   onClick={() => handleComplete(activeTab)}
-                  className="w-full sm:w-auto px-5 py-2.5 sm:py-2 bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white text-sm font-semibold rounded-lg transition-colors"
+                  className='w-full sm:w-auto px-5 py-2.5 sm:py-2 bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white text-sm font-semibold rounded-lg transition-colors'
                 >
                   Tandai Selesai
                 </button>
