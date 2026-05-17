@@ -4,6 +4,18 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
+function calcListProgress() {
+  try {
+    const d = JSON.parse(localStorage.getItem('asd_progress_list')) ?? {};
+    let count = 0;
+    if (d.materi) count++;
+    if (d.contoh) count++;
+    if (d.latihan) count++;
+    if (d.ringkasan) count++;
+    return count * 25;
+  } catch { return 0; }
+}
+
 function calcAdtSederhanaProgress() {
   try {
     const d = JSON.parse(localStorage.getItem('asd_progress_adt_sederhana')) ?? {};
@@ -61,11 +73,11 @@ const topics = [
   {
     id: 'list',
     title: 'List',
-    description: 'Struktur data List: representasi, operasi, dan implementasi dalam bahasa C.',
+    description: 'Struktur data List dengan array: representasi implisit/eksplisit, 5 alternatif implementasi, analisis efisiensi, dan array dinamis.',
     progress: 0,
-    href: null,
-    available: false,
-    bg: 'bg-gray-400',
+    href: '/dashboard/topik/list',
+    available: true,
+    bg: 'bg-emerald-600',
     icon: null,
   },
   {
@@ -133,10 +145,12 @@ const topics = [
 export default function TopikPage() {
   const [pengantarProgress, setPengantarProgress] = useState(0);
   const [adtSederhanaProgress, setAdtSederhanaProgress] = useState(0);
+  const [listProgress, setListProgress] = useState(0);
 
   useEffect(() => {
     setPengantarProgress(calcPengantarProgress());
     setAdtSederhanaProgress(calcAdtSederhanaProgress());
+    setListProgress(calcListProgress());
   }, []);
 
   return (
@@ -148,6 +162,7 @@ export default function TopikPage() {
           const pct =
             topic.id === 'pengantar' ? pengantarProgress :
             topic.id === 'adt-sederhana' ? adtSederhanaProgress :
+            topic.id === 'list' ? listProgress :
             topic.progress;
           return (
             <div
