@@ -23,6 +23,7 @@ Materials:
 - Set & Map
 - List Linier
 - Binary Tree
+- Graph
 - Aplikasi
 ---
 

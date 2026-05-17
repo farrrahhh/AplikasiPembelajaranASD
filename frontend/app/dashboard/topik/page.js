@@ -167,6 +167,16 @@ const topics = [
     icon: null,
   },
   {
+    id: 'graph',
+    title: 'Graph',
+    description: 'Representasi dan algoritma graph: adjacency matrix, adjacency list, BFS, DFS, dan aplikasinya.',
+    progress: 0,
+    href: null,
+    available: false,
+    bg: 'bg-gray-400',
+    icon: null,
+  },
+  {
     id: 'aplikasi',
     title: 'Aplikasi',
     description: 'Aplikasi struktur data dalam pemecahan masalah nyata.',
