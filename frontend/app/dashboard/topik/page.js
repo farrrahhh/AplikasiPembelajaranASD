@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 
 const topics = [
   {
@@ -13,17 +14,13 @@ const topics = [
     available: true,
     bg: 'bg-blue-600',
     icon: (
-      <svg viewBox="0 0 64 64" className="w-16 h-16 opacity-80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="8" y="8" width="20" height="14" rx="2" fill="white" fillOpacity="0.3" />
-        <rect x="36" y="8" width="20" height="14" rx="2" fill="white" fillOpacity="0.3" />
-        <rect x="22" y="30" width="20" height="14" rx="2" fill="white" fillOpacity="0.5" />
-        <rect x="8" y="48" width="14" height="10" rx="2" fill="white" fillOpacity="0.25" />
-        <rect x="42" y="48" width="14" height="10" rx="2" fill="white" fillOpacity="0.25" />
-        <line x1="18" y1="22" x2="32" y2="30" stroke="white" strokeOpacity="0.5" strokeWidth="2" />
-        <line x1="46" y1="22" x2="32" y2="30" stroke="white" strokeOpacity="0.5" strokeWidth="2" />
-        <line x1="15" y1="44" x2="30" y2="44" stroke="white" strokeOpacity="0.4" strokeWidth="2" />
-        <line x1="49" y1="44" x2="34" y2="44" stroke="white" strokeOpacity="0.4" strokeWidth="2" />
-      </svg>
+      <Image
+        src="/algoritma.png"
+        alt="Pengantar Algoritma dan Struktur Data"
+        width={208}
+        height={120}
+        className="w-full h-full object-cover"
+      />
     ),
   },
   {
@@ -120,7 +117,7 @@ export default function TopikPage() {
             className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex"
           >
             <div
-              className={`w-52 flex-shrink-0 flex items-center justify-center ${topic.bg}`}
+              className={`w-52 flex-shrink-0 flex items-center justify-center overflow-hidden ${topic.bg}`}
               style={{ minHeight: '120px' }}
             >
               {topic.icon ?? (
