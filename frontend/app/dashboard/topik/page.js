@@ -28,6 +28,18 @@ function calcListProgress() {
   } catch { return 0; }
 }
 
+function calcSetMapProgress() {
+  try {
+    const d = JSON.parse(localStorage.getItem('asd_progress_set_map')) ?? {};
+    let count = 0;
+    if (d.materi) count++;
+    if (d.contoh) count++;
+    if (d.latihan) count++;
+    if (d.ringkasan) count++;
+    return count * 25;
+  } catch { return 0; }
+}
+
 function calcStackQueueProgress() {
   try {
     const d = JSON.parse(localStorage.getItem('asd_progress_stack_queue')) ?? {};
@@ -127,11 +139,11 @@ const topics = [
   {
     id: 'set-map',
     title: 'Set & Map',
-    description: 'Struktur data Set dan Map: operasi dan aplikasinya.',
+    description: 'ADT Set (elemen unik, union/intersection/difference) dan Map (key-value), dengan tiga implementasi: array tak terurut, array terurut, dan hash table dengan collision handling.',
     progress: 0,
-    href: null,
-    available: false,
-    bg: 'bg-gray-400',
+    href: '/dashboard/topik/set-map',
+    available: true,
+    bg: 'bg-teal-600',
     icon: null,
   },
   {
@@ -172,6 +184,7 @@ export default function TopikPage() {
   const [listProgress, setListProgress] = useState(0);
   const [mesinKarakterProgress, setMesinKarakterProgress] = useState(0);
   const [stackQueueProgress, setStackQueueProgress] = useState(0);
+  const [setMapProgress, setSetMapProgress] = useState(0);
 
   useEffect(() => {
     setPengantarProgress(calcPengantarProgress());
@@ -179,6 +192,7 @@ export default function TopikPage() {
     setListProgress(calcListProgress());
     setMesinKarakterProgress(calcMesinKarakterProgress());
     setStackQueueProgress(calcStackQueueProgress());
+    setSetMapProgress(calcSetMapProgress());
   }, []);
 
   return (
@@ -193,6 +207,7 @@ export default function TopikPage() {
             topic.id === 'list' ? listProgress :
             topic.id === 'mesin-karakter' ? mesinKarakterProgress :
             topic.id === 'stack-queue' ? stackQueueProgress :
+            topic.id === 'set-map' ? setMapProgress :
             topic.progress;
           return (
             <div
