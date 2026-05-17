@@ -64,6 +64,18 @@ function calcBinaryTreeProgress() {
   } catch { return 0; }
 }
 
+function calcGraphProgress() {
+  try {
+    const d = JSON.parse(localStorage.getItem('asd_progress_graph')) ?? {};
+    let count = 0;
+    if (d.materi) count++;
+    if (d.contoh) count++;
+    if (d.latihan) count++;
+    if (d.ringkasan) count++;
+    return count * 25;
+  } catch { return 0; }
+}
+
 function calcAdtSederhanaProgress() {
   try {
     const d = JSON.parse(localStorage.getItem('asd_progress_adt_sederhana')) ?? {};
@@ -181,11 +193,11 @@ const topics = [
   {
     id: 'graph',
     title: 'Graph',
-    description: 'Representasi dan algoritma graph: adjacency matrix, adjacency list, BFS, DFS, dan aplikasinya.',
+    description: 'Graf: terminologi (adjacent/incident/degree), 5 representasi (adjacency matrix/list, incidence matrix/list, edge list), directed graph, dan implementasi multilist dengan primitif searchNode/searchEdge/insertNode/insertEdge/deleteNode.',
     progress: 0,
-    href: null,
-    available: false,
-    bg: 'bg-gray-400',
+    href: '/dashboard/topik/graph',
+    available: true,
+    bg: 'bg-indigo-600',
     icon: null,
   },
   {
@@ -208,6 +220,7 @@ export default function TopikPage() {
   const [stackQueueProgress, setStackQueueProgress] = useState(0);
   const [setMapProgress, setSetMapProgress] = useState(0);
   const [binaryTreeProgress, setBinaryTreeProgress] = useState(0);
+  const [graphProgress, setGraphProgress] = useState(0);
 
   useEffect(() => {
     setPengantarProgress(calcPengantarProgress());
@@ -217,6 +230,7 @@ export default function TopikPage() {
     setStackQueueProgress(calcStackQueueProgress());
     setSetMapProgress(calcSetMapProgress());
     setBinaryTreeProgress(calcBinaryTreeProgress());
+    setGraphProgress(calcGraphProgress());
   }, []);
 
   return (
@@ -233,6 +247,7 @@ export default function TopikPage() {
             topic.id === 'stack-queue' ? stackQueueProgress :
             topic.id === 'set-map' ? setMapProgress :
             topic.id === 'binary-tree' ? binaryTreeProgress :
+            topic.id === 'graph' ? graphProgress :
             topic.progress;
           return (
             <div
