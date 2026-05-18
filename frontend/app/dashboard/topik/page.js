@@ -64,6 +64,18 @@ function calcBinaryTreeProgress() {
   } catch { return 0; }
 }
 
+function calcListLinierProgress() {
+  try {
+    const d = JSON.parse(localStorage.getItem('asd_progress_list_linier')) ?? {};
+    let count = 0;
+    if (d.materi) count++;
+    if (d.contoh) count++;
+    if (d.latihan) count++;
+    if (d.ringkasan) count++;
+    return count * 25;
+  } catch { return 0; }
+}
+
 function calcAplikasiProgress() {
   try {
     const d = JSON.parse(localStorage.getItem('asd_progress_aplikasi')) ?? {};
@@ -185,11 +197,11 @@ const topics = [
   {
     id: 'list-linier',
     title: 'List Linier',
-    description: 'Linked list: singly linked, doubly linked, dan circular linked list.',
+    description: 'Struktur berkait: representasi implisit/eksplisit, Array of Node, list dengan dummy (sentinel), Doubly Linked List, List Sirkuler, Stack, Queue, dan Priority Queue berbasis linked list.',
     progress: 0,
-    href: null,
-    available: false,
-    bg: 'bg-gray-400',
+    href: '/dashboard/topik/list-linier',
+    available: true,
+    bg: 'bg-cyan-600',
     icon: null,
   },
   {
@@ -233,6 +245,7 @@ export default function TopikPage() {
   const [setMapProgress, setSetMapProgress] = useState(0);
   const [binaryTreeProgress, setBinaryTreeProgress] = useState(0);
   const [graphProgress, setGraphProgress] = useState(0);
+  const [listLinierProgress, setListLinierProgress] = useState(0);
   const [aplikasiProgress, setAplikasiProgress] = useState(0);
 
   useEffect(() => {
@@ -244,6 +257,7 @@ export default function TopikPage() {
     setSetMapProgress(calcSetMapProgress());
     setBinaryTreeProgress(calcBinaryTreeProgress());
     setGraphProgress(calcGraphProgress());
+    setListLinierProgress(calcListLinierProgress());
     setAplikasiProgress(calcAplikasiProgress());
   }, []);
 
@@ -262,6 +276,7 @@ export default function TopikPage() {
             topic.id === 'set-map' ? setMapProgress :
             topic.id === 'binary-tree' ? binaryTreeProgress :
             topic.id === 'graph' ? graphProgress :
+            topic.id === 'list-linier' ? listLinierProgress :
             topic.id === 'aplikasi' ? aplikasiProgress :
             topic.progress;
           return (
