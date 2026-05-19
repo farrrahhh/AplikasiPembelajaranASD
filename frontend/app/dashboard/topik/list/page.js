@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
+import Link from "next/link";
 
 // ---------------------------------------------------------------------------
 // Sidebar section definitions
@@ -2071,6 +2072,9 @@ function saveProgress(updates) {
   );
 }
 
+const noopSubscribe = () => () => {};
+const emptyCompleted = { materi: false, contoh: false, latihan: false, ringkasan: false };
+
 // ---------------------------------------------------------------------------
 // Main Page
 // ---------------------------------------------------------------------------
@@ -2078,17 +2082,24 @@ export default function ListPage() {
   const [activeTab, setActiveTab] = useState("MATERI");
   const [activeSection, setActiveSection] = useState("intro");
   const [showToc, setShowToc] = useState(false);
-  const [completed, setCompleted] = useState(() => {
-    if (typeof window === "undefined")
-      return { materi: false, contoh: false, latihan: false, ringkasan: false };
-    const prog = readProgress();
-    return {
-      materi: !!prog.materi,
-      contoh: !!prog.contoh,
-      latihan: !!prog.latihan,
-      ringkasan: !!prog.ringkasan,
-    };
-  });
+  const completedRef = useRef(null);
+  const completed = useSyncExternalStore(
+    noopSubscribe,
+    () => {
+      if (!completedRef.current) {
+        const prog = readProgress();
+        completedRef.current = {
+          materi: !!prog.materi,
+          contoh: !!prog.contoh,
+          latihan: !!prog.latihan,
+          ringkasan: !!prog.ringkasan,
+        };
+      }
+      return completedRef.current;
+    },
+    () => emptyCompleted,
+  );
+  const [, forceUpdate] = useState(0);
   const mainRef = useRef(null);
 
   const handleTabClick = (tab) => {
@@ -2100,7 +2111,8 @@ export default function ListPage() {
     const key = TAB_KEYS[tab];
     if (!key || completed[key]) return;
     saveProgress({ [key]: true });
-    setCompleted((prev) => ({ ...prev, [key]: true }));
+    completedRef.current = { ...completedRef.current, [key]: true };
+    forceUpdate((n) => n + 1);
   };
 
   const handleQuestionEvaluated = useCallback((questionId) => {
@@ -2167,6 +2179,18 @@ export default function ListPage() {
 
       {/* ── Main area ── */}
       <div className='flex-1 flex flex-col min-w-0 bg-white overflow-hidden'>
+        {/* Back navigation */}
+        <div className="shrink-0 px-4 sm:px-6 pt-3 pb-2">
+          <Link
+            href="/dashboard/topik"
+            className="inline-flex items-center gap-1 text-xs text-gray-500 hover:text-gray-800 font-medium transition-colors"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Topik
+          </Link>
+        </div>
         {/* Tabs */}
         <div className='shrink-0 border-b border-gray-200 bg-white overflow-x-auto'>
           <div className='flex gap-1 px-3 sm:px-6 pt-3 min-w-max'>
