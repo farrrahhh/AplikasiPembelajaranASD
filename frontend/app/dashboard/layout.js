@@ -33,7 +33,6 @@ export default function DashboardLayout({ children }) {
   const navItems = [
     { href: '/dashboard', label: 'Beranda', exact: true },
     { href: '/dashboard/topik', label: 'Topik', exact: false },
-    { href: '/dashboard/rekomendasi', label: 'Rekomendasi', exact: false },
     { href: '/dashboard/progress', label: 'Progress', exact: false },
   ];
 
@@ -60,23 +59,23 @@ export default function DashboardLayout({ children }) {
           </div>
         </div>
 
-        {/* Desktop nav links */}
-        <div className="hidden md:flex gap-6 ml-10">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`text-sm font-medium transition-colors ${
-                isActive(item) ? 'text-blue-400' : 'text-gray-300 hover:text-white'
-              }`}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </div>
-
         {/* Right side */}
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-4">
+          {/* Desktop nav links */}
+          <div className="hidden md:flex gap-6">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`text-sm font-medium transition-colors ${
+                  isActive(item) ? 'text-blue-400' : 'text-gray-300 hover:text-white'
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
+
           <button
             onClick={handleLogout}
             title="Keluar"
