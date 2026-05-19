@@ -50,3 +50,23 @@ export function clearSession() {
   localStorage.removeItem('token');
   localStorage.removeItem('user');
 }
+
+export async function updateProfile(token, { name, email, currentPassword, newPassword }) {
+  const body = {};
+  if (name !== undefined) body.name = name;
+  if (email !== undefined) body.email = email;
+  if (currentPassword !== undefined) body.current_password = currentPassword;
+  if (newPassword !== undefined) body.new_password = newPassword;
+
+  const res = await fetch(`${API_BASE}/auth/profile`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.detail || 'Gagal memperbarui profil.');
+  return data;
+}

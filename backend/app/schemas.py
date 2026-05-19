@@ -60,3 +60,10 @@ class AuthResponse(BaseModel):
     message: str
     user: UserResponse
     token: str
+
+
+class UpdateProfileRequest(BaseModel):
+    name: str | None = None
+    email: str | None = None
+    current_password: str | None = None
+    new_password: str | None = None

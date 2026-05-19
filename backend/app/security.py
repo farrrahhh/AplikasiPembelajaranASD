@@ -49,3 +49,7 @@ def create_access_token(user_id: int, email: str, secret_key: str) -> str:
         "exp": datetime.now(timezone.utc) + timedelta(days=JWT_EXPIRY_DAYS),
     }
     return jwt.encode(payload, secret_key, algorithm=JWT_ALGORITHM)
+
+
+def decode_access_token(token: str, secret_key: str) -> dict:
+    return jwt.decode(token, secret_key, algorithms=[JWT_ALGORITHM])
