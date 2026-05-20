@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from sqlalchemy import Boolean, DateTime, Float, ForeignKey, Integer, String, Text, func
+from sqlalchemy import Boolean, DateTime, Float, ForeignKey, Integer, String, Text, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db import Base
@@ -41,7 +41,6 @@ class Topic(Base):
     examples: Mapped[list["Example"]] = relationship(back_populates="topic")
     exercises: Mapped[list["Exercise"]] = relationship(back_populates="topic")
     learning_paths: Mapped[list["LearningPath"]] = relationship(back_populates="topic")
-    progress_records: Mapped[list["Progress"]] = relationship(back_populates="topic")
     performance_records: Mapped[list["UserPerformance"]] = relationship(
         back_populates="topic"
     )
@@ -127,15 +126,22 @@ class UserAnswer(Base):
 
 class Progress(Base):
     __tablename__ = "progress"
+    __table_args__ = (
+        UniqueConstraint("user_id", "topic_slug", name="uq_progress_user_topic"),
+    )
 
     progress_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.user_id"), nullable=False)
-    topic_id: Mapped[int] = mapped_column(ForeignKey("topics.topic_id"), nullable=False)
-    completion_percentage: Mapped[float | None] = mapped_column(Float)
-    last_accessed: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    topic_slug: Mapped[str] = mapped_column(String(100), nullable=False)
+    materi: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    contoh: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    latihan: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    ringkasan: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    last_accessed: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
 
     user: Mapped["User"] = relationship(back_populates="progress_records")
-    topic: Mapped["Topic"] = relationship(back_populates="progress_records")
 
 
 class UserPerformance(Base):

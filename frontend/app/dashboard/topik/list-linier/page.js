@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from 'react';
 import Link from 'next/link';
+import { syncTopicProgress } from '../../../lib/progress';
 
 const SECTIONS = [
   { id: 'pengantar',     title: 'Struktur Berkait',           level: 0 },
@@ -19,6 +20,7 @@ const SECTIONS = [
 
 const TABS = ['MATERI', 'CONTOH', 'LATIHAN', 'RINGKASAN'];
 const PROGRESS_KEY = 'asd_progress_list_linier';
+const TOPIC_SLUG   = 'list-linier';
 const STORAGE_KEY  = 'asd_latihan_list_linier_soal';
 const TAB_KEYS = { MATERI: 'materi', CONTOH: 'contoh', LATIHAN: 'latihan', RINGKASAN: 'ringkasan' };
 
@@ -27,7 +29,9 @@ function readProgress() {
   catch { return {}; }
 }
 function saveProgress(updates) {
-  localStorage.setItem(PROGRESS_KEY, JSON.stringify({ ...readProgress(), ...updates }));
+  const data = { ...readProgress(), ...updates };
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify(data));
+  syncTopicProgress(TOPIC_SLUG, data);
 }
 
 const noopSubscribe = () => () => {};

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
 import Link from "next/link";
+import { syncTopicProgress } from '../../../lib/progress';
 
 const SECTIONS = [
   { id: "queue-intro", title: "Queue (Antrian)", level: 0 },
@@ -1994,6 +1995,7 @@ length      → jumlah elemen`}</pre>
 // Progress helpers
 // ---------------------------------------------------------------------------
 const PROGRESS_KEY = "asd_progress_stack_queue";
+const TOPIC_SLUG   = "stack-queue";
 const TAB_KEYS = {
   MATERI: "materi",
   CONTOH: "contoh",
@@ -2010,10 +2012,9 @@ function readProgress() {
 }
 
 function saveProgress(updates) {
-  localStorage.setItem(
-    PROGRESS_KEY,
-    JSON.stringify({ ...readProgress(), ...updates }),
-  );
+  const data = { ...readProgress(), ...updates };
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify(data));
+  syncTopicProgress(TOPIC_SLUG, data);
 }
 
 const noopSubscribe = () => () => {};

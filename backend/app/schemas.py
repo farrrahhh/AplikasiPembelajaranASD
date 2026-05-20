@@ -67,3 +67,20 @@ class UpdateProfileRequest(BaseModel):
     email: str | None = None
     current_password: str | None = None
     new_password: str | None = None
+
+
+class ProgressResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    topic_slug: str
+    materi: bool
+    contoh: bool
+    latihan: bool
+    ringkasan: bool
+
+
+class ProgressUpdateRequest(BaseModel):
+    materi: bool = False
+    contoh: bool = False
+    latihan: bool = False
+    ringkasan: bool = False

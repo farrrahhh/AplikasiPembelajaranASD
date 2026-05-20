@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { loginUser, saveSession, getSession } from '../lib/auth';
+import { loadProgressFromDb } from '../lib/progress';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -23,6 +24,7 @@ export default function LoginPage() {
     try {
       const data = await loginUser(form.email, form.password);
       saveSession(data);
+      await loadProgressFromDb(data.token);
       router.push('/dashboard');
     } catch (err) {
       setError(err.message);

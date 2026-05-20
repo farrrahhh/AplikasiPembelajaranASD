@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
 import Link from "next/link";
+import { syncTopicProgress } from '../../../lib/progress';
 
 // ---------------------------------------------------------------------------
 // Sidebar section definitions
@@ -2050,6 +2051,7 @@ procedure insertAt(input/output l: List, input x: ElType, input idx: integer)
 // Progress helpers
 // ---------------------------------------------------------------------------
 const PROGRESS_KEY = "asd_progress_list";
+const TOPIC_SLUG   = "list";
 const TAB_KEYS = {
   MATERI: "materi",
   CONTOH: "contoh",
@@ -2066,10 +2068,9 @@ function readProgress() {
 }
 
 function saveProgress(updates) {
-  localStorage.setItem(
-    PROGRESS_KEY,
-    JSON.stringify({ ...readProgress(), ...updates }),
-  );
+  const data = { ...readProgress(), ...updates };
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify(data));
+  syncTopicProgress(TOPIC_SLUG, data);
 }
 
 const noopSubscribe = () => () => {};

@@ -1,12 +1,19 @@
+from datetime import datetime, timezone
+
 from fastapi import APIRouter, Depends, Header, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.config import settings
 from app.db import get_db
-from app.models import User
-from app.schemas import AuthResponse, LoginRequest, RegisterRequest, UpdateProfileRequest, UserResponse
+from app.models import Progress, User
+from app.schemas import AuthResponse, LoginRequest, ProgressResponse, ProgressUpdateRequest, RegisterRequest, UpdateProfileRequest, UserResponse
 from app.security import create_access_token, decode_access_token, hash_password, verify_password
+
+VALID_TOPIC_SLUGS = {
+    "pengantar", "adt-sederhana", "list", "mesin-karakter",
+    "stack-queue", "set-map", "list-linier", "binary-tree", "graph", "aplikasi",
+}
 
 router = APIRouter()
 
@@ -139,3 +146,46 @@ async def update_profile(
     db.commit()
     db.refresh(current_user)
     return UserResponse.model_validate(current_user)
+
+
+@router.get("/progress", response_model=list[ProgressResponse], tags=["progress"])
+async def get_progress(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> list[ProgressResponse]:
+    rows = db.execute(
+        select(Progress).where(Progress.user_id == current_user.user_id)
+    ).scalars().all()
+    return [ProgressResponse.model_validate(r) for r in rows]
+
+
+@router.put("/progress/{topic_slug}", response_model=ProgressResponse, tags=["progress"])
+async def upsert_progress(
+    topic_slug: str,
+    payload: ProgressUpdateRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> ProgressResponse:
+    if topic_slug not in VALID_TOPIC_SLUGS:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Topik tidak ditemukan.")
+
+    row = db.execute(
+        select(Progress).where(
+            Progress.user_id == current_user.user_id,
+            Progress.topic_slug == topic_slug,
+        )
+    ).scalar_one_or_none()
+
+    if row is None:
+        row = Progress(user_id=current_user.user_id, topic_slug=topic_slug)
+        db.add(row)
+
+    row.materi = payload.materi
+    row.contoh = payload.contoh
+    row.latihan = payload.latihan
+    row.ringkasan = payload.ringkasan
+    row.last_accessed = datetime.now(timezone.utc)
+
+    db.commit()
+    db.refresh(row)
+    return ProgressResponse.model_validate(row)

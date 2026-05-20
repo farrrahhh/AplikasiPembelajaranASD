@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from 'react';
 import Link from 'next/link';
+import { syncTopicProgress } from '../../../lib/progress';
 
 const SECTIONS = [
   { id: 'pengantar',    title: 'Pohon (Tree)',                 level: 0 },
@@ -28,6 +29,7 @@ const SECTIONS = [
 
 const TABS = ['MATERI', 'CONTOH', 'LATIHAN', 'RINGKASAN'];
 const PROGRESS_KEY = 'asd_progress_binary_tree';
+const TOPIC_SLUG   = 'binary-tree';
 const STORAGE_KEY  = 'asd_latihan_binary_tree_soal';
 const TAB_KEYS = { MATERI: 'materi', CONTOH: 'contoh', LATIHAN: 'latihan', RINGKASAN: 'ringkasan' };
 
@@ -36,7 +38,9 @@ function readProgress() {
   catch { return {}; }
 }
 function saveProgress(updates) {
-  localStorage.setItem(PROGRESS_KEY, JSON.stringify({ ...readProgress(), ...updates }));
+  const data = { ...readProgress(), ...updates };
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify(data));
+  syncTopicProgress(TOPIC_SLUG, data);
 }
 
 const noopSubscribe = () => () => {};

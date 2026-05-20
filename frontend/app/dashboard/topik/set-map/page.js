@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
 import Link from "next/link";
+import { syncTopicProgress } from '../../../lib/progress';
 
 const SECTIONS = [
   { id: "set-definisi", title: "ADT Set", level: 0 },
@@ -1929,6 +1930,7 @@ unset(k, new())      = new()`}</pre>
 // Progress helpers
 // ---------------------------------------------------------------------------
 const PROGRESS_KEY = "asd_progress_set_map";
+const TOPIC_SLUG   = "set-map";
 const TAB_KEYS = {
   MATERI: "materi",
   CONTOH: "contoh",
@@ -1945,10 +1947,9 @@ function readProgress() {
 }
 
 function saveProgress(updates) {
-  localStorage.setItem(
-    PROGRESS_KEY,
-    JSON.stringify({ ...readProgress(), ...updates }),
-  );
+  const data = { ...readProgress(), ...updates };
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify(data));
+  syncTopicProgress(TOPIC_SLUG, data);
 }
 
 const noopSubscribe = () => () => {};

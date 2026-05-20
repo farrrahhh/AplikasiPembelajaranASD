@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { syncTopicProgress } from '../../../lib/progress';
 
 // ---------------------------------------------------------------------------
 // Sidebar section definitions
@@ -2187,6 +2188,7 @@ function RingkasanContent() {
 // Progress helpers
 // ---------------------------------------------------------------------------
 const PROGRESS_KEY = "asd_progress_pengantar";
+const TOPIC_SLUG   = "pengantar";
 
 const TAB_KEYS = {
   MATERI: "materi",
@@ -2204,10 +2206,9 @@ function readProgress() {
 }
 
 function saveProgress(updates) {
-  localStorage.setItem(
-    PROGRESS_KEY,
-    JSON.stringify({ ...readProgress(), ...updates }),
-  );
+  const data = { ...readProgress(), ...updates };
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify(data));
+  syncTopicProgress(TOPIC_SLUG, data);
 }
 
 const noopSubscribe = () => () => {};
