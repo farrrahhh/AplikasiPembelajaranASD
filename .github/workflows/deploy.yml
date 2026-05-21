@@ -48,6 +48,7 @@ jobs:
             --set-env-vars="FRONTEND_ORIGIN=${{ secrets.NEXT_PUBLIC_API_URL }}" \
             --set-env-vars="APP_ENV=production" \
             --add-cloudsql-instances=${{ env.PROJECT_ID }}:${{ env.REGION }}:asd-db \
+            --service-account=${{ secrets.WIF_SERVICE_ACCOUNT }} \
             --min-instances=0 \
             --max-instances=10
 
