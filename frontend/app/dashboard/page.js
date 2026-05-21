@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useSyncExternalStore } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { getSession } from '../lib/auth';
 
@@ -9,16 +10,16 @@ const noopSubscribe = () => () => {};
 const emptyRows = [];
 
 const TOPICS = [
-  { id: 'pengantar',      key: 'asd_progress_pengantar',      title: 'Pengantar Algoritma dan Struktur Data', shortTitle: 'Pengantar',  href: '/dashboard/topik/pengantar',      color: '#6366f1', bg: 'from-indigo-500 to-indigo-700' },
-  { id: 'adt-sederhana',  key: 'asd_progress_adt_sederhana',  title: 'ADT Sederhana',                        shortTitle: 'ADT',         href: '/dashboard/topik/adt-sederhana',  color: '#a855f7', bg: 'from-purple-500 to-purple-700' },
-  { id: 'list',           key: 'asd_progress_list',           title: 'List',                                 shortTitle: 'List',        href: '/dashboard/topik/list',           color: '#10b981', bg: 'from-emerald-500 to-emerald-700' },
-  { id: 'mesin-karakter', key: 'asd_progress_mesin_karakter', title: 'Mesin Karakter & Kata',                shortTitle: 'Mesin',       href: '/dashboard/topik/mesin-karakter', color: '#0ea5e9', bg: 'from-sky-500 to-sky-700' },
-  { id: 'stack-queue',    key: 'asd_progress_stack_queue',    title: 'Stack & Queue',                        shortTitle: 'Stack',       href: '/dashboard/topik/stack-queue',    color: '#f43f5e', bg: 'from-rose-500 to-rose-700' },
-  { id: 'set-map',        key: 'asd_progress_set_map',        title: 'Set & Map',                            shortTitle: 'Set & Map',   href: '/dashboard/topik/set-map',        color: '#14b8a6', bg: 'from-teal-500 to-teal-700' },
-  { id: 'list-linier',    key: 'asd_progress_list_linier',    title: 'List Linier',                          shortTitle: 'L. Linier',   href: '/dashboard/topik/list-linier',    color: '#06b6d4', bg: 'from-cyan-500 to-cyan-700' },
-  { id: 'binary-tree',    key: 'asd_progress_binary_tree',    title: 'Binary Tree',                          shortTitle: 'B. Tree',     href: '/dashboard/topik/binary-tree',    color: '#f59e0b', bg: 'from-amber-500 to-amber-700' },
-  { id: 'graph',          key: 'asd_progress_graph',          title: 'Graph',                                shortTitle: 'Graph',       href: '/dashboard/topik/graph',          color: '#8b5cf6', bg: 'from-violet-500 to-violet-700' },
-  { id: 'aplikasi',       key: 'asd_progress_aplikasi',       title: 'Aplikasi',                             shortTitle: 'Aplikasi',    href: '/dashboard/topik/aplikasi',       color: '#f97316', bg: 'from-orange-500 to-orange-700' },
+  { id: 'pengantar',      key: 'asd_progress_pengantar',      title: 'Pengantar Algoritma dan Struktur Data', shortTitle: 'Pengantar',  href: '/dashboard/topik/pengantar',      color: '#6366f1', cover: '/cover-materials/1.png'  },
+  { id: 'adt-sederhana',  key: 'asd_progress_adt_sederhana',  title: 'ADT Sederhana',                        shortTitle: 'ADT',         href: '/dashboard/topik/adt-sederhana',  color: '#a855f7', cover: '/cover-materials/2.png'  },
+  { id: 'list',           key: 'asd_progress_list',           title: 'List',                                 shortTitle: 'List',        href: '/dashboard/topik/list',           color: '#10b981', cover: '/cover-materials/3.png'  },
+  { id: 'mesin-karakter', key: 'asd_progress_mesin_karakter', title: 'Mesin Karakter & Kata',                shortTitle: 'Mesin',       href: '/dashboard/topik/mesin-karakter', color: '#0ea5e9', cover: '/cover-materials/4.png'  },
+  { id: 'stack-queue',    key: 'asd_progress_stack_queue',    title: 'Stack & Queue',                        shortTitle: 'Stack',       href: '/dashboard/topik/stack-queue',    color: '#f43f5e', cover: '/cover-materials/5.png'  },
+  { id: 'set-map',        key: 'asd_progress_set_map',        title: 'Set & Map',                            shortTitle: 'Set & Map',   href: '/dashboard/topik/set-map',        color: '#14b8a6', cover: '/cover-materials/6.png'  },
+  { id: 'list-linier',    key: 'asd_progress_list_linier',    title: 'List Linier',                          shortTitle: 'L. Linier',   href: '/dashboard/topik/list-linier',    color: '#06b6d4', cover: '/cover-materials/7.png'  },
+  { id: 'binary-tree',    key: 'asd_progress_binary_tree',    title: 'Binary Tree',                          shortTitle: 'B. Tree',     href: '/dashboard/topik/binary-tree',    color: '#f59e0b', cover: '/cover-materials/8.png'  },
+  { id: 'graph',          key: 'asd_progress_graph',          title: 'Graph',                                shortTitle: 'Graph',       href: '/dashboard/topik/graph',          color: '#8b5cf6', cover: '/cover-materials/9.png'  },
+  { id: 'aplikasi',       key: 'asd_progress_aplikasi',       title: 'Aplikasi',                             shortTitle: 'Aplikasi',    href: '/dashboard/topik/aplikasi',       color: '#f97316', cover: '/cover-materials/10.png' },
 ];
 
 const SECTIONS = ['materi', 'contoh', 'latihan', 'ringkasan'];
@@ -152,10 +153,14 @@ export default function BerandaPage() {
             </h2>
             <div className="border border-slate-200 rounded-xl overflow-hidden flex flex-col sm:flex-row hover:shadow-md transition-shadow">
               {/* Thumbnail */}
-              <div className={`bg-linear-to-br ${nextUnstarted.topic.bg} sm:w-48 h-32 sm:h-auto flex items-center justify-center shrink-0`}>
-                <span className="text-white text-4xl font-black opacity-30 select-none font-mono">
-                  {nextUnstarted.topic.shortTitle[0]}
-                </span>
+              <div className="relative sm:w-48 h-32 sm:h-auto shrink-0 overflow-hidden">
+                <Image
+                  src={nextUnstarted.topic.cover}
+                  alt={nextUnstarted.topic.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 100vw, 192px"
+                />
               </div>
               {/* Info */}
               <div className="p-5 flex flex-col justify-center flex-1">
@@ -234,11 +239,15 @@ function CourseCard({ topic, pct, secs }) {
       className="group border border-slate-200 rounded-xl overflow-hidden hover:shadow-md hover:border-slate-300 transition-all"
     >
       {/* Thumbnail */}
-      <div className={`bg-linear-to-br ${topic.bg} h-28 flex items-center justify-center relative overflow-hidden`}>
-        <span className="text-white text-5xl font-black opacity-20 select-none font-mono">
-          {topic.shortTitle[0]}
-        </span>
-        <span className="absolute bottom-2 right-2.5 text-xs font-bold text-white/80">
+      <div className="relative h-28 overflow-hidden">
+        <Image
+          src={topic.cover}
+          alt={topic.title}
+          fill
+          className="object-cover"
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+        />
+        <span className="absolute bottom-2 right-2.5 text-xs font-bold text-white drop-shadow">
           {pct}%
         </span>
       </div>
