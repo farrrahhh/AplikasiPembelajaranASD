@@ -77,7 +77,6 @@ jobs:
           IMAGE=${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/asd-app/frontend:${{ github.sha }}
           docker build \
             --build-arg NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }} \
-            --build-arg OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
             -t $IMAGE ./frontend
           docker push $IMAGE
 
@@ -89,5 +88,6 @@ jobs:
             --region=${{ env.REGION }} \
             --platform=managed \
             --allow-unauthenticated \
+            --set-env-vars="OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" \
             --min-instances=0 \
             --max-instances=10
