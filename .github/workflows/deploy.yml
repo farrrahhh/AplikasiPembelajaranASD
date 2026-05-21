@@ -47,6 +47,7 @@ jobs:
             --set-env-vars="SECRET_KEY=${{ secrets.SECRET_KEY }}" \
             --set-env-vars="FRONTEND_ORIGIN=${{ secrets.FRONTEND_ORIGIN }}" \
             --set-env-vars="APP_ENV=production" \
+            --set-env-vars="OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" \
             --add-cloudsql-instances=${{ env.PROJECT_ID }}:${{ env.REGION }}:asd-db \
             --service-account=${{ secrets.WIF_SERVICE_ACCOUNT }} \
             --min-instances=0 \
