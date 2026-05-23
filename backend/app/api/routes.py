@@ -1,9 +1,12 @@
 from datetime import datetime, timezone
 
+import httpx
 from fastapi import APIRouter, Depends, Header, HTTPException, status
+from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.ai import TOPIC_CONFIGS, generate_soal
 from app.config import settings
 from app.db import get_db
 from app.models import Progress, User
@@ -14,6 +17,13 @@ VALID_TOPIC_SLUGS = {
     "pengantar", "adt-sederhana", "list", "mesin-karakter",
     "stack-queue", "set-map", "list-linier", "binary-tree", "graph", "aplikasi",
 }
+
+
+class GenerateSoalRequest(BaseModel):
+    jumlah: int = 5
+    kelemahan: list[str] = []
+    tipe_paksa: str | None = None
+    topik_referensi: list[str] = []
 
 router = APIRouter()
 
@@ -189,3 +199,27 @@ async def upsert_progress(
     db.commit()
     db.refresh(row)
     return ProgressResponse.model_validate(row)
+
+
+@router.post("/latihan/{topic_slug}/generate", tags=["latihan"])
+async def generate_latihan(
+    topic_slug: str,
+    payload: GenerateSoalRequest,
+) -> dict:
+    if topic_slug not in TOPIC_CONFIGS:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Topik tidak ditemukan.")
+    if not settings.openai_api_key:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="OpenAI API key tidak dikonfigurasi.")
+    try:
+        result = await generate_soal(
+            topic_slug=topic_slug,
+            jumlah=payload.jumlah,
+            kelemahan=payload.kelemahan,
+            tipe_paksa=payload.tipe_paksa,
+            topik_referensi=payload.topik_referensi,
+        )
+        return result
+    except httpx.HTTPStatusError as e:
+        raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail=f"OpenAI error: {e.response.text}")
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))

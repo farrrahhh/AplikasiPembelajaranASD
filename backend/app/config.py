@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     )
     database_schema: str = "public"
     secret_key: str = "change-me-in-production"
+    openai_api_key: str = ""
+    openai_model: str = "gpt-4o-mini"
 
     model_config = SettingsConfigDict(
         env_file=ENV_FILE,
