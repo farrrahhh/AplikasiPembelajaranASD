@@ -63,6 +63,7 @@ TOPIC_CONFIGS: dict[str, dict] = {
             '- 3 soal bertipe "implementasi" (kode C + notasi algoritmik)'
         ),
         "tipe_label_impl": '"implementasi" (wajib sertakan notasi algoritmik lengkap + implementasi bahasa C)',
+        "materi_evaluasi": 'Pengantar ASD — algoritma, struktur data, paradigma prosedural, ADT, fungsi & prosedur, rekursi, pointer, modularitas program C (.h, .c, main.c).',
     },
     "adt-sederhana": {
         "nama": "ADT Sederhana",
@@ -85,6 +86,7 @@ TOPIC_CONFIGS: dict[str, dict] = {
             '- 3 soal bertipe "implementasi" (kode C + notasi algoritmik)'
         ),
         "tipe_label_impl": '"implementasi" (wajib sertakan notasi algoritmik lengkap + implementasi bahasa C)',
+        "materi_evaluasi": 'ADT Sederhana — definisi ADT, komponen ADT (konstruktor, selektor, predikat, operasi I/O, operasi lain), implementasi ADT POINT dalam bahasa C, macro preprocessor sebagai selektor, file .h dan .c, include guard, tipe boolean manual, kompilasi multi-file.',
     },
     "aplikasi": {
         "nama": "Aplikasi Struktur Data",
@@ -139,6 +141,7 @@ TOPIC_CONFIGS: dict[str, dict] = {
             '- 3 soal bertipe "implementasi" (trace algoritma polinom, simulasi alokasi memori First/Best Fit, sketsa algoritma multi-list atau relasi M-N)'
         ),
         "tipe_label_impl": '"implementasi" (sertakan notasi algoritmik lengkap sebagai referensi jika relevan)',
+        "materi_evaluasi": 'Aplikasi Struktur Data — Polinom (representasi kontigu dengan arrSuku/Degree, representasi berkait terurut menurun, 5 operasi termasuk derivasi dan merging untuk penjumlahan), Pengelolaan Memori (zone bebas, First Fit vs Best Fit, AlokBlok, DeAlokBlok 4 kasus, GarbageCollection), Multi-List Pegawai-Anak (Alt1: list anak per pegawai, Alt2: list global + father pointer), Relasi M-N Dosen-MataKuliah (Alt1/Alt2/Alt3: list terpisah MK_DOS, prosedur AddRel 4 langkah).',
     },
     "binary-tree": {
         "nama": "Pohon Biner (Binary Tree)",
@@ -180,6 +183,7 @@ TOPIC_CONFIGS: dict[str, dict] = {
             '- 3 soal bertipe "implementasi" (tulis notasi algoritmik, implementasi C, atau trace eksekusi)'
         ),
         "tipe_label_impl": '"implementasi" (sertakan notasi algoritmik lengkap sebagai referensi jika relevan)',
+        "materi_evaluasi": 'Pohon Biner (Binary Tree) — definisi rekursif, istilah pohon (akar, daun, tingkat, kedalaman, derajat), ADT TreeNode <info,left,right>, predikat isTreeEmpty/isOneElmt/isUnerLeft/isUnerRight/isBiner, pemrosesan basis-0 vs basis-1, traversal Pre/In/Post-order, fungsi nbElmt/nbLeaf/depth, prosedur addLeft/delLeft, pohon seimbang dengan buildBalancedTree(n), BST (insSearchTree, delete 4 kasus dengan delNode), membangun pohon dari pita karakter.',
     },
     "graph": {
         "nama": "Graph",
@@ -221,6 +225,7 @@ TOPIC_CONFIGS: dict[str, dict] = {
             '- 3 soal bertipe "implementasi" (tulis notasi algoritmik, simulasi adjacency matrix, atau trace primitif multilist)'
         ),
         "tipe_label_impl": '"implementasi" (sertakan notasi algoritmik lengkap sebagai referensi jika relevan)',
+        "materi_evaluasi": 'Graph — definisi G=(V,E), terminologi (adjacent/incident/degree), variasi graph (weighted/directed/undirected/simple/regular/complete/empty), representasi (adjacency matrix O(V2)/adjacency list O(V+E)/incidence matrix/edge list), directed graph (predecessor/successor), implementasi multilist (Node dengan id/nPred/trail/next, SuccNode, leader list, trailer list), primitif: searchNode/searchEdge/insertNode/insertEdge/deleteNode.',
     },
     "list": {
         "nama": "ADT List",
@@ -245,6 +250,7 @@ TOPIC_CONFIGS: dict[str, dict] = {
             '- 3 soal bertipe "implementasi" (notasi algoritmik + kode)'
         ),
         "tipe_label_impl": '"implementasi" (wajib sertakan notasi algoritmik lengkap sebagai referensi)',
+        "materi_evaluasi": 'ADT List — definisi dan istilah (head, length, traversal), operasi dasar/insert/delete, implementasi dengan array (5 alternatif: alt-1a, alt-2a, alt-1b, alt-2b, alt-3), notasi algoritmik IF2111, representasi implisit (mark) vs eksplisit (nEff), rata kiri vs tidak rata kiri, fungsi antara firstIdx/lastIdx/isIdxEff, array dinamis (resize 2x dan 0.5x), elemen tersebar dan defragmen, perbandingan efisiensi O(1) vs O(n).',
     },
     "list-linier": {
         "nama": "List Linier (Struktur Berkait)",
@@ -308,6 +314,7 @@ TOPIC_CONFIGS: dict[str, dict] = {
             '- 3 soal bertipe "implementasi" (tulis fungsi C lengkap: operasi list biasa, DLL, list sirkuler, stack, queue, priority queue, atau sortedInsert)'
         ),
         "tipe_label_impl": '"implementasi" (sertakan deklarasi tipe dan signature fungsi sebagai referensi)',
+        "materi_evaluasi": 'List Linier (Struktur Berkait) — node <info,next>, representasi implisit (List=Address) vs eksplisit (List=<first>), Array of Node, list dengan dummy/sentinel, Doubly Linked List (prev+info+next, deleteLast O(1)), List Sirkuler (Next(last)=First), Stack berkait (push=insertFirst), Queue berkait (enqueue=insertLast O(1)), Priority Queue (sortedInsert O(n)), operasi umum (countPos, max, searchPos, deleteNeg, copyPos, updateList).',
     },
     "mesin-karakter": {
         "nama": "Mesin Karakter dan Mesin Kata",
@@ -336,6 +343,7 @@ TOPIC_CONFIGS: dict[str, dict] = {
             '- 3 soal bertipe "implementasi" (tulis notasi algoritmik + kode)'
         ),
         "tipe_label_impl": '"implementasi" (wajib sertakan notasi algoritmik lengkap sebagai referensi)',
+        "materi_evaluasi": 'Mesin Karakter dan Mesin Kata — mesin abstrak, komponen mesin karakter (pita/CC/EOP/MARK/start/adv), pola pemrosesan pita, studi kasus mesin karakter, konsep kata (buffer+length), primitif ignoreBlank dan salinKata, tiga versi model akuisisi kata (Versi 1: endKata boolean, Versi 2: length=0 sentinel, Versi 3: cc=MARK dengan initAkses), implementasi C multi-file, studi kasus mesin kata.',
     },
     "set-map": {
         "nama": "ADT Set dan Map",
@@ -373,6 +381,7 @@ TOPIC_CONFIGS: dict[str, dict] = {
             '- 3 soal bertipe "implementasi" (tulis notasi algoritmik + kode, atau simulasi hash table)'
         ),
         "tipe_label_impl": '"implementasi" (sertakan notasi algoritmik lengkap sebagai referensi jika relevan)',
+        "materi_evaluasi": 'ADT Set dan Map — Set (elemen unik, tidak terurut; operasi add/remove/isIn/union/intersection/setDifference/isSubset; axiomatic semantics; array tak terurut O(1) add, O(n) isIn; array terurut O(log n) isIn; trik hapus: pindah elemen terakhir), Map (pasangan key-value, key unik; operasi find/set/unset; set() insert atau update), Hash Table (fungsi hash; collision; chaining vs open addressing/linear probing; load factor; rehashing; masalah penghapusan slot).',
     },
     "stack-queue": {
         "nama": "Queue dan Stack",
@@ -402,6 +411,7 @@ TOPIC_CONFIGS: dict[str, dict] = {
             '- 3 soal bertipe "implementasi" (tulis notasi algoritmik + kode C)'
         ),
         "tipe_label_impl": '"implementasi" (sertakan notasi algoritmik lengkap sebagai referensi jika relevan)',
+        "materi_evaluasi": 'Queue dan Stack — Queue (FIFO, HEAD/TAIL/IDX_UNDEF, Alt-1 geser semua O(n), Alt-2 HEAD bergerak masalah semi-full, Alt-3 circular buffer O(1)), implementasi C (queue.h, enqueue Alt-2, dequeue), Stack (LIFO, TOP/IDX_UNDEF, push idxTop++, pop idxTop--), implementasi C (stack.h), aplikasi postfix evaluation (operan push, operator pop dua operan, urutan pop penting), copyStack/inverseStack/mergeStack, round robin, priority queue.',
     },
 }
 
@@ -499,3 +509,124 @@ async def generate_soal(
     response.raise_for_status()
     data = response.json()
     return json.loads(data['choices'][0]['message']['content'])
+
+
+RUBRIK: dict[str, list[dict]] = {
+    "pengetahuan": [
+        {"nama": "Keakuratan Konsep", "maks": 40, "panduan": "Apakah konsep yang dijelaskan benar dan tepat secara teknis?"},
+        {"nama": "Kelengkapan Penjelasan", "maks": 30, "panduan": "Apakah penjelasan mencakup semua aspek penting dari pertanyaan?"},
+        {"nama": "Kualitas Contoh", "maks": 30, "panduan": "Apakah contoh yang diberikan relevan, spesifik, dan tepat menggambarkan konsep?"},
+    ],
+    "implementasi": [
+        {"nama": "Kebenaran Logika", "maks": 40, "panduan": "Apakah logika/algoritma yang diimplementasikan benar dan menghasilkan output yang sesuai?"},
+        {"nama": "Sintaks & Konvensi C", "maks": 25, "panduan": "Apakah sintaks C digunakan dengan benar? Apakah tipe data, return type, pointer, dan konvensi bahasa C sudah tepat?"},
+        {"nama": "Kesesuaian Notasi Algoritma", "maks": 20, "panduan": "Apakah implementasi sesuai dengan notasi algoritma yang diberikan (jika ada)?"},
+        {"nama": "Kelengkapan Implementasi", "maks": 15, "panduan": "Apakah semua bagian yang diminta sudah diimplementasikan?"},
+    ],
+}
+
+
+async def evaluasi_soal(
+    topic_slug: str,
+    soal: dict,
+    jawaban: str,
+) -> dict:
+    cfg = TOPIC_CONFIGS[topic_slug]
+    materi = cfg["materi_evaluasi"]
+    tipe = "implementasi" if soal.get("tipe") == "implementasi" else "pengetahuan"
+    rubrik = RUBRIK[tipe]
+    total_maks = sum(r["maks"] for r in rubrik)
+    rubrik_text = "\n".join(f"- {r['nama']} (0–{r['maks']} poin): {r['panduan']}" for r in rubrik)
+    notasi = f"\n\nNotasi Algoritma:\n{soal['notasiAlgoritma']}" if soal.get("notasiAlgoritma") else ""
+
+    system_prompt = (
+        f"Kamu adalah tutor mata kuliah Algoritma dan Struktur Data (ASD) untuk program studi STI ITB.\n"
+        f"Evaluasi jawaban mahasiswa secara objektif menggunakan rubrik penilaian yang ditentukan.\n\n"
+        f"Materi: {materi}\n\n"
+        f"RUBRIK PENILAIAN ({'Soal Implementasi' if tipe == 'implementasi' else 'Soal Pengetahuan'}):\n"
+        f"{rubrik_text}\n\n"
+        f"Total maksimum: {total_maks} poin.\n\n"
+        f'Respons HARUS berupa JSON valid dengan struktur PERSIS:\n'
+        f'{{\n'
+        f'  "nilai": <"Sangat Baik" | "Baik" | "Cukup" | "Perlu Perbaikan" | "Belum Dijawab">,\n'
+        f'  "skor": <integer 0–100>,\n'
+        f'  "metrik": [{{"nama": <string>, "skor": <integer>, "maks": <integer>, "keterangan": <string>}}],\n'
+        f'  "komentar": <string>,\n'
+        f'  "yang_benar": <string atau null>,\n'
+        f'  "yang_perlu_diperbaiki": <string atau null>,\n'
+        f'  "konsep_lemah": [<string>]\n'
+        f'}}\n\n'
+        f"Aturan: skor = (jumlah poin metrik / {total_maks}) x 100 dibulatkan. "
+        f"Jika jawaban kosong: Belum Dijawab, skor 0. "
+        f">=85=Sangat Baik, 70-84=Baik, 50-69=Cukup, <50=Perlu Perbaikan. "
+        f"Urutan metrik harus sama dengan urutan rubrik."
+    )
+    user_prompt = (
+        f"## Soal {soal['id']} — {'Implementasi' if tipe == 'implementasi' else 'Pengetahuan'}\n"
+        f"Topik: {', '.join(soal.get('topik', []))}\n"
+        f"Pertanyaan: {soal['pertanyaan']}{notasi}\n\n"
+        f"Jawaban Mahasiswa:\n{jawaban.strip() if jawaban and jawaban.strip() else '(tidak dijawab)'}"
+    )
+
+    async with httpx.AsyncClient(timeout=60.0) as client:
+        response = await client.post(
+            'https://api.openai.com/v1/chat/completions',
+            headers={'Content-Type': 'application/json', 'Authorization': f'Bearer {settings.openai_api_key}'},
+            json={
+                'model': settings.openai_model,
+                'messages': [{'role': 'system', 'content': system_prompt}, {'role': 'user', 'content': user_prompt}],
+                'response_format': {'type': 'json_object'},
+                'temperature': 0.2,
+            },
+        )
+    response.raise_for_status()
+    result = json.loads(response.json()['choices'][0]['message']['content'])
+    return {'id': soal['id'], **result}
+
+
+async def evaluasi_batch(
+    topic_slug: str,
+    soal_dengan_jawaban: list[dict],
+) -> dict:
+    cfg = TOPIC_CONFIGS[topic_slug]
+    materi = cfg["materi_evaluasi"]
+
+    system_prompt = (
+        f"Kamu adalah tutor mata kuliah Algoritma dan Struktur Data (ASD) untuk program studi STI ITB.\n"
+        f"Tugasmu adalah menganalisis jawaban mahasiswa secara mendalam dan memberikan umpan balik yang konstruktif dalam Bahasa Indonesia.\n\n"
+        f"Materi yang diuji: {materi}\n\n"
+        f"Panduan analisis:\n"
+        f"- Untuk soal PENGETAHUAN: nilai keakuratan konsep, kelengkapan penjelasan, dan kualitas contoh.\n"
+        f"- Untuk soal IMPLEMENTASI: nilai kebenaran logika, penggunaan pointer, tipe return, dan kesesuaian dengan notasi algoritma.\n"
+        f"- Jika jawaban kosong, nilai 'Belum Dijawab' dengan skor 0.\n\n"
+        f'Respons HARUS berupa JSON valid:\n'
+        f'{{\n'
+        f'  "feedback": [{{"id": <int>, "nilai": <string>, "skor": <int 0-100>, "komentar": <string>, "yang_benar": <string|null>, "yang_perlu_diperbaiki": <string|null>, "konsep_lemah": [<string>]}}],\n'
+        f'  "analisis_kelemahan": <string>,\n'
+        f'  "area_fokus": [<string>],\n'
+        f'  "soal_tambahan": [{{"topik": <string>, "tipe": <"Pengetahuan"|"Implementasi">, "pertanyaan": <string>, "hint": <string>}}]\n'
+        f'}}\n\n'
+        f"Buat 2–3 soal tambahan yang langsung menargetkan kelemahan mahasiswa."
+    )
+    user_prompt = "\n\n---\n\n".join(
+        f"## Soal {s['id']} — {'Implementasi' if s.get('tipe') == 'implementasi' else 'Pengetahuan'}\n"
+        f"Topik: {', '.join(s.get('topik', []))}\n"
+        f"Pertanyaan: {s['pertanyaan']}"
+        + (f"\n\nNotasi Algoritma:\n{s['notasiAlgoritma']}" if s.get('notasiAlgoritma') else "")
+        + f"\n\nJawaban Mahasiswa:\n{s.get('jawaban', '').strip() or '(tidak dijawab)'}"
+        for s in soal_dengan_jawaban
+    )
+
+    async with httpx.AsyncClient(timeout=120.0) as client:
+        response = await client.post(
+            'https://api.openai.com/v1/chat/completions',
+            headers={'Content-Type': 'application/json', 'Authorization': f'Bearer {settings.openai_api_key}'},
+            json={
+                'model': settings.openai_model,
+                'messages': [{'role': 'system', 'content': system_prompt}, {'role': 'user', 'content': user_prompt}],
+                'response_format': {'type': 'json_object'},
+                'temperature': 0.5,
+            },
+        )
+    response.raise_for_status()
+    return json.loads(response.json()['choices'][0]['message']['content'])
