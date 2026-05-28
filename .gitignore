@@ -1,4 +1,4 @@
-.DS_Store
+**/.DS_Store
 backend/.env
 backend/.venv/
 backend/__pycache__/
@@ -7,4 +7,3 @@ backend/.mypy_cache/
 frontend/node_modules/
 frontend/dist/
 frontend/.env
-script_db.txt
