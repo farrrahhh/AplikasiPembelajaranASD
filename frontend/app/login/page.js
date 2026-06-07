@@ -106,7 +106,7 @@ export default function LoginPage() {
               />
             </div>
 
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center text-sm">
               <label className="flex items-center gap-2 cursor-pointer select-none">
                 <input
                   type="checkbox"
@@ -116,9 +116,6 @@ export default function LoginPage() {
                 />
                 <span className="text-gray-700">Ingat Saya</span>
               </label>
-              <button type="button" className="text-blue-600 font-medium hover:underline">
-                Lupa Kata Sandi
-              </button>
             </div>
 
             <button
