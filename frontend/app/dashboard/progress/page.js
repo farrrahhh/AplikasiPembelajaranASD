@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { fetchAllProgress } from '../lib/progress';
+import { fetchAllProgress } from '../../lib/progress';
 
 const CHART_HEIGHT = 180;
 
