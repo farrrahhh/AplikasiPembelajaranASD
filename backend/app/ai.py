@@ -630,3 +630,90 @@ async def evaluasi_batch(
         )
     response.raise_for_status()
     return json.loads(response.json()['choices'][0]['message']['content'])
+
+
+async def chat_materi_ai(topic_slug: str, pesan: str, riwayat: list[dict]) -> str:
+    cfg = TOPIC_CONFIGS[topic_slug]
+    nama = cfg.get("nama", topic_slug)
+    materi = cfg["materi_evaluasi"]
+    cakupan = cfg.get("cakupan", "")
+
+    system_prompt = (
+        f"Kamu adalah AI Tutor interaktif untuk mata kuliah Algoritma dan Struktur Data (ASD), program studi STI ITB.\n"
+        f"Mahasiswa sedang membaca materi topik: {nama}.\n\n"
+        f"Konteks materi:\n{materi}\n"
+        + (f"\nCakupan topik: {cakupan}\n" if cakupan else "")
+        + f"\nPanduan menjawab:\n"
+        f"- Gunakan Bahasa Indonesia yang jelas, ramah, dan terstruktur\n"
+        f"- Jawab langsung dan padat — hindari preamble seperti 'Tentu saja!' atau 'Pertanyaan yang bagus!'\n"
+        f"- Berikan contoh konkret dan analogi jika membantu pemahaman\n"
+        f"- Jika ada kode, gunakan notasi algoritmik IF2111 atau bahasa C sesuai materi\n"
+        f"- Jika pertanyaan tidak relevan dengan topik ASD, tetap bantu tapi arahkan kembali ke materi\n"
+        f"- Maksimal 4 paragraf kecuali diminta lebih panjang\n"
+        f"- Jangan ulangi pertanyaan mahasiswa di awal jawaban"
+    )
+
+    msgs = [{"role": "system", "content": system_prompt}]
+    for m in riwayat:
+        if m.get("role") in ("user", "assistant") and m.get("content"):
+            msgs.append({"role": m["role"], "content": m["content"]})
+    msgs.append({"role": "user", "content": pesan})
+
+    async with httpx.AsyncClient(timeout=60.0) as client:
+        response = await client.post(
+            'https://api.openai.com/v1/chat/completions',
+            headers={'Content-Type': 'application/json', 'Authorization': f'Bearer {settings.openai_api_key}'},
+            json={
+                'model': settings.openai_model,
+                'messages': msgs,
+                'temperature': 0.5,
+                'max_tokens': 800,
+            },
+        )
+    response.raise_for_status()
+    return response.json()['choices'][0]['message']['content']
+
+
+async def evaluasi_soal_sendiri(topic_slug: str, pertanyaan: str, jawaban: str) -> dict:
+    cfg = TOPIC_CONFIGS[topic_slug]
+    materi = cfg["materi_evaluasi"]
+
+    system_prompt = (
+        f"Kamu adalah tutor mata kuliah Algoritma dan Struktur Data (ASD) untuk program studi STI ITB.\n"
+        f"Mahasiswa memberikan soal sendiri (dari buku, ujian, atau latihan) beserta jawabannya untuk dievaluasi.\n\n"
+        f"Materi yang relevan untuk topik ini:\n{materi}\n\n"
+        f'Respons HARUS berupa JSON valid dengan struktur PERSIS:\n'
+        f'{{\n'
+        f'  "tipe_soal": <"pengetahuan" | "implementasi">,\n'
+        f'  "nilai": <"Sangat Baik" | "Baik" | "Cukup" | "Perlu Perbaikan" | "Belum Dijawab">,\n'
+        f'  "skor": <integer 0-100>,\n'
+        f'  "komentar": <string — ringkasan evaluasi keseluruhan>,\n'
+        f'  "yang_benar": <string atau null — aspek jawaban yang sudah tepat>,\n'
+        f'  "yang_perlu_diperbaiki": <string atau null — aspek yang perlu diperbaiki>,\n'
+        f'  "konsep_lemah": [<string> — nama konsep spesifik yang belum dikuasai],\n'
+        f'  "rekomendasi_belajar": [<string> — subtopik spesifik dari materi yang harus dipelajari ulang, maks 4]\n'
+        f'}}\n\n'
+        f"Aturan:\n"
+        f"1. Tentukan tipe_soal: 'implementasi' jika soal meminta kode/notasi algoritmik/trace eksekusi, 'pengetahuan' jika konseptual/essay.\n"
+        f"2. Evaluasi berdasarkan kebenaran konsep ASD dan kelengkapan penjelasan.\n"
+        f"3. Skor: >=85=Sangat Baik, 70-84=Baik, 50-69=Cukup, <50=Perlu Perbaikan, jawaban kosong=Belum Dijawab (skor 0).\n"
+        f"4. rekomendasi_belajar berisi subtopik spesifik yang relevan dengan kelemahan yang ditemukan."
+    )
+    user_prompt = (
+        f"Soal:\n{pertanyaan.strip()}\n\n"
+        f"Jawaban Mahasiswa:\n{jawaban.strip() if jawaban and jawaban.strip() else '(tidak dijawab)'}"
+    )
+
+    async with httpx.AsyncClient(timeout=60.0) as client:
+        response = await client.post(
+            'https://api.openai.com/v1/chat/completions',
+            headers={'Content-Type': 'application/json', 'Authorization': f'Bearer {settings.openai_api_key}'},
+            json={
+                'model': settings.openai_model,
+                'messages': [{'role': 'system', 'content': system_prompt}, {'role': 'user', 'content': user_prompt}],
+                'response_format': {'type': 'json_object'},
+                'temperature': 0.2,
+            },
+        )
+    response.raise_for_status()
+    return json.loads(response.json()['choices'][0]['message']['content'])

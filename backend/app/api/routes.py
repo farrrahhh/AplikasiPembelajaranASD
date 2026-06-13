@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.ai import TOPIC_CONFIGS, evaluasi_batch, evaluasi_soal, generate_soal
+from app.ai import TOPIC_CONFIGS, chat_materi_ai, evaluasi_batch, evaluasi_soal, evaluasi_soal_sendiri, generate_soal
 from app.config import settings
 from app.db import get_db
 from app.models import Progress, User
@@ -34,6 +34,17 @@ class EvaluasiSoalRequest(BaseModel):
 class EvaluasiBatchRequest(BaseModel):
     soal: list[dict]
     jawaban: dict[str, str] = {}
+
+
+class EvaluasiSoalSendiriRequest(BaseModel):
+    pertanyaan: str
+    jawaban: str = ""
+
+
+class ChatRequest(BaseModel):
+    pesan: str
+    riwayat: list[dict] = []
+
 
 router = APIRouter()
 
@@ -271,6 +282,23 @@ async def evaluasi_latihan(
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 
+@router.post("/latihan/{topic_slug}/evaluasi-soal-sendiri", tags=["latihan"])
+async def evaluasi_latihan_soal_sendiri(
+    topic_slug: str,
+    payload: EvaluasiSoalSendiriRequest,
+) -> dict:
+    if topic_slug not in TOPIC_CONFIGS:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Topik tidak ditemukan.")
+    if not settings.openai_api_key:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="OpenAI API key tidak dikonfigurasi.")
+    try:
+        return await evaluasi_soal_sendiri(topic_slug, payload.pertanyaan, payload.jawaban)
+    except httpx.HTTPStatusError as e:
+        raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail=f"OpenAI error: {e.response.text}")
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+
 @router.post("/latihan/{topic_slug}/evaluasi-batch", tags=["latihan"])
 async def evaluasi_latihan_batch(
     topic_slug: str,
@@ -283,6 +311,24 @@ async def evaluasi_latihan_batch(
     soal_dengan_jawaban = [{**s, "jawaban": payload.jawaban.get(str(s["id"]), "")} for s in payload.soal]
     try:
         return await evaluasi_batch(topic_slug=topic_slug, soal_dengan_jawaban=soal_dengan_jawaban)
+    except httpx.HTTPStatusError as e:
+        raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail=f"OpenAI error: {e.response.text}")
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+
+@router.post("/chat/{topic_slug}", tags=["chat"])
+async def chat_materi(
+    topic_slug: str,
+    payload: ChatRequest,
+) -> dict:
+    if topic_slug not in TOPIC_CONFIGS:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Topik tidak ditemukan.")
+    if not settings.openai_api_key:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="OpenAI API key tidak dikonfigurasi.")
+    try:
+        balasan = await chat_materi_ai(topic_slug, payload.pesan, payload.riwayat)
+        return {"balasan": balasan}
     except httpx.HTTPStatusError as e:
         raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail=f"OpenAI error: {e.response.text}")
     except Exception as e:

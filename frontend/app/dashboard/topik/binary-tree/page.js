@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { fetchTopicProgress, saveTopicProgress } from '../../../lib/progress';
 
 import SoalSendiriPanel from '../../../components/SoalSendiriPanel';
+import MateriChatWidget from '../../../components/MateriChatWidget';
 const SECTIONS = [
   { id: 'pengantar',    title: 'Pohon (Tree)',                 level: 0 },
   { id: 'istilah',      title: 'Istilah dalam Pohon',          level: 1 },
@@ -1655,6 +1656,7 @@ export default function BinaryTreePage() {
         <div ref={mainRef} className="flex-1 overflow-y-auto">
           <div className="max-w-3xl mx-auto px-4 sm:px-8 py-5 sm:py-6">
             {activeTab === 'MATERI'    && <MateriContent />}
+            {activeTab === 'MATERI' && <MateriChatWidget topicSlug={TOPIC_SLUG} />}
             {activeTab === 'CONTOH'   && <ContohContent />}
             {activeTab === 'LATIHAN' && (
               <div>
