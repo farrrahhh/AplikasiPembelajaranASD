@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { fetchTopicProgress, saveTopicProgress } from '../../../lib/progress';
 
+import SoalSendiriPanel from '../../../components/SoalSendiriPanel';
 // ---------------------------------------------------------------------------
 // Sidebar section definitions
 // ---------------------------------------------------------------------------
@@ -2026,6 +2027,7 @@ const TAB_KEYS = {
 // ---------------------------------------------------------------------------
 export default function MesinKarakterPage() {
   const [activeTab, setActiveTab] = useState("MATERI");
+  const [latihanMode, setLatihanMode] = useState('ai');
   const [activeSection, setActiveSection] = useState("intro");
   const [showToc, setShowToc] = useState(false);
   const [completed, setCompleted] = useState({ materi: false, contoh: false, latihan: false, ringkasan: false });
@@ -2213,7 +2215,29 @@ export default function MesinKarakterPage() {
             {activeTab === "MATERI" && <MateriContent />}
             {activeTab === "CONTOH" && <ContohContent />}
             {activeTab === "LATIHAN" && (
-              <LatihanContent onQuestionEvaluated={handleQuestionEvaluated} />
+              <div>
+                <div className='flex gap-1 mb-5 p-1 bg-gray-100 rounded-xl w-fit'>
+                  <button
+                    onClick={() => setLatihanMode('ai')}
+                    className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+                      latihanMode === 'ai' ? 'bg-white text-blue-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+                    }`}
+                  >
+                    Soal dari AI
+                  </button>
+                  <button
+                    onClick={() => setLatihanMode('sendiri')}
+                    className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+                      latihanMode === 'sendiri' ? 'bg-white text-blue-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+                    }`}
+                  >
+                    Soal Sendiri
+                  </button>
+                </div>
+                {latihanMode === 'ai'
+                  ? <LatihanContent onQuestionEvaluated={handleQuestionEvaluated} />
+                  : <SoalSendiriPanel topicSlug={TOPIC_SLUG} onGoToMateri={() => setActiveTab('MATERI')} />}
+              </div>
             )}
             {activeTab === "RINGKASAN" && <RingkasanContent />}
 

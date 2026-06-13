@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { fetchTopicProgress, saveTopicProgress } from '../../../lib/progress';
 
+import SoalSendiriPanel from '../../../components/SoalSendiriPanel';
 const SECTIONS = [
   { id: 'pengantar',     title: 'Graph',                        level: 0 },
   { id: 'terminologi',   title: 'Terminologi Dasar',            level: 1 },
@@ -1302,6 +1303,7 @@ next : AdrSuccNode`}</code>
 // ---------------------------------------------------------------------------
 export default function GraphPage() {
   const [activeTab, setActiveTab] = useState('MATERI');
+  const [latihanMode, setLatihanMode] = useState('ai');
   const [activeSection, setActiveSection] = useState('pengantar');
   const [showToc, setShowToc] = useState(false);
   const [completed, setCompleted] = useState({ materi: false, contoh: false, latihan: false, ringkasan: false });
@@ -1445,7 +1447,31 @@ export default function GraphPage() {
           <div className="max-w-3xl mx-auto px-4 sm:px-8 py-5 sm:py-6">
             {activeTab === 'MATERI'    && <MateriContent />}
             {activeTab === 'CONTOH'   && <ContohContent />}
-            {activeTab === 'LATIHAN'  && <LatihanContent onQuestionEvaluated={handleQuestionEvaluated} />}
+            {activeTab === 'LATIHAN' && (
+              <div>
+                <div className='flex gap-1 mb-5 p-1 bg-gray-100 rounded-xl w-fit'>
+                  <button
+                    onClick={() => setLatihanMode('ai')}
+                    className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+                      latihanMode === 'ai' ? 'bg-white text-blue-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+                    }`}
+                  >
+                    Soal dari AI
+                  </button>
+                  <button
+                    onClick={() => setLatihanMode('sendiri')}
+                    className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+                      latihanMode === 'sendiri' ? 'bg-white text-blue-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+                    }`}
+                  >
+                    Soal Sendiri
+                  </button>
+                </div>
+                {latihanMode === 'ai'
+                  ? <LatihanContent onQuestionEvaluated={handleQuestionEvaluated} />
+                  : <SoalSendiriPanel topicSlug={TOPIC_SLUG} onGoToMateri={() => setActiveTab('MATERI')} />}
+              </div>
+            )}
             {activeTab === 'RINGKASAN' && <RingkasanContent />}
 
             <div className="mt-10 pt-6 border-t border-gray-200 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-0 justify-between">
