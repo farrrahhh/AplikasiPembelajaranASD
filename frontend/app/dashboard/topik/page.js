@@ -3,151 +3,9 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { fetchAllProgress } from "../../lib/progress";
 
-function calcMesinKarakterProgress() {
-  try {
-    const d =
-      JSON.parse(localStorage.getItem("asd_progress_mesin_karakter")) ?? {};
-    let count = 0;
-    if (d.materi) count++;
-    if (d.contoh) count++;
-    if (d.latihan) count++;
-    if (d.ringkasan) count++;
-    return count * 25;
-  } catch {
-    return 0;
-  }
-}
-
-function calcListProgress() {
-  try {
-    const d = JSON.parse(localStorage.getItem("asd_progress_list")) ?? {};
-    let count = 0;
-    if (d.materi) count++;
-    if (d.contoh) count++;
-    if (d.latihan) count++;
-    if (d.ringkasan) count++;
-    return count * 25;
-  } catch {
-    return 0;
-  }
-}
-
-function calcSetMapProgress() {
-  try {
-    const d = JSON.parse(localStorage.getItem("asd_progress_set_map")) ?? {};
-    let count = 0;
-    if (d.materi) count++;
-    if (d.contoh) count++;
-    if (d.latihan) count++;
-    if (d.ringkasan) count++;
-    return count * 25;
-  } catch {
-    return 0;
-  }
-}
-
-function calcStackQueueProgress() {
-  try {
-    const d =
-      JSON.parse(localStorage.getItem("asd_progress_stack_queue")) ?? {};
-    let count = 0;
-    if (d.materi) count++;
-    if (d.contoh) count++;
-    if (d.latihan) count++;
-    if (d.ringkasan) count++;
-    return count * 25;
-  } catch {
-    return 0;
-  }
-}
-
-function calcBinaryTreeProgress() {
-  try {
-    const d =
-      JSON.parse(localStorage.getItem("asd_progress_binary_tree")) ?? {};
-    let count = 0;
-    if (d.materi) count++;
-    if (d.contoh) count++;
-    if (d.latihan) count++;
-    if (d.ringkasan) count++;
-    return count * 25;
-  } catch {
-    return 0;
-  }
-}
-
-function calcListLinierProgress() {
-  try {
-    const d =
-      JSON.parse(localStorage.getItem("asd_progress_list_linier")) ?? {};
-    let count = 0;
-    if (d.materi) count++;
-    if (d.contoh) count++;
-    if (d.latihan) count++;
-    if (d.ringkasan) count++;
-    return count * 25;
-  } catch {
-    return 0;
-  }
-}
-
-function calcAplikasiProgress() {
-  try {
-    const d = JSON.parse(localStorage.getItem("asd_progress_aplikasi")) ?? {};
-    let count = 0;
-    if (d.materi) count++;
-    if (d.contoh) count++;
-    if (d.latihan) count++;
-    if (d.ringkasan) count++;
-    return count * 25;
-  } catch {
-    return 0;
-  }
-}
-
-function calcGraphProgress() {
-  try {
-    const d = JSON.parse(localStorage.getItem("asd_progress_graph")) ?? {};
-    let count = 0;
-    if (d.materi) count++;
-    if (d.contoh) count++;
-    if (d.latihan) count++;
-    if (d.ringkasan) count++;
-    return count * 25;
-  } catch {
-    return 0;
-  }
-}
-
-function calcAdtSederhanaProgress() {
-  try {
-    const d =
-      JSON.parse(localStorage.getItem("asd_progress_adt_sederhana")) ?? {};
-    let count = 0;
-    if (d.materi) count++;
-    if (d.contoh) count++;
-    if (d.latihan) count++;
-    if (d.ringkasan) count++;
-    return count * 25;
-  } catch {
-    return 0;
-  }
-}
-
-function calcPengantarProgress() {
-  try {
-    const d = JSON.parse(localStorage.getItem("asd_progress_pengantar")) ?? {};
-    let count = 0;
-    if (d.materi) count++;
-    if (d.contoh) count++;
-    if (d.latihan) count++;
-    if (d.ringkasan) count++;
-    return count * 25;
-  } catch {
-    return 0;
-  }
-}
+const SECTIONS = ['materi', 'contoh', 'latihan', 'ringkasan'];
 
 const topics = [
   {
@@ -155,7 +13,6 @@ const topics = [
     title: "Pengantar Algoritma dan Struktur Data",
     description:
       "Konsep dasar algoritma dan struktur data: paradigma prosedural, ADT, notasi algoritmik, dasar bahasa C, serta modularitas dan reusabilitas program.",
-    progress: 0,
     href: "/dashboard/topik/pengantar",
     available: true,
     bg: "bg-blue-600",
@@ -174,7 +31,6 @@ const topics = [
     title: "ADT Sederhana",
     description:
       "Implementasi ADT sederhana seperti Point, Time, dan Date dalam bahasa C menggunakan pasangan file header (.h) dan implementasi (.c).",
-    progress: 0,
     href: "/dashboard/topik/adt-sederhana",
     available: true,
     bg: "bg-purple-600",
@@ -193,7 +49,6 @@ const topics = [
     title: "List",
     description:
       "List berbasis array: representasi implisit dan eksplisit, lima alternatif implementasi, operasi pencarian dan pengurutan, serta array dinamis.",
-    progress: 0,
     href: "/dashboard/topik/list",
     available: true,
     bg: "bg-emerald-600",
@@ -212,7 +67,6 @@ const topics = [
     title: "Mesin Karakter & Kata",
     description:
       "Mesin abstrak pemrosesan teks: primitif start dan advance, model pembacaan karakter dan kata, serta implementasi word scanner dalam C.",
-    progress: 0,
     href: "/dashboard/topik/mesin-karakter",
     available: true,
     bg: "bg-sky-600",
@@ -231,7 +85,6 @@ const topics = [
     title: "Stack & Queue",
     description:
       "Stack (LIFO) dan Queue (FIFO) berbasis array: circular buffer, operasi push/pop/enqueue/dequeue, dan aplikasi evaluasi ekspresi postfix.",
-    progress: 0,
     href: "/dashboard/topik/stack-queue",
     available: true,
     bg: "bg-rose-600",
@@ -250,7 +103,6 @@ const topics = [
     title: "Set & Map",
     description:
       "ADT Set dan Map: operasi union, intersection, dan difference, diimplementasikan dengan array tak terurut, array terurut, dan hash table.",
-    progress: 0,
     href: "/dashboard/topik/set-map",
     available: true,
     bg: "bg-teal-600",
@@ -269,7 +121,6 @@ const topics = [
     title: "List Linier",
     description:
       "Linked list: singly dan doubly linked list, list sirkuler, dan list dengan sentinel. Implementasi Stack, Queue, dan Priority Queue berbasis pointer.",
-    progress: 0,
     href: "/dashboard/topik/list-linier",
     available: true,
     bg: "bg-cyan-600",
@@ -288,7 +139,6 @@ const topics = [
     title: "Binary Tree",
     description:
       "Pohon biner: traversal pre/in/post-order, fungsi rekursif, pohon seimbang, dan Binary Search Tree dengan operasi insert, delete, dan pencarian.",
-    progress: 0,
     href: "/dashboard/topik/binary-tree",
     available: true,
     bg: "bg-amber-600",
@@ -307,7 +157,6 @@ const topics = [
     title: "Graph",
     description:
       "Representasi graf: adjacency matrix, adjacency list, incidence matrix, dan edge list. Mencakup directed graph dan implementasi multilist dengan operasi insert dan delete.",
-    progress: 0,
     href: "/dashboard/topik/graph",
     available: true,
     bg: "bg-indigo-600",
@@ -326,7 +175,6 @@ const topics = [
     title: "Aplikasi",
     description:
       "Studi kasus terpadu: representasi polinom, manajemen memori dinamis (First Fit/Best Fit), Multi-List, dan relasi M-N sebagai penerapan nyata struktur data.",
-    progress: 0,
     href: "/dashboard/topik/aplikasi",
     available: true,
     bg: "bg-orange-600",
@@ -343,28 +191,10 @@ const topics = [
 ];
 
 export default function TopikPage() {
-  const [pengantarProgress, setPengantarProgress] = useState(0);
-  const [adtSederhanaProgress, setAdtSederhanaProgress] = useState(0);
-  const [listProgress, setListProgress] = useState(0);
-  const [mesinKarakterProgress, setMesinKarakterProgress] = useState(0);
-  const [stackQueueProgress, setStackQueueProgress] = useState(0);
-  const [setMapProgress, setSetMapProgress] = useState(0);
-  const [binaryTreeProgress, setBinaryTreeProgress] = useState(0);
-  const [graphProgress, setGraphProgress] = useState(0);
-  const [listLinierProgress, setListLinierProgress] = useState(0);
-  const [aplikasiProgress, setAplikasiProgress] = useState(0);
+  const [progressMap, setProgressMap] = useState({});
 
   useEffect(() => {
-    setPengantarProgress(calcPengantarProgress());
-    setAdtSederhanaProgress(calcAdtSederhanaProgress());
-    setListProgress(calcListProgress());
-    setMesinKarakterProgress(calcMesinKarakterProgress());
-    setStackQueueProgress(calcStackQueueProgress());
-    setSetMapProgress(calcSetMapProgress());
-    setBinaryTreeProgress(calcBinaryTreeProgress());
-    setGraphProgress(calcGraphProgress());
-    setListLinierProgress(calcListLinierProgress());
-    setAplikasiProgress(calcAplikasiProgress());
+    fetchAllProgress().then(setProgressMap);
   }, []);
 
   return (
@@ -375,28 +205,8 @@ export default function TopikPage() {
 
       <div className='space-y-3 sm:space-y-4'>
         {topics.map((topic) => {
-          const pct =
-            topic.id === "pengantar"
-              ? pengantarProgress
-              : topic.id === "adt-sederhana"
-                ? adtSederhanaProgress
-                : topic.id === "list"
-                  ? listProgress
-                  : topic.id === "mesin-karakter"
-                    ? mesinKarakterProgress
-                    : topic.id === "stack-queue"
-                      ? stackQueueProgress
-                      : topic.id === "set-map"
-                        ? setMapProgress
-                        : topic.id === "binary-tree"
-                          ? binaryTreeProgress
-                          : topic.id === "graph"
-                            ? graphProgress
-                            : topic.id === "list-linier"
-                              ? listLinierProgress
-                              : topic.id === "aplikasi"
-                                ? aplikasiProgress
-                                : topic.progress;
+          const d = progressMap[topic.id] ?? {};
+          const pct = SECTIONS.filter((k) => d[k]).length * 25;
           return (
             <div
               key={topic.id}

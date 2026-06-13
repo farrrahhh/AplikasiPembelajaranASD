@@ -1,7 +1,8 @@
 'use client';
 
-import { useRef, useSyncExternalStore } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { fetchAllProgress } from '../lib/progress';
 
 const CHART_HEIGHT = 180;
 
@@ -106,68 +107,35 @@ const SECTIONS = [
   { key: 'ringkasan', label: 'Ringkasan' },
 ];
 
-function readAllProgress() {
-  const result = {};
-  TOPICS.forEach((t) => {
-    try {
-      result[t.id] = JSON.parse(localStorage.getItem(t.key)) ?? {};
-    } catch {
-      result[t.id] = {};
-    }
-  });
-  return result;
-}
-
 function countSections(d) {
   return SECTIONS.filter((s) => d[s.key]).length;
 }
 
-function updateStreak() {
-  try {
-    const today = new Date().toISOString().split('T')[0];
-    const lastVisit = localStorage.getItem('asd_last_visit');
-    let streak = parseInt(localStorage.getItem('asd_streak') ?? '0', 10);
-    if (!lastVisit) {
-      localStorage.setItem('asd_last_visit', today);
-      localStorage.setItem('asd_streak', '1');
-      return 1;
-    }
-    if (lastVisit === today) return streak || 1;
-    const diff = Math.round((new Date(today) - new Date(lastVisit)) / 86400000);
-    streak = diff === 1 ? streak + 1 : 1;
-    localStorage.setItem('asd_last_visit', today);
-    localStorage.setItem('asd_streak', String(streak));
-    return streak;
-  } catch {
-    return 0;
-  }
-}
-
-const noopSubscribe = () => () => {};
-const emptyData = {};
-const zeroStreak = 0;
-
 export default function ProgressPage() {
-  const dataRef = useRef(null);
-  const streakRef = useRef(null);
+  const [data, setData] = useState({});
+  const [streak, setStreak] = useState(0);
 
-  const data = useSyncExternalStore(
-    noopSubscribe,
-    () => {
-      if (!dataRef.current) dataRef.current = readAllProgress();
-      return dataRef.current;
-    },
-    () => emptyData,
-  );
+  useEffect(() => {
+    fetchAllProgress().then(setData);
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const lastVisit = localStorage.getItem('asd_last_visit');
+      let s = parseInt(localStorage.getItem('asd_streak') ?? '0', 10);
+      if (!lastVisit) {
+        localStorage.setItem('asd_last_visit', today);
+        localStorage.setItem('asd_streak', '1');
+        setStreak(1);
+        return;
+      }
+      if (lastVisit === today) { setStreak(s || 1); return; }
+      const diff = Math.round((new Date(today) - new Date(lastVisit)) / 86400000);
+      s = diff === 1 ? s + 1 : 1;
+      localStorage.setItem('asd_last_visit', today);
+      localStorage.setItem('asd_streak', String(s));
+      setStreak(s);
+    } catch { setStreak(0); }
+  }, []);
 
-  const streak = useSyncExternalStore(
-    noopSubscribe,
-    () => {
-      if (streakRef.current === null) streakRef.current = updateStreak();
-      return streakRef.current;
-    },
-    () => zeroStreak,
-  );
   const getPct = (id) => countSections(data[id] ?? {}) * 25;
 
   const avgProgress = Math.round(

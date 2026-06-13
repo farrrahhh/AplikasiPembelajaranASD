@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { syncTopicProgress } from '../../../lib/progress';
+import { fetchTopicProgress, saveTopicProgress } from '../../../lib/progress';
 
 // ---------------------------------------------------------------------------
 // Sidebar section definitions
@@ -2187,8 +2187,8 @@ function RingkasanContent() {
 // ---------------------------------------------------------------------------
 // Progress helpers
 // ---------------------------------------------------------------------------
-const PROGRESS_KEY = "asd_progress_pengantar";
-const TOPIC_SLUG   = "pengantar";
+const TOPIC_SLUG = "pengantar";
+const EVALUATED_KEY = "asd_evaluated_pengantar";
 
 const TAB_KEYS = {
   MATERI: "materi",
@@ -2197,21 +2197,6 @@ const TAB_KEYS = {
   RINGKASAN: "ringkasan",
 };
 
-function readProgress() {
-  try {
-    return JSON.parse(localStorage.getItem(PROGRESS_KEY)) ?? {};
-  } catch {
-    return {};
-  }
-}
-
-function saveProgress(updates) {
-  const data = { ...readProgress(), ...updates };
-  localStorage.setItem(PROGRESS_KEY, JSON.stringify(data));
-  syncTopicProgress(TOPIC_SLUG, data);
-}
-
-const noopSubscribe = () => () => {};
 const emptyCompleted = { materi: false, contoh: false, latihan: false, ringkasan: false };
 
 // ---------------------------------------------------------------------------
@@ -2221,25 +2206,14 @@ export default function PengantarPage() {
   const [activeTab, setActiveTab] = useState("MATERI");
   const [activeSection, setActiveSection] = useState("intro");
   const [showToc, setShowToc] = useState(false);
-  const completedRef = useRef(null);
-  const completed = useSyncExternalStore(
-    noopSubscribe,
-    () => {
-      if (!completedRef.current) {
-        const prog = readProgress();
-        completedRef.current = {
-          materi: !!prog.materi,
-          contoh: !!prog.contoh,
-          latihan: !!prog.latihan,
-          ringkasan: !!prog.ringkasan,
-        };
-      }
-      return completedRef.current;
-    },
-    () => emptyCompleted,
-  );
-  const [, forceUpdate] = useState(0);
+  const [completed, setCompleted] = useState(emptyCompleted);
   const mainRef = useRef(null);
+
+  useEffect(() => {
+    fetchTopicProgress(TOPIC_SLUG).then((prog) => {
+      if (prog) setCompleted({ materi: !!prog.materi, contoh: !!prog.contoh, latihan: !!prog.latihan, ringkasan: !!prog.ringkasan });
+    });
+  }, []);
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
@@ -2249,16 +2223,17 @@ export default function PengantarPage() {
   const handleComplete = (tab) => {
     const key = TAB_KEYS[tab];
     if (!key || completed[key]) return;
-    saveProgress({ [key]: true });
-    completedRef.current = { ...completedRef.current, [key]: true };
-    forceUpdate((n) => n + 1);
+    const next = { ...completed, [key]: true };
+    setCompleted(next);
+    saveTopicProgress(TOPIC_SLUG, next);
   };
 
   const handleQuestionEvaluated = useCallback((questionId) => {
-    const prog = readProgress();
-    const evaluated = new Set(prog.latihanEvaluated ?? []);
-    evaluated.add(questionId);
-    saveProgress({ latihanEvaluated: [...evaluated] });
+    try {
+      const evaluated = new Set(JSON.parse(localStorage.getItem(EVALUATED_KEY) ?? '[]'));
+      evaluated.add(questionId);
+      localStorage.setItem(EVALUATED_KEY, JSON.stringify([...evaluated]));
+    } catch {}
   }, []);
 
   // Update sidebar highlight based on scroll position

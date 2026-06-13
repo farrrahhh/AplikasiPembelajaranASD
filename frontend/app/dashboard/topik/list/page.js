@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import { syncTopicProgress } from '../../../lib/progress';
+import { fetchTopicProgress, saveTopicProgress } from '../../../lib/progress';
 
 // ---------------------------------------------------------------------------
 // Sidebar section definitions
@@ -2059,22 +2059,8 @@ const TAB_KEYS = {
   RINGKASAN: "ringkasan",
 };
 
-function readProgress() {
-  try {
-    return JSON.parse(localStorage.getItem(PROGRESS_KEY)) ?? {};
-  } catch {
-    return {};
-  }
-}
 
-function saveProgress(updates) {
-  const data = { ...readProgress(), ...updates };
-  localStorage.setItem(PROGRESS_KEY, JSON.stringify(data));
-  syncTopicProgress(TOPIC_SLUG, data);
-}
 
-const noopSubscribe = () => () => {};
-const emptyCompleted = { materi: false, contoh: false, latihan: false, ringkasan: false };
 
 // ---------------------------------------------------------------------------
 // Main Page
@@ -2083,24 +2069,13 @@ export default function ListPage() {
   const [activeTab, setActiveTab] = useState("MATERI");
   const [activeSection, setActiveSection] = useState("intro");
   const [showToc, setShowToc] = useState(false);
-  const completedRef = useRef(null);
-  const completed = useSyncExternalStore(
-    noopSubscribe,
-    () => {
-      if (!completedRef.current) {
-        const prog = readProgress();
-        completedRef.current = {
-          materi: !!prog.materi,
-          contoh: !!prog.contoh,
-          latihan: !!prog.latihan,
-          ringkasan: !!prog.ringkasan,
-        };
-      }
-      return completedRef.current;
-    },
-    () => emptyCompleted,
-  );
-  const [, forceUpdate] = useState(0);
+  const [completed, setCompleted] = useState({ materi: false, contoh: false, latihan: false, ringkasan: false });
+
+  useEffect(() => {
+    fetchTopicProgress('list').then((prog) => {
+      if (prog) setCompleted({ materi: !!prog.materi, contoh: !!prog.contoh, latihan: !!prog.latihan, ringkasan: !!prog.ringkasan });
+    });
+  }, []);
   const mainRef = useRef(null);
 
   const handleTabClick = (tab) => {
@@ -2111,16 +2086,17 @@ export default function ListPage() {
   const handleComplete = (tab) => {
     const key = TAB_KEYS[tab];
     if (!key || completed[key]) return;
-    saveProgress({ [key]: true });
-    completedRef.current = { ...completedRef.current, [key]: true };
-    forceUpdate((n) => n + 1);
+    const next = { ...completed, [key]: true };
+    setCompleted(next);
+    saveTopicProgress('list', next);
   };
 
   const handleQuestionEvaluated = useCallback((questionId) => {
-    const prog = readProgress();
-    const evaluated = new Set(prog.latihanEvaluated ?? []);
-    evaluated.add(questionId);
-    saveProgress({ latihanEvaluated: [...evaluated] });
+    try {
+      const evaluated = new Set(JSON.parse(localStorage.getItem('asd_evaluated_list') ?? '[]'));
+      evaluated.add(questionId);
+      localStorage.setItem('asd_evaluated_list', JSON.stringify([...evaluated]));
+    } catch {}
   }, []);
 
   // Sidebar highlight on scroll

@@ -179,6 +179,25 @@ async def get_progress(
     return [ProgressResponse.model_validate(r) for r in rows]
 
 
+@router.get("/progress/{topic_slug}", response_model=ProgressResponse, tags=["progress"])
+async def get_topic_progress(
+    topic_slug: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> ProgressResponse:
+    if topic_slug not in VALID_TOPIC_SLUGS:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Topik tidak ditemukan.")
+    row = db.execute(
+        select(Progress).where(
+            Progress.user_id == current_user.user_id,
+            Progress.topic_slug == topic_slug,
+        )
+    ).scalar_one_or_none()
+    if row is None:
+        return ProgressResponse(topic_slug=topic_slug, materi=False, contoh=False, latihan=False, ringkasan=False)
+    return ProgressResponse.model_validate(row)
+
+
 @router.put("/progress/{topic_slug}", response_model=ProgressResponse, tags=["progress"])
 async def upsert_progress(
     topic_slug: str,

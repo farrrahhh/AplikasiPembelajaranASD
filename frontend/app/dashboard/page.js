@@ -1,13 +1,11 @@
 'use client';
 
-import { useEffect, useRef, useSyncExternalStore } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { getSession } from '../lib/auth';
-
-const noopSubscribe = () => () => {};
-const emptyRows = [];
+import { fetchAllProgress } from '../lib/progress';
 
 const TOPICS = [
   { id: 'pengantar',      key: 'asd_progress_pengantar',      title: 'Pengantar Algoritma dan Struktur Data', shortTitle: 'Pengantar',  href: '/dashboard/topik/pengantar',      color: '#6366f1', cover: '/cover-materials/1.png'  },
@@ -24,12 +22,6 @@ const TOPICS = [
 
 const SECTIONS = ['materi', 'contoh', 'latihan', 'ringkasan'];
 const SECTION_LABELS = { materi: 'Materi', contoh: 'Contoh', latihan: 'Latihan', ringkasan: 'Ringkasan' };
-
-function readProgress(key) {
-  try { return JSON.parse(localStorage.getItem(key)) ?? {}; } catch { return {}; }
-}
-function countDone(d) { return SECTIONS.filter((s) => d[s]).length; }
-function getStreak() { try { return parseInt(localStorage.getItem('asd_streak') ?? '0', 10); } catch { return 0; } }
 
 function greeting(name) {
   const h = new Date().getHours();
@@ -59,45 +51,31 @@ function buildInsights(rows) {
 
 export default function BerandaPage() {
   const router = useRouter();
-  const userRef  = useRef(undefined);
-  const rowsRef  = useRef(null);
-  const streakRef = useRef(null);
-
-  const user = useSyncExternalStore(
-    noopSubscribe,
-    () => {
-      if (userRef.current === undefined) userRef.current = getSession()?.user ?? null;
-      return userRef.current;
-    },
-    () => null,
-  );
-
-  const rows = useSyncExternalStore(
-    noopSubscribe,
-    () => {
-      if (!rowsRef.current) {
-        rowsRef.current = TOPICS.map((topic) => {
-          const d = readProgress(topic.key);
-          const secs = countDone(d);
-          return { topic, d, secs, pct: secs * 25 };
-        });
-      }
-      return rowsRef.current;
-    },
-    () => emptyRows,
-  );
-
-  const streak = useSyncExternalStore(
-    noopSubscribe,
-    () => { if (streakRef.current === null) streakRef.current = getStreak(); return streakRef.current; },
-    () => 0,
-  );
+  const [user, setUser] = useState(null);
+  const [rows, setRows] = useState([]);
+  const [streak, setStreak] = useState(0);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    if (user === null) router.replace('/login');
-  }, [user, router]);
+    const u = getSession()?.user ?? null;
+    setUser(u);
+    if (!u) { router.replace('/login'); return; }
 
-  if (!user || rows.length === 0) return null;
+    fetchAllProgress().then((progressMap) => {
+      setRows(TOPICS.map((topic) => {
+        const d = progressMap[topic.id] ?? {};
+        const secs = SECTIONS.filter((s) => d[s]).length;
+        return { topic, d, secs, pct: secs * 25 };
+      }));
+      setLoaded(true);
+    });
+
+    try {
+      setStreak(parseInt(localStorage.getItem('asd_streak') ?? '0', 10));
+    } catch {}
+  }, [router]);
+
+  if (!user || !loaded) return null;
 
   const inProgress     = rows.filter(({ pct }) => pct > 0 && pct < 100);
   const nextUnstarted  = rows.find(({ pct }) => pct === 0);
