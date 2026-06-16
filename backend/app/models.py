@@ -137,6 +137,7 @@ class Progress(Base):
     contoh: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     latihan: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     ringkasan: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    weak_concepts: Mapped[str | None] = mapped_column(Text, nullable=True)
     last_accessed: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )

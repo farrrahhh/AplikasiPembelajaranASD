@@ -1369,7 +1369,11 @@ function LatihanContent({ onQuestionEvaluated }) {
     } catch {
       // ignore — fall through to generate
     }
-    generateSoal([]);
+    fetchTopicProgress(TOPIC_SLUG).then((prog) => {
+
+      generateSoal(prog?.weak_concepts ?? []);
+
+    });
   }, [generateSoal]);
 
   const evaluasiSoal = async () => {
@@ -1410,6 +1414,7 @@ function LatihanContent({ onQuestionEvaluated }) {
         Object.values(feedbackMap).flatMap((f) => f.konsep_lemah ?? []),
       ),
     ];
+    saveTopicProgress(TOPIC_SLUG, { ...completed, weak_concepts: kelemahan });
     generateSoal(kelemahan);
   };
 
@@ -2214,7 +2219,7 @@ export default function PengantarPage() {
 
   useEffect(() => {
     fetchTopicProgress(TOPIC_SLUG).then((prog) => {
-      if (prog) setCompleted({ materi: !!prog.materi, contoh: !!prog.contoh, latihan: !!prog.latihan, ringkasan: !!prog.ringkasan });
+      if (prog) setCompleted({ materi: !!prog.materi, contoh: !!prog.contoh, latihan: !!prog.latihan, ringkasan: !!prog.ringkasan, weak_concepts: prog.weak_concepts ?? [] });
     });
   }, []);
 

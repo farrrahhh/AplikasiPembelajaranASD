@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, field_validator
@@ -77,6 +78,20 @@ class ProgressResponse(BaseModel):
     contoh: bool
     latihan: bool
     ringkasan: bool
+    weak_concepts: list[str] = []
+
+    @field_validator("weak_concepts", mode="before")
+    @classmethod
+    def parse_weak_concepts(cls, v: object) -> list[str]:
+        if isinstance(v, str):
+            try:
+                parsed = json.loads(v)
+                return parsed if isinstance(parsed, list) else []
+            except Exception:
+                return []
+        if isinstance(v, list):
+            return v
+        return []
 
 
 class ProgressUpdateRequest(BaseModel):
@@ -84,3 +99,4 @@ class ProgressUpdateRequest(BaseModel):
     contoh: bool = False
     latihan: bool = False
     ringkasan: bool = False
+    weak_concepts: list[str] | None = None  # None = jangan ubah nilai yang sudah ada

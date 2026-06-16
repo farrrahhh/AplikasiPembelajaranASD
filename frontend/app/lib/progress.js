@@ -41,9 +41,19 @@ export async function fetchAllProgress() {
 }
 
 // Save progress for a single topic to DB.
+// Pass weak_concepts in data to persist them; omit or set to undefined to leave unchanged.
 export async function saveTopicProgress(slug, data) {
   const token = getToken();
   if (!token) return;
+  const body = {
+    materi: !!data.materi,
+    contoh: !!data.contoh,
+    latihan: !!data.latihan,
+    ringkasan: !!data.ringkasan,
+  };
+  if (data.weak_concepts !== undefined) {
+    body.weak_concepts = Array.isArray(data.weak_concepts) ? data.weak_concepts : [];
+  }
   try {
     await fetch(`${API_BASE}/progress/${slug}`, {
       method: 'PUT',
@@ -51,12 +61,7 @@ export async function saveTopicProgress(slug, data) {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        materi: !!data.materi,
-        contoh: !!data.contoh,
-        latihan: !!data.latihan,
-        ringkasan: !!data.ringkasan,
-      }),
+      body: JSON.stringify(body),
     });
   } catch {}
 }

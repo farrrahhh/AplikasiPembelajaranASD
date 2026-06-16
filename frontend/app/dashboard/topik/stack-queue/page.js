@@ -1142,7 +1142,11 @@ function LatihanContent({ onQuestionEvaluated }) {
     } catch {
       // ignore
     }
-    generateSoal([]);
+    fetchTopicProgress(TOPIC_SLUG).then((prog) => {
+
+      generateSoal(prog?.weak_concepts ?? []);
+
+    });
   }, [generateSoal]);
 
   const evaluasiSoal = async () => {
@@ -1183,6 +1187,7 @@ function LatihanContent({ onQuestionEvaluated }) {
         Object.values(feedbackMap).flatMap((f) => f.konsep_lemah ?? []),
       ),
     ];
+    saveTopicProgress(TOPIC_SLUG, { ...completed, weak_concepts: kelemahan });
     generateSoal(kelemahan);
   };
 
@@ -2016,11 +2021,11 @@ export default function StackQueuePage() {
   const [latihanMode, setLatihanMode] = useState('ai');
   const [activeSection, setActiveSection] = useState("queue-intro");
   const [showToc, setShowToc] = useState(false);
-  const [completed, setCompleted] = useState({ materi: false, contoh: false, latihan: false, ringkasan: false });
+  const [completed, setCompleted] = useState({ materi: false, contoh: false, latihan: false, ringkasan: false, weak_concepts: [] });
 
   useEffect(() => {
     fetchTopicProgress('stack-queue').then((prog) => {
-      if (prog) setCompleted({ materi: !!prog.materi, contoh: !!prog.contoh, latihan: !!prog.latihan, ringkasan: !!prog.ringkasan });
+      if (prog) setCompleted({ materi: !!prog.materi, contoh: !!prog.contoh, latihan: !!prog.latihan, ringkasan: !!prog.ringkasan, weak_concepts: prog.weak_concepts ?? [] });
     });
   }, []);
   const mainRef = useRef(null);

@@ -76,9 +76,29 @@ def ensure_schema_exists() -> None:
         connection.exec_driver_sql(f'CREATE SCHEMA IF NOT EXISTS "{safe_schema_name}"')
 
 
+def _migrate_add_columns() -> None:
+    """Add columns introduced after initial deployment without dropping data."""
+    db_url = make_url(settings.database_url)
+    schema_prefix = f'"{settings.database_schema}".' if settings.database_schema else ""
+    progress_table = f"{schema_prefix}progress"
+
+    with engine.begin() as conn:
+        if db_url.get_backend_name() == "postgresql":
+            conn.execute(text(
+                f"ALTER TABLE {progress_table} ADD COLUMN IF NOT EXISTS weak_concepts TEXT"
+            ))
+        else:
+            # SQLite: ADD COLUMN IF NOT EXISTS is not supported before 3.37
+            try:
+                conn.execute(text("ALTER TABLE progress ADD COLUMN weak_concepts TEXT"))
+            except Exception:
+                pass  # column already exists
+
+
 def init_db() -> None:
     import app.models  # noqa: F401
 
     ensure_database_exists()
     ensure_schema_exists()
     Base.metadata.create_all(bind=engine)
+    _migrate_add_columns()

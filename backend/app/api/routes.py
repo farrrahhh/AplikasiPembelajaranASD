@@ -1,3 +1,4 @@
+import json
 from datetime import datetime, timezone
 
 import httpx
@@ -234,6 +235,8 @@ async def upsert_progress(
     row.contoh = payload.contoh
     row.latihan = payload.latihan
     row.ringkasan = payload.ringkasan
+    if payload.weak_concepts is not None:
+        row.weak_concepts = json.dumps(payload.weak_concepts)
     row.last_accessed = datetime.now(timezone.utc)
 
     db.commit()
