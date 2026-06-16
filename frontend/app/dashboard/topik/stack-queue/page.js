@@ -2018,6 +2018,7 @@ const TAB_KEYS = {
 // ---------------------------------------------------------------------------
 export default function StackQueuePage() {
   const [activeTab, setActiveTab] = useState("MATERI");
+  const [lockNotif, setLockNotif] = useState("");
   const [latihanMode, setLatihanMode] = useState('ai');
   const [activeSection, setActiveSection] = useState("queue-intro");
   const [showToc, setShowToc] = useState(false);
@@ -2031,6 +2032,14 @@ export default function StackQueuePage() {
   const mainRef = useRef(null);
 
   const handleTabClick = (tab) => {
+    const requires = { CONTOH: 'materi', LATIHAN: 'contoh', RINGKASAN: 'latihan' }[tab];
+    if (requires && !completed[requires]) {
+      const label = { materi: 'Materi', contoh: 'Contoh', latihan: 'Latihan' }[requires];
+      setLockNotif(`Selesaikan tab ${label} terlebih dahulu.`);
+      setTimeout(() => setLockNotif(''), 3000);
+      return;
+    }
+    setLockNotif('');
     setActiveTab(tab);
     setShowToc(false);
   };
@@ -2125,6 +2134,8 @@ export default function StackQueuePage() {
             {TABS.map((tab) => {
               const isDone = completed[TAB_KEYS[tab]];
               const isActive = activeTab === tab;
+              const requires = { CONTOH: 'materi', LATIHAN: 'contoh', RINGKASAN: 'latihan' }[tab];
+              const isLocked = requires ? !completed[requires] : false;
               return (
                 <button
                   key={tab}
@@ -2132,10 +2143,17 @@ export default function StackQueuePage() {
                   className={`shrink-0 px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-t-lg transition-colors flex items-center gap-1.5 ${
                     isActive
                       ? "bg-rose-700 text-white"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      : isLocked
+                        ? "bg-gray-50 text-gray-300 cursor-not-allowed"
+                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   }`}
                 >
                   {tab}
+                  {isLocked && (
+                    <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                    </svg>
+                  )}
                   {isDone && (
                     <svg
                       className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isActive ? "text-green-300" : "text-green-500"}`}
@@ -2217,6 +2235,14 @@ export default function StackQueuePage() {
           </div>
         )}
 
+        {lockNotif && (
+          <div className="shrink-0 bg-amber-50 border-b border-amber-200 px-4 sm:px-6 py-2 text-sm text-amber-700 flex items-center gap-2">
+            <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+            </svg>
+            {lockNotif}
+          </div>
+        )}
         {/* Scrollable content */}
         <div ref={mainRef} className='flex-1 overflow-y-auto'>
           <div className='max-w-3xl mx-auto px-4 sm:px-8 py-5 sm:py-6'>
